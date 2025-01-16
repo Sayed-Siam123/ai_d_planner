@@ -34,6 +34,7 @@ dependencies:
   flutter_app_version_checker: ^0.3.2
   animated_snack_bar: ^0.4.0
   url_launcher: ^6.3.1
+  card_swiper: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -66,9 +67,6 @@ flutter:
         - asset: assets/fonts/Gilroy-Bold.otf
         - asset: assets/fonts/Gilroy-ExtraBold.otf
         - asset: assets/fonts/Gilroy-Heavy.otf
-
-#cd - sb 57
-#sb - cd 22
 
     - family: Kalnia
       fonts:
