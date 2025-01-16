@@ -19,7 +19,7 @@ class AppColors {
     },
   );
 
-  static const primaryColor = Color(0xFF076839);
+  static const primaryColor = Color(0xFFD70365);
 
   //primaryColor.withOpacity(0.7) --> splash, authentication
 
@@ -28,7 +28,7 @@ class AppColors {
   static const primaryAccentColor = Color(0xFF883C90);
   static const primaryLiteColor = Color(0xFF563078);
   static const secondaryColor = Color(0xFFC02231);
-  static const backgroundColor = Color(0xFFEEF2F8);
+  static const backgroundColor = Color(0xFFF9F9F9);
   static const backgroundColorNew = Color(0xFFE2ECF4);
   static const accentColor = Color(0xFF703E97);
   static const errorColor = Color(0xFFED3675);
@@ -59,7 +59,7 @@ class AppColors {
   static const flightFilterSelectedColor = Color(0xFF0050F0);
   static const flightSearchBackgroundColor = Color(0xFFDEE6F2);
   //text color
-  static const textColor = Color(0xFF2B2B2D);
+  static const textColor = Color(0xFF3D3D3D);
   static const textGray = Color(0xFF727272);
   static const bgGray = Color(0xFFeef2f8);
   static const textGrayShade2 = Color(0xFF444444);
