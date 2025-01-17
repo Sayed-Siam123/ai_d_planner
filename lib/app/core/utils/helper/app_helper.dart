@@ -133,7 +133,8 @@ class AppHelper {
   }
 
   bool isKeyBoardVisible(context) {
-    return MediaQuery.of(context).viewInsets.bottom > 0 ? true : false;
+    //return MediaQuery.of(context).viewInsets.bottom > 0 ? true : false;
+    return WidgetsBinding.instance.window.viewInsets.bottom > 0.0 ? true : false;
   }
 
   String getFormattedDateOnly(DateTime dateTime,

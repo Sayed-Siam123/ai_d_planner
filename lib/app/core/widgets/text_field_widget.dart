@@ -210,7 +210,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                 fillColor: !widget.fieldEnable! ? AppColors.textGrayShade4 : widget.fillColor,
                 filled: !widget.fieldEnable! ? false : true,
                 suffixIcon: widget.showSuffixIcon
-                    ? widget.isPasswordType && !widget.hasCustomIcon
+                    ? widget.isPasswordType && widget.hasCustomIcon
                         ? IconButton(
                             onPressed: () => widget.onClickPasswordShowHide?.call(),
                             splashRadius: 5,

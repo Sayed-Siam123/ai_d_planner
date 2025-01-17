@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:ai_d_planner/app/modules/authentication/views/login_page.dart';
 import 'package:ai_d_planner/app/modules/authentication/views/signup_page.dart';
+import 'package:ai_d_planner/app/modules/get_started/views/get_started_page.dart';
+import 'package:ai_d_planner/app/modules/question_flow/views/question_flow_page.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +34,8 @@ final routerDelegate = BeamerDelegate(
       AppRoutes.splash: (context, state, data) => routePageBuilder(child: SplashPage(),path: AppRoutes.splash,isBack: false),
       AppRoutes.login: (context, state, data) => routePageBuilder(child: LoginPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.login,isBack: (data as PageRouteArg).isBackAction!),
       AppRoutes.signup: (context, state, data) => routePageBuilder(child: SignupPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.signup,isBack: (data as PageRouteArg).isBackAction!),
+      AppRoutes.getStarted: (context, state, data) => routePageBuilder(child: GetStartedPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.getStarted,isBack: (data as PageRouteArg).isBackAction!),
+      AppRoutes.quesFlow: (context, state, data) => routePageBuilder(child: QuestionFlowPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.quesFlow,isBack: (data as PageRouteArg).isBackAction!),
     },
   ).call,
 );

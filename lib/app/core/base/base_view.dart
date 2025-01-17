@@ -97,7 +97,7 @@ class _BaseViewState extends State<BaseView> with TickerProviderStateMixin {
           child: Scaffold(
             key: widget.globalScaffoldKey,
             // extendBodyBehindAppBar: true,
-            // resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.backgroundColor,
             appBar: widget.appBar(context) ?? CustomAppBar.noAppBar(),
             drawerEnableOpenDragGesture: false,

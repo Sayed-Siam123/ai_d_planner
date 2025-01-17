@@ -9,6 +9,7 @@ import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/data/models/page_route_arguments.dart';
+import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,7 @@ import '../../../core/utils/helper/app_helper.dart';
 import '../../../core/widgets/custom_app_bar.dart';
 import '../../../core/widgets/custom_buttons_widget.dart';
 import '../../../core/widgets/text_field_widget.dart';
+import '../../../routes/app_routes.dart';
 import '../../../services/password_obscure_operation/bloc/password_obscure_ops_cubit.dart';
 import '../../../services/password_obscure_operation/bloc/password_obscure_ops_state.dart';
 
@@ -50,10 +52,7 @@ class LoginPage extends BaseView {
   @override
   Widget body(BuildContext context) {
     // TODO: implement body
-    return AppHelper().isKeyBoardVisible(context)
-        ? SingleChildScrollView(
-      child: _bodyWidget(context),
-    ) : _bodyWidget(context);
+    return _bodyWidget(context);
   }
 
   @override
@@ -129,132 +128,156 @@ class LoginPage extends BaseView {
 
   Widget _bodyWidget(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                AppWidgets().gapH(16),
-                Center(
-                    child: Image.asset(
-                      loginLogo,
-                      height: 60,
-                      width: 60,
-                    )),
-                AppWidgets().gapH(30),
-                Text(
-                  StringConstants.signIn,
-                  style: textRegularStyle(context,
-                      fontSize: 25, fontWeight: FontWeight.w700),
-                ),
-                AppWidgets().gapH(30),
-                CustomTextFieldWidget(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: _bodyWidgetTree(context,isKeyboardOpen: AppHelper().isKeyBoardVisible(context)),
+    );
+  }
+  Widget _bodyWidgetTree(BuildContext context, {bool? isKeyboardOpen = false}){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            AppWidgets().gapH(16),
+            Center(
+                child: Image.asset(
+                  loginLogo,
+                  height: 60,
+                  width: 60,
+                )),
+            AppWidgets().gapH(30),
+            Text(
+              StringConstants.signIn,
+              style: textRegularStyle(context,
+                  fontSize: 25, fontWeight: FontWeight.w700),
+            ),
+            AppWidgets().gapH(30),
+            CustomTextFieldWidget(
+              context: context,
+              hint: StringConstants.email,
+              name: "email",
+              errorText: StringConstants.emailError,
+              isPasswordType: false,
+              showStar: true,
+              keyboardType: KeyboardType.text,
+              showSuffixIcon: false,
+              autoFillEnabled: false,
+              controller: emailController,
+              focusNode: emailFocus,
+              isReadOnly: false,
+              fieldEnable: true,
+              fillColor: AppColors.whitePure,
+              borderColor: AppColors.textFieldBorderColor,
+              hasCustomIcon: true,
+              showPrefixIcon: true,
+              prefixIcon: SvgPicture.asset(email,fit: BoxFit.scaleDown,),
+            ),
+            AppWidgets().gapH(8),
+            BlocBuilder<PasswordObscureCubit, PasswordObscureState>(
+              builder: (context, state) {
+                return CustomTextFieldWidget(
                   context: context,
-                  hint: StringConstants.email,
-                  name: "email",
-                  errorText: StringConstants.emailError,
-                  isPasswordType: false,
-                  showStar: true,
-                  keyboardType: KeyboardType.text,
-                  showSuffixIcon: false,
+                  hint: StringConstants.password,
+                  name: "password",
+                  errorText: StringConstants.passwordError,
+                  showSuffixIcon: true,
                   autoFillEnabled: false,
-                  controller: emailController,
-                  focusNode: emailFocus,
-                  isReadOnly: false,
-                  fieldEnable: true,
-                  fillColor: AppColors.whitePure,
-                  borderColor: AppColors.textFieldBorderColor,
-                ),
-                AppWidgets().gapH(8),
-                BlocBuilder<PasswordObscureCubit, PasswordObscureState>(
-                  builder: (context, state) {
-                    return CustomTextFieldWidget(
-                      context: context,
-                      hint: StringConstants.password,
-                      name: "password",
-                      errorText: StringConstants.passwordError,
-                      showSuffixIcon: true,
-                      autoFillEnabled: false,
-                      showStar: true,
-                      keyboardType: KeyboardType.password,
-                      isPasswordType: true,
-                      controller: passwordController,
-                      focusNode: passwordFocus,
-                      showPassword: isPasswordShow ?? false,
-                      onClickPasswordShowHide: () {
-                        isPasswordShow = passwordObscureCubit.toggleObscureOnClick(
-                            currentValue: isPasswordShow ?? false);
-                      },
-                    );
+                  showStar: true,
+                  keyboardType: KeyboardType.password,
+                  isPasswordType: true,
+                  controller: passwordController,
+                  focusNode: passwordFocus,
+                  showPassword: isPasswordShow ?? false,
+                  hasCustomIcon: true,
+                  showPrefixIcon: true,
+                  prefixIcon: SvgPicture.asset(password,fit: BoxFit.scaleDown,),
+                  onClickPasswordShowHide: () {
+                    isPasswordShow = passwordObscureCubit.toggleObscureOnClick(
+                        currentValue: isPasswordShow ?? false);
                   },
-                ),
-                AppWidgets().gapH(8),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: CustomAppTextButton(
-                      onPressed: () {},
-                      title: StringConstants.f_password,
-                      fontWeight: FontWeight.w400,
-                      textColor: AppColors.primaryColor
-                  ),
-                ),
-                AppWidgets().gapH(30),
-                CustomAppMaterialButton(
-                  title: StringConstants.signIn,
-                  backgroundColor: AppColors.primaryColor,
-                  borderColor: AppColors.primaryColor,
-                  usePrefixIcon: false,
-                  needSplashEffect: true,
-                  borderRadius: 50,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  onPressed: () async {},
-                ),
-                AppWidgets().gapH(40),
-                _orWidget(),
-                AppWidgets().gapH(15),
-                Text(
-                  StringConstants.signInWith,
-                  style: textRegularStyle(context,
-                      fontSize: 20, fontWeight: FontWeight.w600),
-                ),
-                AppWidgets().gapH(15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _socialMediaLogoWidget(appleLogo),
-                    AppWidgets().gapW24(),
-                    _socialMediaLogoWidget(fbLogo),
-                    AppWidgets().gapW24(),
-                    _socialMediaLogoWidget(googleLogo),
-                  ],
-                ),
+                );
+              },
+            ),
+            AppWidgets().gapH(8),
+            Align(
+              alignment: Alignment.centerRight,
+              child: CustomAppTextButton(
+                  onPressed: () {},
+                  title: StringConstants.f_password,
+                  fontWeight: FontWeight.w400,
+                  textColor: AppColors.primaryColor
+              ),
+            ),
+            AppWidgets().gapH(30),
+            CustomAppMaterialButton(
+              title: StringConstants.signIn,
+              backgroundColor: AppColors.primaryColor,
+              borderColor: AppColors.primaryColor,
+              usePrefixIcon: false,
+              needSplashEffect: true,
+              borderRadius: 50,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              onPressed: () async {
+                toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
+                  to: AppRoutes.getStarted,
+                  from: AppRoutes.login,
+                  pageRouteType: PageRouteType.pushReplacement,
+                  isFromDashboardNav: false,
+                ));
+              },
+            ),
+            AppWidgets().gapH(40),
+            _orWidget(),
+            AppWidgets().gapH(15),
+            Text(
+              StringConstants.signInWith,
+              style: textRegularStyle(context,
+                  fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            AppWidgets().gapH(15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _socialMediaLogoWidget(appleLogo),
+                AppWidgets().gapW24(),
+                _socialMediaLogoWidget(fbLogo),
+                AppWidgets().gapW24(),
+                _socialMediaLogoWidget(googleLogo),
               ],
             ),
-          ),
-          Text.rich(TextSpan(
-              text: StringConstants.dontHaveAnyAccount,
-              style: textRegularStyle(context, fontWeight: FontWeight.w500),
-              children: [
-                TextSpan(text: " "),
-                TextSpan(
-                  text: StringConstants.signUp,
-                  style: textRegularStyle(context,
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.w700)
-                      .copyWith(decoration: TextDecoration.underline),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      printLog('Tap Here onTap');
-                    },
-                )
-              ])),
-          AppWidgets().gapH(10),
-        ],
-      ),
+          ],
+        ),
+        !isKeyboardOpen! ? Spacer() : SizedBox(),
+        !isKeyboardOpen ? Text.rich(TextSpan(
+            text: StringConstants.dontHaveAnyAccount,
+            style: textRegularStyle(context, fontWeight: FontWeight.w500),
+            children: [
+              TextSpan(text: " "),
+              TextSpan(
+                text: StringConstants.signUp,
+                style: textRegularStyle(context,
+                    color: AppColors.primaryColor,
+                    fontWeight: FontWeight.w700)
+                    .copyWith(decoration: TextDecoration.underline),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    _tapOnSignup();
+                  },
+              )
+            ])) : SizedBox(),
+        !isKeyboardOpen ? AppWidgets().gapH(10) : SizedBox(),
+      ],
     );
+  }
+
+  void _tapOnSignup() {
+    toReplacementNamed(AppRoutes.signup,args: PageRouteArg(
+      to: AppRoutes.signup,
+      from: AppRoutes.login,
+      pageRouteType: PageRouteType.pushReplacement,
+      isFromDashboardNav: false,
+    ));
   }
 }

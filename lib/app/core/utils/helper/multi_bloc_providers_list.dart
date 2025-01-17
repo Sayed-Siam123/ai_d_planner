@@ -1,3 +1,5 @@
+import 'package:ai_d_planner/app/modules/get_started/bloc/get_started_bloc.dart';
+import 'package:ai_d_planner/app/modules/question_flow/bloc/question_flow_bloc.dart';
 import 'package:ai_d_planner/app/services/password_obscure_operation/bloc/password_obscure_ops_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/single_child_widget.dart';
@@ -11,5 +13,11 @@ final List<SingleChildWidget> multiBlocProvidersList  = [
     ),
     BlocProvider<PasswordObscureCubit>(
       create: (context) => getIt<PasswordObscureCubit>(),
+    ),
+    BlocProvider<GetStartedBloc>(
+      create: (context) => getIt<GetStartedBloc>(),
+    ),
+    BlocProvider<QuestionFlowBloc>(
+      create: (context) => getIt<QuestionFlowBloc>(),
     ),
   ];

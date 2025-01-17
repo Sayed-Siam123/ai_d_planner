@@ -16,6 +16,9 @@ const loginLogo = "${pngPath}login_logo.png";
 const googleLogo = "${svgPath}google.svg";
 const fbLogo = "${svgPath}fb.svg";
 const appleLogo = "${svgPath}apple.svg";
+const user = "${svgPath}user.svg";
+const email = "${svgPath}email.svg";
+const password = "${svgPath}password.svg";
 
 //images
 

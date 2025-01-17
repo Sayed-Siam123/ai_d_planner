@@ -55,7 +55,7 @@ class CustomAppBar {
                     },
                     child: Transform.translate(
                         offset: const Offset(0, 0),
-                        child: const Icon(Icons.arrow_back_ios_new,size: 23,color: AppColors.textColor,)
+                        child: const Icon(Icons.arrow_back_outlined,size: 23,color: AppColors.blackPure,)
                     )
                 )
             ),
