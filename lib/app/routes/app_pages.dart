@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:ai_d_planner/app/modules/authentication/views/login_page.dart';
+import 'package:ai_d_planner/app/modules/authentication/views/signup_page.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 
@@ -28,29 +30,8 @@ final routerDelegate = BeamerDelegate(
     routes: {
       // Return either Widgets or BeamPages if more customization is needed
       AppRoutes.splash: (context, state, data) => routePageBuilder(child: SplashPage(),path: AppRoutes.splash,isBack: false),
-      // AppRoutes.authentication: (context, state, data) => routePageBuilder(child: LoginView(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.authentication,isBack: (data as PageRouteArg).isBackAction!),
-      // AppRoutes.otpVerification: (context, state, data) => routePageBuilder(child: OtpValidationView(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.otpVerification,isBack: (data as PageRouteArg).isBackAction!),
-      // AppRoutes.dashboard: (context, state, data) => routePageBuilder(child: DashboardPage(context,pageRouteArg: data as PageRouteArg),path: AppRoutes.dashboard,isBack: (data as PageRouteArg).isBackAction!),
-      // AppRoutes.profilePage: (context, state, data) => routePageBuilder(child: ProfilePage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.profilePage,isBack: (data as PageRouteArg).isBackAction!),
-
-      // AppRoutes.transactionBottomNav: (context, state, data) => TransactionsView(context,pageRouteArg: data as PageRouteArg,),
-      // AppRoutes.beneficiaryBottomNav: (context, state, data) => BeneficiaryManagementNavView(context),
-      // AppRoutes.settingsBottomNav: (context, state, data) => SettingsPage(context),
-
-      // '/books/:bookId': (context, state, data) {
-      //   // Take the path parameter of interest from BeamState
-      //   final bookId = state.pathParameters['bookId']!;
-      //   // Collect arbitrary data that persists throughout navigation
-      //   final info = (data as MyObject).info;
-      //   // Use BeamPage to define custom behavior
-      //   return BeamPage(
-      //     key: ValueKey('book-$bookId'),
-      //     title: 'A Book #$bookId',
-      //     popToNamed: '/',
-      //     type: BeamPageType.scaleTransition,
-      //     child: BookDetailsScreen(bookId, info),
-      //   );
-      // }
+      AppRoutes.login: (context, state, data) => routePageBuilder(child: LoginPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.login,isBack: (data as PageRouteArg).isBackAction!),
+      AppRoutes.signup: (context, state, data) => routePageBuilder(child: SignupPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.signup,isBack: (data as PageRouteArg).isBackAction!),
     },
   ).call,
 );

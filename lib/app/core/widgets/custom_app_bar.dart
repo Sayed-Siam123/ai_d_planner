@@ -85,7 +85,7 @@ class CustomAppBar {
       title: !isTitleImage ? Text(
         title,
         style: textRegularStyle(context,fontSize: 20, fontWeight: FontWeight.w800,color: titleTextColor),
-      ) : Transform.translate(offset: const Offset(0,-10),child: Image.asset(logo2,scale: 8,)),
+      ) : Transform.translate(offset: const Offset(0,-10),child: Image.asset(logoPath,scale: 8,)),
       elevation: elevation,
       shadowColor: AppColors.white.withOpacity(0.4),
       centerTitle: isCenterTitle,

@@ -16,7 +16,6 @@ import 'app/core/style/app_colors.dart';
 import 'app/core/utils/helper/multi_bloc_providers_list.dart';
 import 'app/core/utils/helper/print_log.dart';
 import 'app/core/widgets/app_widgets.dart';
-import 'app/modules/home_screen.dart';
 import 'app/routes/app_pages.dart';
 
 void main() async{

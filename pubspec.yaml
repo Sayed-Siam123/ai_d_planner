@@ -35,6 +35,8 @@ dependencies:
   animated_snack_bar: ^0.4.0
   url_launcher: ^6.3.1
   card_swiper: ^3.0.1
+  flutter_form_builder: ^9.7.0 # form builder helper
+  form_builder_validators: ^11.1.1 # form builder validator use
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +56,11 @@ flutter:
   assets:
     - assets/
     - assets/fonts/
+    - assets/images/
+    - assets/logo/
+    - assets/lottie/
+    - assets/png/
+    - assets/svg/
 
   fonts:
     - family: Gilroy

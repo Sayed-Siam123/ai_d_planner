@@ -45,6 +45,8 @@ class AppColors {
 
   static const tabBarBg = Color(0xFFF6F9FF);
   static const borderColor = Color(0xFFB3CBFA);
+  static const textFieldBorderColor = Color(0xFFEDEDED);
+
   static const greenBgColor = Color(0xFFEBFAD9);
   ///Core Color
   static const coreWidgetColor = Color(0xFF533F5A);

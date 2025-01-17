@@ -98,7 +98,7 @@ class _BaseViewState extends State<BaseView> with TickerProviderStateMixin {
             key: widget.globalScaffoldKey,
             // extendBodyBehindAppBar: true,
             // resizeToAvoidBottomInset: false,
-            backgroundColor: AppColors.whitePure,
+            backgroundColor: AppColors.backgroundColor,
             appBar: widget.appBar(context) ?? CustomAppBar.noAppBar(),
             drawerEnableOpenDragGesture: false,
             body: SafeArea(
@@ -154,7 +154,7 @@ class _BaseViewState extends State<BaseView> with TickerProviderStateMixin {
 
     var checker =  await _checker.checkUpdate();
 
-    if(routerDelegate.currentConfiguration?.uri.path == AppRoutes.authentication){
+    if(routerDelegate.currentConfiguration?.uri.path == AppRoutes.login){
       if(checker.canUpdate){
         CustomDialog.customDialog(mounted ? AppWidgets().globalContext : null,
           title: "Update Information",

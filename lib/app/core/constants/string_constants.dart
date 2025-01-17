@@ -1,29 +1,15 @@
 class StringConstants {
-  static const String appTitle = "Sky Sense";
-  static const String hintText = "Enter city name";
-  static const String noInternet = "Please check your internet connection!";
-  static const String noDataFound = "No matching location found.";
-  static const String weatherNowText = "Weather Now";
-  static const String tkSign = "৳";
-  static const String degreeCelcius = "\u{2103}";
-  static const String degreefarenheit = "\u{2109}";
-  static const String cloud = "\u{2601}";
-  static const String umbrella = "\u{2602}";
-  static const String wind = "\u{1F32C}";
-  static const String humidity = "\u{1F4A7}";
-  static const String pressure = "\u{3371}";
-  static const String uv = "UV";
-  static const String feelsLikeText = "Feels Like";
-  static const String windText = "Wind";
-  static const String cloudText = "Cloud Cover";
-  static const String percipitationText = "Percipitation";
-  static const String humidityText = "Humidity";
-  static const String windDirectionText = "Wind Direction";
-  static const String loadingText = "Loading";
-  static const String uvText = "UV Index";
-  static const String pressureText = "Pressure";
-  static const String somethingWrongText = "Something Went Wrong!!. Try Again.";
-  static const String exitTitle = "Are you sure you want to exit?";
-  static const String noText = "No";
-  static const String yesText = "Yes";
+
+  //TODO:: LOGIN
+  static const String signIn = "Sign In";
+  static const String email = "Email";
+  static const String emailError = "email not found";
+  static const String password = "Password";
+  static const String passwordError = "Password not found";
+  static const String f_password = "Forget Password?";
+  static const String or = "Or";
+  static const String signInWith = "Sign in With";
+  static const String dontHaveAnyAccount = "Don't have an account?";
+  static const String signUp = "Sign Up";
+
 }
