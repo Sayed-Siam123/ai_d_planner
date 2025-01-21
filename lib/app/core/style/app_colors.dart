@@ -39,7 +39,6 @@ class AppColors {
   /// tour
   static const gradientColor1 = Color(0xFFC5E3FF);
   static const gradientColor2 = Color(0xFF155EEF);
-  static const tourLiteColor = Color(0xFF828282);
   static const downloadBackgroundColor = Color(0xFFE0EBFF);
   static const vacationBackgroundColor = Color(0xFF548AF5);
 
@@ -62,12 +61,15 @@ class AppColors {
   static const flightSearchBackgroundColor = Color(0xFFDEE6F2);
   //text color
   static const textColor = Color(0xFF3D3D3D);
+  static const appBarTitleTextColor = Color(0xFF1D1D1D);
   static const textGray = Color(0xFF727272);
   static const bgGray = Color(0xFFeef2f8);
   static const textGrayShade2 = Color(0xFF444444);
   static const textGrayShade3 = Color(0xFF333333);
   static const textGrayShade4 = Color(0xFFE0E0E0);
   static const textGrayShade5 = Color(0xFFBBBBBB);
+  static const textGrayShade6 = Color(0xFF949494);
+  static const textGrayShade7 = Color(0xFF828282);
 
   static const textGreen = Color(0xFF12A84F);
   static const textGreenNew = Color(0xFF598F17);

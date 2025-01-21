@@ -104,28 +104,109 @@ class QuestionFlowPage extends BaseView {
                         children: [
                           Text(questions.ques!,style: textRegularStyle(context,fontSize: 32,fontWeight: FontWeight.bold),),
                           AppWidgets().gapH12(),
-                          Wrap(
+                          /*Wrap(
                             spacing: 15,
                             runSpacing: 15,
                             children: questions.options!.map((option) {
                               int optionIndex = questions.options!.indexOf(option);
 
-                              return Material(color: questions.selected == null || questions.selected != optionIndex ? AppColors.whitePure : AppColors.primaryColor,shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(roundRadius),
-                                side: BorderSide(
-                                  color: AppColors.primaryColor.withValues(alpha: 0.15)
-                                )
-                              ),child: InkWell(
-                                onTap: () {
-                                  quesFlowBloc.add(SelectOption(questionIndex: questionIndex,selectedAnswer: optionIndex));
-                                },
-                                borderRadius: BorderRadius.circular(roundRadius),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(13.0),
-                                  child: Text(option,style: textRegularStyle(context,fontSize: 16,fontWeight: FontWeight.w500,isWhiteColor: questions.selected == optionIndex ? true : false)),
+                              // Determine selection status for single or multiple selection
+                              bool isSelected;
+                              if (questions.isMultipleSelect!) {
+                                isSelected = questions.selected?.contains(option) ?? false;
+                              } else {
+                                isSelected = questions.selected == option;
+                              }
+
+                              return Material(
+                                color: isSelected ? AppColors.primaryColor : AppColors.whitePure,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(roundRadius),
+                                  side: BorderSide(
+                                    color: AppColors.primaryColor.withOpacity(0.15),
+                                  ),
                                 ),
-                              ));
-                            },).toList(),
+                                child: InkWell(
+                                  onTap: () {
+                                    // Trigger the appropriate event for single or multiple selection
+                                    quesFlowBloc.add(SelectOption(
+                                      questionIndex: questionIndex,
+                                      selectedAnswer: {
+                                        "optionID" : optionIndex,
+                                        "option": option
+                                      },
+                                    ));
+                                  },
+                                  borderRadius: BorderRadius.circular(roundRadius),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(13.0),
+                                    child: Text(
+                                      option,
+                                      style: textRegularStyle(
+                                        context,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        isWhiteColor: isSelected,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),*/
+
+                          Wrap(
+                            spacing: 15,
+                            runSpacing: 15,
+                            children: questions.options!.map((option) {
+                              // Get the index of the current option
+                              int optionIndex = questions.options!.indexOf(option);
+
+                              // Determine selection status for single or multiple selection
+                              bool isSelected;
+                              if (questions.isMultipleSelect!) {
+                                isSelected = questions.selected?.any((selected) =>
+                                selected["optionID"] == optionIndex && selected["option"] == option) ?? false;
+                              } else {
+                                isSelected = questions.selected?["optionID"] == optionIndex &&
+                                    questions.selected?["option"] == option;
+                              }
+
+                              return Material(
+                                color: isSelected ? AppColors.primaryColor : AppColors.whitePure,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(roundRadius),
+                                  side: BorderSide(
+                                    color: AppColors.primaryColor.withOpacity(0.15),
+                                  ),
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    // Trigger the appropriate event for single or multiple selection
+                                    quesFlowBloc.add(SelectOption(
+                                      questionIndex: questionIndex,
+                                      selectedAnswer: {
+                                        "optionID": optionIndex,
+                                        "option": option,
+                                      },
+                                    ));
+                                  },
+                                  borderRadius: BorderRadius.circular(roundRadius),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(13.0),
+                                    child: Text(
+                                      option,
+                                      style: textRegularStyle(
+                                        context,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        isWhiteColor: isSelected,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ],
                       );
@@ -137,23 +218,32 @@ class QuestionFlowPage extends BaseView {
               },
             ),
           ),
-          CustomAppMaterialButton(
-            title: StringConstants.buttonNext,
-            backgroundColor: AppColors.primaryColor,
-            borderColor: AppColors.primaryColor,
-            usePrefixIcon: false,
-            needSplashEffect: true,
-            borderRadius: 50,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            onPressed: () async {
-              int nextPageIndex = quesFlowBloc.state.currentIndex!+1;
-              pageController!.animateToPage(nextPageIndex,duration: Duration(milliseconds: 200),curve: Curves.easeOutExpo);
-              quesFlowBloc.add(ChangeToNext(pageCurrentIndex: nextPageIndex));
+          BlocBuilder<QuestionFlowBloc,QuestionFlowState>(
+            builder: (context, state) {
+              return CustomAppMaterialButton(
+                title: _getButtonName(),
+                backgroundColor: AppColors.primaryColor,
+                borderColor: AppColors.primaryColor,
+                usePrefixIcon: false,
+                needSplashEffect: true,
+                borderRadius: 50,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                onPressed: () async {
+                  int nextPageIndex = quesFlowBloc.state.currentIndex!+1;
+
+                  if(nextPageIndex == quesFlowBloc.state.getStartedQues?.length){
+                    _proceedToSubmit();
+                  } else{
+                    pageController!.animateToPage(nextPageIndex,duration: Duration(milliseconds: 200),curve: Curves.easeOutExpo);
+                    quesFlowBloc.add(ChangeToNext(pageCurrentIndex: nextPageIndex));
+                  }
+
+                },
+              );
             },
           ),
           AppWidgets().gapH24(),
-          AppWidgets().gapH(20),
         ],
       ),
     );
@@ -195,6 +285,23 @@ class QuestionFlowPage extends BaseView {
       pageRouteType: PageRouteType.pushReplacement,
       isFromDashboardNav: false,
       isBackAction: true
+    ));
+  }
+
+  _getButtonName() {
+    if((quesFlowBloc.state.currentIndex!+1) == quesFlowBloc.state.getStartedQues?.length){
+      return StringConstants.buttonSubmit;
+    } else{
+      return StringConstants.buttonNext;
+    }
+  }
+
+  void _proceedToSubmit() {
+    toReplacementNamed(AppRoutes.seeFullFeature,args: PageRouteArg(
+        to: AppRoutes.seeFullFeature,
+        from: AppRoutes.quesFlow,
+        pageRouteType: PageRouteType.pushReplacement,
+        isFromDashboardNav: false,
     ));
   }
 

@@ -6,6 +6,10 @@ abstract class AppRoutes {
   static const signup = _Paths.signup;
   static const getStarted = _Paths.getStarted;
   static const quesFlow = _Paths.quesFlow;
+  static const seeFullFeature = _Paths.seeFullFeature;
+  static const packagePricePlan = _Paths.packagePricePlan;
+  static const exclusiveVipOffer = _Paths.exclusiveVipOffer;
+  static const dashboard = _Paths.dashboard;
 }
 
 abstract class _Paths {
@@ -16,4 +20,9 @@ abstract class _Paths {
   static const signup = '/signup';
   static const getStarted = '/getStarted';
   static const quesFlow = '/quesFlow';
+  static const seeFullFeature = '/seeFullFeature';
+  static const packagePricePlan = '/packagePricePlan';
+  static const exclusiveVipOffer = '/exclusiveVipOffer';
+  static const dashboard = '/dashboard';
+
 }

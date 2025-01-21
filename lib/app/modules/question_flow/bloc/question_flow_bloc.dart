@@ -25,16 +25,94 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
 
     List<GetStartedQuesModel> updatedQuestions = List.from(state.getStartedQues!); // Clone the list
 
-    if(updatedQuestions[event.questionIndex!].selected == null || updatedQuestions[event.questionIndex!].selected != event.selectedAnswer){
-      updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
-        selected: event.selectedAnswer,
-      );
-    } else if(updatedQuestions[event.questionIndex!].selected == event.selectedAnswer){
+    /*    if (updatedQuestions[event.questionIndex!].isMultipleSelect!) {
+      // Handle multiple selection
+      printLog("Handle multiple selection");
+      List<dynamic>? selectedAnswers = updatedQuestions[event.questionIndex!].selected ?? [];
 
-      printLog("I am here");
+      if (selectedAnswers!.contains(event.selectedAnswer)) {
+        // Deselect the answer
+        selectedAnswers.remove(event.selectedAnswer);
+      } else {
+        // Select the answer
+        selectedAnswers.add(event.selectedAnswer);
+      }
+
+      printLog(selectedAnswers);
+
       updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
-        selected: null,
+        selected: selectedAnswers,
       );
+
+    } else {
+      // Handle single selection
+      printLog("Handle single selection");
+      if (updatedQuestions[event.questionIndex!].selected == null ||
+          updatedQuestions[event.questionIndex!].selected != event.selectedAnswer) {
+        updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          selected: event.selectedAnswer,
+        );
+      } else if (updatedQuestions[event.questionIndex!].selected == event.selectedAnswer) {
+        // Deselect the answer
+        updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          selected: null,
+        );
+      }
+    }*/
+
+    if (updatedQuestions[event.questionIndex!].isMultipleSelect!) {
+      // Handle multiple selection
+      printLog("Handle multiple selection");
+
+      List<Map<String, dynamic>> selectedAnswers = List<Map<String, dynamic>>.from(updatedQuestions[event.questionIndex!].selected ?? []);
+
+      Map<String, dynamic> selectedAnswer = {
+        "optionID": event.selectedAnswer["optionID"],
+        "option": event.selectedAnswer["option"]
+      };
+
+      // Check if the answer already exists in the list
+      bool exists = selectedAnswers.any((answer) =>
+      answer["optionID"] == selectedAnswer["optionID"] &&
+          answer["option"] == selectedAnswer["option"]);
+
+      if (exists) {
+        // Deselect the answer
+        selectedAnswers.removeWhere((answer) =>
+        answer["optionID"] == selectedAnswer["optionID"] &&
+            answer["option"] == selectedAnswer["option"]);
+      } else {
+        // Select the answer
+        selectedAnswers.add(selectedAnswer);
+      }
+
+      // Update the question with the modified selected answers
+      updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+        selected: selectedAnswers,
+      );
+
+    } else {
+      // Handle single selection
+      printLog("Handle single selection");
+
+      Map<String, dynamic>? selectedAnswer = updatedQuestions[event.questionIndex!].selected;
+
+      if (selectedAnswer == null ||
+          selectedAnswer["optionID"] != event.selectedAnswer["optionID"] ||
+          selectedAnswer["option"] != event.selectedAnswer["option"]) {
+        // Select the answer
+        updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          selected: {
+            "optionID": event.selectedAnswer["optionID"],
+            "option": event.selectedAnswer["option"]
+          },
+        );
+      } else {
+        // Deselect the answer
+        updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          selected: null,
+        );
+      }
     }
 
     emit(state.copyWith(

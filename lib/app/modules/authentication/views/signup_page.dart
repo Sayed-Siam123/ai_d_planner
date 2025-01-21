@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:ai_d_planner/app/core/base/base_view.dart';
+import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_bloc.dart';
+import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../binding/central_dependecy_injection.dart';
@@ -31,11 +34,18 @@ class SignupPage extends BaseView {
   TextEditingController? userController = TextEditingController();
   TextEditingController? emailController = TextEditingController();
   TextEditingController? passwordController = TextEditingController();
+  TextEditingController? confirmPasswordController = TextEditingController();
+
   FocusNode? userFocus = FocusNode();
   FocusNode? emailFocus = FocusNode();
   FocusNode? passwordFocus = FocusNode();
+  FocusNode? confirmPasswordFocus = FocusNode();
+
   bool? isPasswordShow,isConfirmPasswordShow;
   final passwordObscureCubit = getIt<PasswordObscureCubit>();
+  final authBloc = getIt<AuthenticationBloc>();
+
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   PreferredSizeWidget? appBar(BuildContext context) {
@@ -95,135 +105,148 @@ class SignupPage extends BaseView {
     );
   }
   Widget _bodyWidgetTree(BuildContext context, {bool? isKeyboardOpen = false}){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            AppWidgets().gapH(16),
-            Center(
-                child: Image.asset(
-                  loginLogo,
-                  height: 60,
-                  width: 60,
-                )),
-            AppWidgets().gapH(30),
-            Text(
-              StringConstants.signUp,
-              style: textRegularStyle(context,
-                  fontSize: 25, fontWeight: FontWeight.w700),
-            ),
-            AppWidgets().gapH(30),
-            CustomTextFieldWidget(
-              context: context,
-              hint: StringConstants.name,
-              name: "name",
-              errorText: StringConstants.nameError,
-              isPasswordType: false,
-              showStar: true,
-              keyboardType: KeyboardType.text,
-              showSuffixIcon: false,
-              autoFillEnabled: false,
-              controller: emailController,
-              focusNode: emailFocus,
-              isReadOnly: false,
-              fieldEnable: true,
-              fillColor: AppColors.whitePure,
-              borderColor: AppColors.textFieldBorderColor,
-              hasCustomIcon: true,
-              showPrefixIcon: true,
-              prefixIcon: SvgPicture.asset(user,fit: BoxFit.scaleDown,),
-            ),
-            AppWidgets().gapH(8),
-            CustomTextFieldWidget(
-              context: context,
-              hint: StringConstants.email,
-              name: "email",
-              errorText: StringConstants.emailError,
-              isPasswordType: false,
-              showStar: true,
-              keyboardType: KeyboardType.text,
-              showSuffixIcon: false,
-              autoFillEnabled: false,
-              controller: emailController,
-              focusNode: emailFocus,
-              isReadOnly: false,
-              fieldEnable: true,
-              fillColor: AppColors.whitePure,
-              borderColor: AppColors.textFieldBorderColor,
-              hasCustomIcon: true,
-              showPrefixIcon: true,
-              prefixIcon: SvgPicture.asset(email,fit: BoxFit.scaleDown,),
-            ),
-            AppWidgets().gapH(8),
-            BlocBuilder<PasswordObscureCubit, PasswordObscureState>(
-              builder: (context, state) {
-                return CustomTextFieldWidget(
-                  context: context,
-                  hint: StringConstants.password,
-                  name: "password",
-                  errorText: StringConstants.passwordError,
-                  showSuffixIcon: true,
-                  autoFillEnabled: false,
-                  showStar: true,
-                  keyboardType: KeyboardType.password,
-                  isPasswordType: true,
-                  controller: passwordController,
-                  focusNode: passwordFocus,
-                  showPassword: isPasswordShow ?? false,
-                  hasCustomIcon: true,
-                  showPrefixIcon: true,
-                  prefixIcon: SvgPicture.asset(password,fit: BoxFit.scaleDown,),
-                  onClickPasswordShowHide: () {
-                    isPasswordShow = passwordObscureCubit.toggleObscureOnClick(
-                        currentValue: isPasswordShow ?? false);
-                  },
-                );
-              },
-            ),
-            AppWidgets().gapH(8),
-            BlocBuilder<PasswordObscureCubit, PasswordObscureState>(
-              builder: (context, state) {
-                return CustomTextFieldWidget(
-                  context: context,
-                  hint: StringConstants.c_password,
-                  name: "confirm_password",
-                  errorText: StringConstants.passwordError,
-                  showSuffixIcon: true,
-                  autoFillEnabled: false,
-                  showStar: true,
-                  keyboardType: KeyboardType.password,
-                  isPasswordType: true,
-                  controller: passwordController,
-                  focusNode: passwordFocus,
-                  showPassword: isConfirmPasswordShow ?? false,
-                  hasCustomIcon: true,
-                  showPrefixIcon: true,
-                  prefixIcon: SvgPicture.asset(password,fit: BoxFit.scaleDown,),
-                  onClickPasswordShowHide: () {
-                    isConfirmPasswordShow = passwordObscureCubit.toggleObscureOnClick(
-                        currentValue: isConfirmPasswordShow ?? false);
-                  },
-                );
-              },
-            ),
-            AppWidgets().gapH(30),
-            CustomAppMaterialButton(
-              title: StringConstants.signIn,
-              backgroundColor: AppColors.primaryColor,
-              borderColor: AppColors.primaryColor,
-              usePrefixIcon: false,
-              needSplashEffect: true,
-              borderRadius: 50,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              onPressed: () async {},
-            ),
-            AppWidgets().gapH(40),
-          ],
-        ),
-      ],
+    return FormBuilder(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.disabled,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          AppWidgets().gapH(16),
+          Center(
+              child: Image.asset(
+                loginLogo,
+                height: 60,
+                width: 60,
+              )),
+          AppWidgets().gapH(30),
+          Text(
+            StringConstants.signUp,
+            style: textRegularStyle(context,
+                fontSize: 25, fontWeight: FontWeight.w700),
+          ),
+          AppWidgets().gapH(30),
+          CustomTextFieldWidget(
+            context: context,
+            hint: StringConstants.name,
+            name: "name",
+            errorText: StringConstants.nameError,
+            isPasswordType: false,
+            showStar: true,
+            keyboardType: KeyboardType.text,
+            showSuffixIcon: false,
+            autoFillEnabled: false,
+            controller: userController,
+            focusNode: userFocus,
+            isReadOnly: false,
+            fieldEnable: true,
+            fillColor: AppColors.whitePure,
+            borderColor: AppColors.textFieldBorderColor,
+            hasCustomIcon: true,
+            showPrefixIcon: true,
+            prefixIcon: SvgPicture.asset(user,fit: BoxFit.scaleDown,),
+          ),
+          AppWidgets().gapH(8),
+          CustomTextFieldWidget(
+            context: context,
+            hint: StringConstants.email,
+            name: "email",
+            errorText: StringConstants.emailError,
+            isPasswordType: false,
+            showStar: true,
+            keyboardType: KeyboardType.text,
+            showSuffixIcon: false,
+            autoFillEnabled: false,
+            controller: emailController,
+            focusNode: emailFocus,
+            isReadOnly: false,
+            fieldEnable: true,
+            fillColor: AppColors.whitePure,
+            borderColor: AppColors.textFieldBorderColor,
+            hasCustomIcon: true,
+            showPrefixIcon: true,
+            prefixIcon: SvgPicture.asset(email,fit: BoxFit.scaleDown,),
+          ),
+          AppWidgets().gapH(8),
+          BlocBuilder<PasswordObscureCubit, PasswordObscureState>(
+            builder: (context, state) {
+              return CustomTextFieldWidget(
+                context: context,
+                hint: StringConstants.password,
+                name: "password",
+                errorText: StringConstants.passwordError,
+                showSuffixIcon: true,
+                autoFillEnabled: false,
+                showStar: true,
+                keyboardType: KeyboardType.password,
+                isPasswordType: true,
+                controller: passwordController,
+                focusNode: passwordFocus,
+                showPassword: isPasswordShow ?? false,
+                hasCustomIcon: true,
+                showPrefixIcon: true,
+                prefixIcon: SvgPicture.asset(password,fit: BoxFit.scaleDown,),
+                onClickPasswordShowHide: () {
+                  isPasswordShow = passwordObscureCubit.toggleObscureOnClick(
+                      currentValue: isPasswordShow ?? false);
+                },
+              );
+            },
+          ),
+          AppWidgets().gapH(8),
+          BlocBuilder<PasswordObscureCubit, PasswordObscureState>(
+            builder: (context, state) {
+              return CustomTextFieldWidget(
+                context: context,
+                hint: StringConstants.c_password,
+                name: "confirm_password",
+                errorText: StringConstants.passwordError,
+                showSuffixIcon: true,
+                autoFillEnabled: false,
+                showStar: true,
+                keyboardType: KeyboardType.password,
+                isPasswordType: true,
+                controller: confirmPasswordController,
+                focusNode: confirmPasswordFocus,
+                showPassword: isConfirmPasswordShow ?? false,
+                hasCustomIcon: true,
+                showPrefixIcon: true,
+                prefixIcon: SvgPicture.asset(password,fit: BoxFit.scaleDown,),
+                onClickPasswordShowHide: () {
+                  isConfirmPasswordShow = passwordObscureCubit.toggleObscureOnClick(
+                      currentValue: isConfirmPasswordShow ?? false);
+                },
+              );
+            },
+          ),
+          AppWidgets().gapH(30),
+          CustomAppMaterialButton(
+            title: StringConstants.signUp,
+            backgroundColor: AppColors.primaryColor,
+            borderColor: AppColors.primaryColor,
+            usePrefixIcon: false,
+            needSplashEffect: true,
+            borderRadius: 50,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            onPressed: () async {
+              if(_formKey.currentState!.validate()){
+                _formKey.currentState!.save();
+                if(passwordController?.text.toString() != confirmPasswordController?.text.toString()){
+                  AppWidgets().getSnackBar(message: "Password not matched!",status: SnackBarStatus.error);
+                } else{
+                  authBloc.add(InitiateSignup(
+                    email: emailController?.text.toString(),
+                    password: passwordController?.text.toString(),
+                    userName: userController?.text.toString()
+                  ));
+                }
+              }
+            },
+          ),
+          AppWidgets().gapH(40),
+        ],
+      ),
     );
   }
 }

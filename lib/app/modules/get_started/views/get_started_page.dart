@@ -173,7 +173,7 @@ class GetStartedPage extends BaseView {
     return Expanded(
       child: Column(
         children: [
-          AppWidgets().gapH(44),
+          AppWidgets().gapH(30),
           Spacer(),
           Text(StringConstants.bodyMessage,style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),textAlign: TextAlign.center,),
           Spacer(),
@@ -195,7 +195,7 @@ class GetStartedPage extends BaseView {
               ));
             },
           ),
-          AppWidgets().gapH24(),
+          //AppWidgets().gapH24(),
         ],
       ),
     );

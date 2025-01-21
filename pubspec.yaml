@@ -38,6 +38,9 @@ dependencies:
   flutter_form_builder: ^9.7.0 # form builder helper
   form_builder_validators: ^11.1.1 # form builder validator use
   smooth_page_indicator: ^1.2.0+3
+  pausable_timer: ^3.1.0
+
+  supabase_flutter: ^2.8.3
 
 dev_dependencies:
   flutter_test:

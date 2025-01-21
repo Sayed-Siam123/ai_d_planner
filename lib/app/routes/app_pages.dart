@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:ai_d_planner/app/core/base/base_view_with_nav.dart';
 import 'package:ai_d_planner/app/modules/authentication/views/login_page.dart';
 import 'package:ai_d_planner/app/modules/authentication/views/signup_page.dart';
+import 'package:ai_d_planner/app/modules/get_started/views/exclusive_vip_offer.dart';
 import 'package:ai_d_planner/app/modules/get_started/views/get_started_page.dart';
+import 'package:ai_d_planner/app/modules/get_started/views/package_price_plan_page.dart';
+import 'package:ai_d_planner/app/modules/get_started/views/see_full_features.dart';
 import 'package:ai_d_planner/app/modules/question_flow/views/question_flow_page.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +40,10 @@ final routerDelegate = BeamerDelegate(
       AppRoutes.signup: (context, state, data) => routePageBuilder(child: SignupPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.signup,isBack: (data as PageRouteArg).isBackAction!),
       AppRoutes.getStarted: (context, state, data) => routePageBuilder(child: GetStartedPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.getStarted,isBack: (data as PageRouteArg).isBackAction!),
       AppRoutes.quesFlow: (context, state, data) => routePageBuilder(child: QuestionFlowPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.quesFlow,isBack: (data as PageRouteArg).isBackAction!),
+      AppRoutes.seeFullFeature: (context, state, data) => routePageBuilder(child: SeeFullFeatures(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.seeFullFeature,isBack: (data as PageRouteArg).isBackAction!),
+      AppRoutes.packagePricePlan: (context, state, data) => routePageBuilder(child: PackagePricePlanPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.packagePricePlan,isBack: (data as PageRouteArg).isBackAction!),
+      AppRoutes.exclusiveVipOffer: (context, state, data) => routePageBuilder(child: ExclusiveVipOffer(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.exclusiveVipOffer,isBack: (data as PageRouteArg).isBackAction!),
+      AppRoutes.dashboard: (context, state, data) => routePageBuilder(child: DashboardPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.dashboard,isBack: (data as PageRouteArg).isBackAction!),
     },
   ).call,
 );

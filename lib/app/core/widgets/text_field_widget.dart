@@ -242,7 +242,8 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                 counterText: "",
                 error: field.errorText != null
                     ? Text(
-                        AppWidgets().globalContext.tr(field.errorText!),
+                        // AppWidgets().globalContext.tr(field.errorText!),
+                        field.errorText!,
                         style: textRegularStyle(context,
                             color: AppColors.warningRed, fontSize: 11),
                       )

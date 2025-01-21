@@ -13,6 +13,7 @@ import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/style/app_colors.dart';
@@ -36,6 +37,7 @@ class LoginPage extends BaseView {
   FocusNode? passwordFocus = FocusNode();
   bool? isPasswordShow;
   final passwordObscureCubit = getIt<PasswordObscureCubit>();
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   PreferredSizeWidget? appBar(BuildContext context) {
@@ -137,117 +139,126 @@ class LoginPage extends BaseView {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Column(
-          children: [
-            AppWidgets().gapH(16),
-            Center(
-                child: Image.asset(
-                  loginLogo,
-                  height: 60,
-                  width: 60,
-                )),
-            AppWidgets().gapH(30),
-            Text(
-              StringConstants.signIn,
-              style: textRegularStyle(context,
-                  fontSize: 25, fontWeight: FontWeight.w700),
-            ),
-            AppWidgets().gapH(30),
-            CustomTextFieldWidget(
-              context: context,
-              hint: StringConstants.email,
-              name: "email",
-              errorText: StringConstants.emailError,
-              isPasswordType: false,
-              showStar: true,
-              keyboardType: KeyboardType.text,
-              showSuffixIcon: false,
-              autoFillEnabled: false,
-              controller: emailController,
-              focusNode: emailFocus,
-              isReadOnly: false,
-              fieldEnable: true,
-              fillColor: AppColors.whitePure,
-              borderColor: AppColors.textFieldBorderColor,
-              hasCustomIcon: true,
-              showPrefixIcon: true,
-              prefixIcon: SvgPicture.asset(email,fit: BoxFit.scaleDown,),
-            ),
-            AppWidgets().gapH(8),
-            BlocBuilder<PasswordObscureCubit, PasswordObscureState>(
-              builder: (context, state) {
-                return CustomTextFieldWidget(
-                  context: context,
-                  hint: StringConstants.password,
-                  name: "password",
-                  errorText: StringConstants.passwordError,
-                  showSuffixIcon: true,
-                  autoFillEnabled: false,
-                  showStar: true,
-                  keyboardType: KeyboardType.password,
-                  isPasswordType: true,
-                  controller: passwordController,
-                  focusNode: passwordFocus,
-                  showPassword: isPasswordShow ?? false,
-                  hasCustomIcon: true,
-                  showPrefixIcon: true,
-                  prefixIcon: SvgPicture.asset(password,fit: BoxFit.scaleDown,),
-                  onClickPasswordShowHide: () {
-                    isPasswordShow = passwordObscureCubit.toggleObscureOnClick(
-                        currentValue: isPasswordShow ?? false);
-                  },
-                );
-              },
-            ),
-            AppWidgets().gapH(8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: CustomAppTextButton(
-                  onPressed: () {},
-                  title: StringConstants.f_password,
-                  fontWeight: FontWeight.w400,
-                  textColor: AppColors.primaryColor
+        FormBuilder(
+          autovalidateMode: AutovalidateMode.disabled,
+          key: _formKey,
+          child: Column(
+            children: [
+              AppWidgets().gapH(16),
+              Center(
+                  child: Image.asset(
+                    loginLogo,
+                    height: 60,
+                    width: 60,
+                  )),
+              AppWidgets().gapH(30),
+              Text(
+                StringConstants.signIn,
+                style: textRegularStyle(context,
+                    fontSize: 25, fontWeight: FontWeight.w700),
               ),
-            ),
-            AppWidgets().gapH(30),
-            CustomAppMaterialButton(
-              title: StringConstants.signIn,
-              backgroundColor: AppColors.primaryColor,
-              borderColor: AppColors.primaryColor,
-              usePrefixIcon: false,
-              needSplashEffect: true,
-              borderRadius: 50,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              onPressed: () async {
-                toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
-                  to: AppRoutes.getStarted,
-                  from: AppRoutes.login,
-                  pageRouteType: PageRouteType.pushReplacement,
-                  isFromDashboardNav: false,
-                ));
-              },
-            ),
-            AppWidgets().gapH(40),
-            _orWidget(),
-            AppWidgets().gapH(15),
-            Text(
-              StringConstants.signInWith,
-              style: textRegularStyle(context,
-                  fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            AppWidgets().gapH(15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _socialMediaLogoWidget(appleLogo),
-                AppWidgets().gapW24(),
-                _socialMediaLogoWidget(fbLogo),
-                AppWidgets().gapW24(),
-                _socialMediaLogoWidget(googleLogo),
-              ],
-            ),
-          ],
+              AppWidgets().gapH(30),
+              CustomTextFieldWidget(
+                context: context,
+                hint: StringConstants.email,
+                name: "email",
+                errorText: StringConstants.emailError,
+                isPasswordType: false,
+                showStar: true,
+                keyboardType: KeyboardType.text,
+                showSuffixIcon: false,
+                autoFillEnabled: false,
+                controller: emailController,
+                focusNode: emailFocus,
+                isReadOnly: false,
+                fieldEnable: true,
+                fillColor: AppColors.whitePure,
+                borderColor: AppColors.textFieldBorderColor,
+                hasCustomIcon: true,
+                showPrefixIcon: true,
+                prefixIcon: SvgPicture.asset(email,fit: BoxFit.scaleDown,),
+              ),
+              AppWidgets().gapH(8),
+              BlocBuilder<PasswordObscureCubit, PasswordObscureState>(
+                builder: (context, state) {
+                  return CustomTextFieldWidget(
+                    context: context,
+                    hint: StringConstants.password,
+                    name: "password",
+                    errorText: StringConstants.passwordError,
+                    showSuffixIcon: true,
+                    autoFillEnabled: false,
+                    showStar: true,
+                    keyboardType: KeyboardType.password,
+                    isPasswordType: true,
+                    controller: passwordController,
+                    focusNode: passwordFocus,
+                    showPassword: isPasswordShow ?? false,
+                    hasCustomIcon: true,
+                    showPrefixIcon: true,
+                    prefixIcon: SvgPicture.asset(password,fit: BoxFit.scaleDown,),
+                    onClickPasswordShowHide: () {
+                      isPasswordShow = passwordObscureCubit.toggleObscureOnClick(
+                          currentValue: isPasswordShow ?? false);
+                    },
+                  );
+                },
+              ),
+              AppWidgets().gapH(8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: CustomAppTextButton(
+                    onPressed: () {},
+                    title: StringConstants.f_password,
+                    fontWeight: FontWeight.w400,
+                    textColor: AppColors.primaryColor
+                ),
+              ),
+              AppWidgets().gapH(30),
+              CustomAppMaterialButton(
+                title: StringConstants.signIn,
+                backgroundColor: AppColors.primaryColor,
+                borderColor: AppColors.primaryColor,
+                usePrefixIcon: false,
+                needSplashEffect: true,
+                borderRadius: 50,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                onPressed: () async {
+
+                  if(_formKey.currentState!.validate()){
+                    _formKey.currentState!.save();
+
+                    toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
+                      to: AppRoutes.getStarted,
+                      from: AppRoutes.login,
+                      pageRouteType: PageRouteType.pushReplacement,
+                      isFromDashboardNav: false,
+                    ));
+                  }
+                },
+              ),
+              AppWidgets().gapH(40),
+              _orWidget(),
+              AppWidgets().gapH(15),
+              Text(
+                StringConstants.signInWith,
+                style: textRegularStyle(context,
+                    fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              AppWidgets().gapH(15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _socialMediaLogoWidget(appleLogo),
+                  AppWidgets().gapW24(),
+                  _socialMediaLogoWidget(fbLogo),
+                  AppWidgets().gapW24(),
+                  _socialMediaLogoWidget(googleLogo),
+                ],
+              ),
+            ],
+          ),
         ),
         !isKeyboardOpen! ? Spacer() : SizedBox(),
         !isKeyboardOpen ? Text.rich(TextSpan(

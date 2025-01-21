@@ -5,7 +5,7 @@ class StringConstants {
   static const String email = "Email";
   static const String emailError = "email not found";
   static const String password = "Password";
-  static const String passwordError = "Password not found";
+  static const String passwordError = "password not found";
   static const String f_password = "Forget Password?";
   static const String or = "Or";
   static const String signInWith = "Sign in With";
@@ -27,5 +27,20 @@ class StringConstants {
   //TODO:: QUESTION FLOW
   static const String buttonNext = "Next";
   static const String buttonSubmit = "Submit";
+
+  //TODO:: SEE FULL FEATURE
+  static const String seeFullFeatureTopTitle = "Voilà! Your perfect date is\nready 🎊";
+  static const String seeFullFeatureButtonTitle = "🎊 See The Full Plan";
+
+  //TODO:: PRICE PACKAGE PAGE
+
+  static const String priceTopTitle = "Time to take control";
+  static const String priceTopSubtitle = "Everyday you wait is another day you could have changed your life.";
+
+  //TODO:: EXCLUSIVE VIP OFFER
+
+  static const String vipTopTitle = "Exclusive VIP Offer";
+  static const String vipTopSubtitle = "Join 50,000+ people who have already transformed their love lives.";
+
 
 }

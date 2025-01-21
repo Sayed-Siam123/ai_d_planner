@@ -19,15 +19,17 @@ class CustomAppBar {
         elevation = 5.0,
         statusBarColor = AppColors.primaryColor,
         isDarkBrightness = true,
-      Widget? actionWidget}) {
+        titleFontSize = 20,
+        titleFontWeight = FontWeight.bold,
+      List<Widget>? actionWidget}) {
     return AppBar(
-      actions: [actionWidget ?? const SizedBox()],
+      actions: actionWidget ?? [const SizedBox()],
       surfaceTintColor: backgroundColor,
       backgroundColor: backgroundColor,
       toolbarHeight: 65,
       title: Text(
         title,
-        style: textRegularStyle(context,fontSize: 15, fontWeight: FontWeight.w600),
+        style: textRegularStyle(context,fontSize: double.parse(titleFontSize.toString()), fontWeight: titleFontWeight,color: AppColors.appBarTitleTextColor),
       ),
       elevation: elevation,
       shadowColor: AppColors.white.withOpacity(0.4),
@@ -62,7 +64,7 @@ class CustomAppBar {
           ),
         ),
       ),
-      leadingWidth: 65,
+      leadingWidth: onBackTap != null ? 65 : 0,
     );
     //TODO:: isDarkBrightness: true for android, false for ios
   }
