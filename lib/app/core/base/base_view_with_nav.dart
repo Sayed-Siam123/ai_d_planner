@@ -332,8 +332,8 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
           child: SizedBox(
             child: BottomNavigationBar(
               currentIndex: state.currentIndex!,
-              selectedLabelStyle: textRegularStyle(context, color: AppColors.primaryColor, fontSize: 12,fontWeight: FontWeight.w500,languageSelect: LanguageSelect.poppins),
-              unselectedLabelStyle: textRegularStyle(context, color: AppColors.liteGray, fontSize: 12,fontWeight: FontWeight.w400,languageSelect: LanguageSelect.poppins),
+              selectedLabelStyle: textRegularStyle(context, color: AppColors.primaryColor, fontSize: 12,fontWeight: FontWeight.w500),
+              unselectedLabelStyle: textRegularStyle(context, color: AppColors.liteGray, fontSize: 12,fontWeight: FontWeight.w400),
               enableFeedback: false,
               type: BottomNavigationBarType.fixed,
               elevation: 10,
@@ -430,7 +430,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
       //   icon,
       //   color: color,
       // ),
-      child: Image.asset(icon,height: double.parse(size.toString()),width: double.parse(size.toString()),),
+      child: Image.asset(icon,height: double.parse(size.toString()),width: double.parse(size.toString()),color: AppColors.primaryColor,),
     );
   }
 

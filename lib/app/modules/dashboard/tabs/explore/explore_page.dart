@@ -34,12 +34,12 @@ class _ExplorePageState extends State<ExplorePage> {
                 indicatorColor: AppColors.primaryColor,
                 labelColor: AppColors.primaryColor,
                 labelStyle: textRegularStyle(context,
-                    languageSelect: LanguageSelect.exo_2,
+                    languageSelect: LanguageSelect.gilroy,
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryColor),
                 unselectedLabelStyle: textRegularStyle(context,
-                    languageSelect: LanguageSelect.exo_2,
+                    languageSelect: LanguageSelect.gilroy,
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textGrayShade6),
@@ -134,7 +134,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(mapPin,height: 20,width: 20,),
+                      Image.asset(mapPin,height: 20,width: 20,color: AppColors.primaryColor),
                       AppWidgets().gapW8(),
                       Expanded(child: Text("Park Street, New York",style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 12,color: AppColors.textGrayShade7),))
                     ],
@@ -144,7 +144,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(budget,height: 20,width: 20,),
+                      Image.asset(budget,height: 20,width: 20,color: AppColors.primaryColor),
                       AppWidgets().gapW8(),
                       Text("\$500",style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 12,color: AppColors.textGrayShade7),)
                     ],
@@ -154,7 +154,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(calender,height: 20,width: 20,),
+                      Image.asset(calender,height: 20,width: 20,color: AppColors.primaryColor),
                       AppWidgets().gapW8(),
                       Text("02-01-2025",style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 12,color: AppColors.textGrayShade7),)
                     ],

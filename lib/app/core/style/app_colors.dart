@@ -19,7 +19,9 @@ class AppColors {
     },
   );
 
-  static const primaryColor = Color(0xFFD70365);
+
+  static const primaryColor = Color(0xFF55355C);
+  // static const primaryColor = Color(0xFFD70365);
 
   //primaryColor.withOpacity(0.7) --> splash, authentication
 
