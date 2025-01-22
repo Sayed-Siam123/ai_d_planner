@@ -157,7 +157,8 @@ class ExclusiveVipOffer extends BaseView {
                   Container(
                     width: double.maxFinite,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.04),
+                      gradient: AppColors.boxGradient,
+                      //color: AppColors.primaryColor.withValues(alpha: 0.04),
                       borderRadius: BorderRadius.circular(boxRadius),
                     ),
                     child: Padding(
@@ -168,7 +169,7 @@ class ExclusiveVipOffer extends BaseView {
                           AppWidgets().gapH(15),
                           Container(
                             decoration: BoxDecoration(
-                                color: AppColors.primaryColor
+                                color: AppColors.customHex("D70365")
                                     .withValues(alpha: 0.15),
                                 borderRadius:
                                     BorderRadius.circular(roundRadius)),
@@ -178,7 +179,7 @@ class ExclusiveVipOffer extends BaseView {
                               child: Text(
                                 "Offer end in 15:57",
                                 style: textRegularStyle(context,
-                                    color: AppColors.primaryColor,
+                                    color: AppColors.customHex("D70365"),
                                     fontSize: 12,
                                     fontWeight: FontWeight.normal),
                               ),

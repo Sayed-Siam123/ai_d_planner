@@ -31,6 +31,7 @@ const chatBotNavInActive = "${pngPath}chatbot_nav_inactive.png";
 
 const profileNavActive = "${pngPath}profile_nav_active.png";
 const profileNavInActive = "${pngPath}profile_nav_inactive.png";
+const homeTopBackgroundImage = "${pngPath}home_top_background.png";
 
 //svg
 const googleLogo = "${svgPath}google.svg";
@@ -44,7 +45,9 @@ const crown = "${svgPath}crown.svg";
 const menuList = "${svgPath}menu_plan.svg";
 const favActive = "${svgPath}fav_active_icon.svg";
 const aiBrain = "${svgPath}ai_brain.svg";
+const homeFrontImage = "${svgPath}home_front_image.svg";
 
+//home_top_background.svg
 //images
 
 //lottie

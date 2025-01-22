@@ -446,6 +446,17 @@ class AppHelper {
     );
   }
 
+  systemOverlayStyle2({color = AppColors.primaryColor,navBarColor = AppColors.whitePure, Brightness brightness = Brightness.light}){
+    return SystemUiOverlayStyle(
+      statusBarColor: color,
+      statusBarBrightness: brightness,
+      statusBarIconBrightness: brightness,
+      systemNavigationBarColor: navBarColor,
+      systemNavigationBarDividerColor: Colors.transparent,
+      systemNavigationBarIconBrightness: brightness,
+    );
+  }
+
   /*openWhatsapp() async {
     var whatsappUrl = "whatsapp://send?phone=+8801701208389" +
         "&text=${Uri.encodeComponent("")}";

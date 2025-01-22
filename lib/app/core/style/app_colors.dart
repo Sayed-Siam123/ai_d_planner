@@ -30,7 +30,8 @@ class AppColors {
   static const primaryAccentColor = Color(0xFF883C90);
   static const primaryLiteColor = Color(0xFF563078);
   static const secondaryColor = Color(0xFFC02231);
-  static const backgroundColor = Color(0xFFF9F9F9);
+  // static const backgroundColor = Color(0xFFF9F9F9);
+  static const backgroundColor = Color(0xFFFFF9F6);
   static const backgroundColorNew = Color(0xFFE2ECF4);
   static const accentColor = Color(0xFF703E97);
   static const errorColor = Color(0xFFED3675);
@@ -150,11 +151,15 @@ class AppColors {
   static const liteTextColor = Color(0xFF747474);
   static const cancelBackgroundColor = Color(0xFFFFECF2);
   static const profileHeaderBackgroundColor = Color(0xFFDBDEFF);
-
   static const unSelectedColor = Color(0xFFECECEC);
-
   static const bottomNavUnselectedColor = Color(0xFF9A9A9A);
 
+
+  // D70365
+
+  static Color customHex(String? hex){
+    return Color(int.parse("0xFF${hex.toString()}"));
+  }
 
 //#F08100
   // Gradient
@@ -212,5 +217,14 @@ class AppColors {
     ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+  );
+
+  static const boxGradient = LinearGradient(
+    colors: [
+      Color(0xFFCFD9DF),
+      Color(0xFFE2EBF0),
+    ],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
   );
 }

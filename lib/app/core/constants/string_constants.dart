@@ -1,7 +1,9 @@
 class StringConstants {
 
   //TODO:: LOGIN
-  static const String signIn = "Sign In";
+  static const String loginOrSignup = "Login or Sign Up";
+
+  static const String signIn = "Login";
   static const String email = "Email";
   static const String emailError = "email not found";
   static const String password = "Password";

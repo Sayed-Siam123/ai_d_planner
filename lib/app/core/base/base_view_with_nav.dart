@@ -4,6 +4,7 @@ import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/chatbot/chat_bot_page.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/explore_page.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/profile_page.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/question_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -88,13 +89,16 @@ class _DashboardPageState extends State<DashboardPage> {
               //   back();
               // }
             },
-            child: Scaffold(
-              key: globalScaffoldKey,
-              backgroundColor: AppColors.backgroundColor,
-              appBar: showAppBar(context, pageController),
-              drawerEnableOpenDragGesture: false,
-              body: SafeArea(
-                child: Column(
+            child: SafeArea(
+              top: false,
+              bottom: false,
+              child: Scaffold(
+                key: globalScaffoldKey,
+                backgroundColor: AppColors.backgroundColor,
+                appBar: showAppBar(context, pageController),
+                drawerEnableOpenDragGesture: false,
+                extendBodyBehindAppBar: true,
+                body: Column(
                   children: [
                     // jailBreakOrRootCheckerWidget(context),
                     internetConnectionStatusWidget(context),
@@ -108,19 +112,20 @@ class _DashboardPageState extends State<DashboardPage> {
                           _currentIndex = index;
                         },
                         children: <Widget>[
-                          HomePage(),
-                          ExplorePage(),
+                          HomePage(pageController: pageController,),
+                          ExplorePage(pageController: pageController,),
                           ChatBotPage(),
-                          ProfilePage()
+                          ProfilePage(),
+                          QuestionPage(pageController: pageController,),
                         ],
                       ),
                     ),
                   ],
                 ),
-              ),
-              bottomNavigationBar: BottomNavigationBarWidget(
-                currentIndex: _currentIndex,
-                pageController: pageController,
+                bottomNavigationBar: BottomNavigationBarWidget(
+                  currentIndex: _currentIndex,
+                  pageController: pageController,
+                ),
               ),
             ),
           ),
@@ -151,12 +156,15 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   showAppBar(context, PageController? pageController) {
+    var internetCubit = getIt<InternetCubit>();
+    var currentIndex = BlocProvider.of<BottomNavStateCubit>(context).state.currentIndex!;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         SystemChrome.setSystemUIOverlayStyle(AppHelper().systemOverlayStyle(
           color: AppColors.backgroundColor,
           navBarColor: AppColors.backgroundColor,
-          isDarkBrightness: Platform.isAndroid ? true : false,
+          isDarkBrightness: currentIndex == 0 ? true : false,
         )); //forcefully change status bar color and nav bar color change
       });
     });
@@ -167,22 +175,11 @@ class _DashboardPageState extends State<DashboardPage> {
       navBarColor: AppColors.backgroundColor,
     );
 
-    var internetCubit = getIt<InternetCubit>();
-    var currentIndex =
-    BlocProvider.of<BottomNavStateCubit>(context).state.currentIndex!;
-
     if (currentIndex == 0) {
-      appBar = CustomAppBar.customAppBar(
-        context,
-        "Date AI",
-        statusBarColor: AppColors.backgroundColor,
-        navBarColor: AppColors.backgroundColor,
-        backgroundColor: AppColors.backgroundColor,
+      appBar = CustomAppBar.noAppBar2(
+        statusBarColor: AppColors.transparentPure,
         isDarkBrightness: true,
-        elevation: 0.0,
-        isCenterTitle: true,
-        titleFontSize: 24,
-        titleFontWeight: FontWeight.bold
+        navBarColor: AppColors.transparentPure,
       );
     } else if (currentIndex == 1) {
       appBar = CustomAppBar.customAppBar(
@@ -227,7 +224,7 @@ class _DashboardPageState extends State<DashboardPage> {
         statusBarColor: AppColors.backgroundColor,
         navBarColor: AppColors.backgroundColor,
         backgroundColor: AppColors.backgroundColor,
-        isDarkBrightness: true,
+        isDarkBrightness: false,
         elevation: 0.0,
         // onBackTap: () {
         //   animateToPage(context, index: 0);

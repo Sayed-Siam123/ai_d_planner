@@ -8,7 +8,10 @@ import 'package:icons_flutter/icons_flutter.dart';
 import '../../../../core/style/app_style.dart';
 
 class ExplorePage extends StatefulWidget {
-  const ExplorePage({Key? key}) : super(key: key);
+
+  final PageController? pageController;
+
+  ExplorePage({Key? key,this.pageController}) : super(key: key);
 
   @override
   _ExplorePageState createState() => _ExplorePageState();
@@ -21,55 +24,57 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   Widget _bodyWidget(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: DefaultTabController(
-        length: 3,
-        initialIndex: 0,
-        child: Column(
-          children: [
-            TabBar(
-                indicatorSize: TabBarIndicatorSize.tab,
-                dividerColor: AppColors.textFieldBorderColor,
-                indicatorColor: AppColors.primaryColor,
-                labelColor: AppColors.primaryColor,
-                labelStyle: textRegularStyle(context,
-                    languageSelect: LanguageSelect.gilroy,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primaryColor),
-                unselectedLabelStyle: textRegularStyle(context,
-                    languageSelect: LanguageSelect.gilroy,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textGrayShade6),
-                indicator: UnderlineTabIndicator(
-                  borderSide:
-                      BorderSide(color: AppColors.primaryColor, width: 4),
-                  borderRadius: BorderRadius.circular(boxRadius),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: DefaultTabController(
+          length: 3,
+          initialIndex: 0,
+          child: Column(
+            children: [
+              TabBar(
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  dividerColor: AppColors.textFieldBorderColor,
+                  indicatorColor: AppColors.primaryColor,
+                  labelColor: AppColors.primaryColor,
+                  labelStyle: textRegularStyle(context,
+                      languageSelect: LanguageSelect.gilroy,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primaryColor),
+                  unselectedLabelStyle: textRegularStyle(context,
+                      languageSelect: LanguageSelect.gilroy,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textGrayShade6),
+                  indicator: UnderlineTabIndicator(
+                    borderSide:
+                        BorderSide(color: AppColors.primaryColor, width: 4),
+                    borderRadius: BorderRadius.circular(boxRadius),
+                  ),
+                  tabs: <Widget>[
+                    Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 12),
+                        child: Text('Favorite')),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 12),
+                        child: Text('Upcoming')),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 12),
+                        child: Text('Passed')),
+                  ]),
+              Expanded(
+                child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    _favourite(context),
+                    _upcoming(context),
+                    _passed(context),
+                  ],
                 ),
-                tabs: <Widget>[
-                  Padding(
-                      padding: const EdgeInsets.only(top: 12, bottom: 12),
-                      child: Text('Favorite')),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 12, bottom: 12),
-                      child: Text('Upcoming')),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 12, bottom: 12),
-                      child: Text('Passed')),
-                ]),
-            Expanded(
-              child: TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  _favourite(context),
-                  _upcoming(context),
-                  _passed(context),
-                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

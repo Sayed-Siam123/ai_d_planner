@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ChatBotPage extends StatefulWidget {
-  const ChatBotPage({Key? key}) : super(key: key);
+
+  final PageController? pageController;
+
+  const ChatBotPage({Key? key,this.pageController}) : super(key: key);
 
   @override
   _ChatBotPageState createState() => _ChatBotPageState();

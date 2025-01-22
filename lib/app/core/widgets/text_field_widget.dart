@@ -63,7 +63,7 @@ class CustomTextFieldWidget extends StatefulWidget {
     this.showPassword = false,
     this.onClickPasswordShowHide,
     this.customHeight = 50,
-    this.borderRadius = 6,
+    this.borderRadius = 16,
     this.focusNode,
     this.controller = null,
     this.onChange = null,

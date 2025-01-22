@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/core/constants/size_constants.dart';
 import 'package:ai_d_planner/app/core/style/app_colors.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../../../../core/utils/helper/app_helper.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,25 +20,27 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        children: [
-          AppWidgets().gapH(40),
-          Image.asset(profilePicDummy,height: 80,),
-          AppWidgets().gapH(16),
-          Text("Leslie Alex",style: textRegularStyle(context,fontSize: 18,fontWeight: FontWeight.w600),),
-          AppWidgets().gapH(24),
-          _successRateContainer(context),
-          AppWidgets().gapH(24),
-          _profileOption(context,icon: Icons.settings,title: "My Account",onTap: () {},),
-          AppWidgets().gapH(12),
-          _profileOption(context,icon: Icons.manage_accounts_rounded,title: "Setting",onTap: () {},),
-          AppWidgets().gapH(12),
-          _profileOption(context,icon: Icons.support_agent,title: "Support",onTap: () {},),
-          AppWidgets().gapH(12),
-          _profileOption(context,icon: Icons.logout,title: "Log out",onTap: () {},),
-        ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          children: [
+            AppWidgets().gapH(40),
+            Image.asset(profilePicDummy,height: 80,),
+            AppWidgets().gapH(16),
+            Text("Leslie Alex",style: textRegularStyle(context,fontSize: 18,fontWeight: FontWeight.w600),),
+            AppWidgets().gapH(24),
+            _successRateContainer(context),
+            AppWidgets().gapH(24),
+            _profileOption(context,icon: Icons.settings,title: "My Account",onTap: () {},),
+            AppWidgets().gapH(12),
+            _profileOption(context,icon: Icons.manage_accounts_rounded,title: "Setting",onTap: () {},),
+            AppWidgets().gapH(12),
+            _profileOption(context,icon: Icons.support_agent,title: "Support",onTap: () {},),
+            AppWidgets().gapH(12),
+            _profileOption(context,icon: Icons.logout,title: "Log out",onTap: () {},),
+          ],
+        ),
       ),
     );
   }

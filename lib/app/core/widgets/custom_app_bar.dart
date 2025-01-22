@@ -197,4 +197,14 @@ class CustomAppBar {
         systemOverlayStyle: AppHelper().systemOverlayStyle(navBarColor: navBarColor,color: statusBarColor,isDarkBrightness: Platform.isAndroid ? true : false,));
     //TODO:: isDarkBrightness: true for android, false for ios
   }
+
+  static noAppBar2({navBarColor = AppColors.whitePure,statusBarColor = AppColors.primaryColor,isDarkBrightness = false}) {
+    return AppBar(
+        toolbarHeight: 0.0,
+        elevation: 0.0,
+        backgroundColor: navBarColor,
+        surfaceTintColor: Colors.transparent,
+        systemOverlayStyle: AppHelper().systemOverlayStyle(navBarColor: navBarColor,color: statusBarColor,isDarkBrightness: isDarkBrightness,));
+    //TODO:: isDarkBrightness: true for android, false for ios
+  }
 }

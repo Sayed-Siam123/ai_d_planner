@@ -144,7 +144,7 @@ class LoginPage extends BaseView {
           key: _formKey,
           child: Column(
             children: [
-              AppWidgets().gapH(16),
+              AppWidgets().gapH(32),
               Center(
                   child: Image.asset(
                     loginLogo,
@@ -153,7 +153,7 @@ class LoginPage extends BaseView {
                   )),
               AppWidgets().gapH(30),
               Text(
-                StringConstants.signIn,
+                StringConstants.loginOrSignup,
                 style: textRegularStyle(context,
                     fontSize: 25, fontWeight: FontWeight.w700),
               ),
