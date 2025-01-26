@@ -39,7 +39,7 @@ class CustomTextFieldWidget extends StatefulWidget {
       isReadOnly;
   final dynamic borderColor;
   final int? borderRadius;
-  final VoidCallback? onClickPasswordShowHide;
+  final VoidCallback? onClickPasswordShowHide,onTap;
   final FocusNode? focusNode;
   final TextEditingController? controller;
   final int? customHeight;
@@ -62,6 +62,7 @@ class CustomTextFieldWidget extends StatefulWidget {
     this.showLabelSeparate = true,
     this.showPassword = false,
     this.onClickPasswordShowHide,
+    this.onTap = null,
     this.customHeight = 50,
     this.borderRadius = 16,
     this.focusNode,
@@ -140,6 +141,9 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
             child: TextField(
               controller: widget.controller,
               focusNode: widget.focusNode,
+              onTap: () {
+                widget.onTap?.call();
+              },
               autofillHints: widget.autoFillEnabled!
                   ? widget.isPasswordType == false
                       ? [AutofillHints.username]
@@ -198,6 +202,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                 labelText: !widget.showLabelSeparate ? '${widget.label}' : "",
                 contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                 hintText: widget.hint ?? "",
+                hintStyle: textRegularStyle(context),
                 constraints: BoxConstraints(
                   maxHeight: field.errorText != null
                       ? double.parse((widget.customHeight! + 20).toString())
@@ -207,8 +212,8 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                   // maxWidth: MediaQuery.of(context).size.width,
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                fillColor: !widget.fieldEnable! ? AppColors.textGrayShade4 : widget.fillColor,
-                filled: !widget.fieldEnable! ? false : true,
+                fillColor: !widget.fieldEnable! ? widget.fillColor : widget.fillColor,
+                filled: true,
                 suffixIcon: widget.showSuffixIcon
                     ? widget.isPasswordType && widget.hasCustomIcon
                         ? IconButton(

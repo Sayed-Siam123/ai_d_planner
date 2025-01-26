@@ -43,6 +43,7 @@ class StringConstants {
 
   static const String vipTopTitle = "Exclusive VIP Offer";
   static const String vipTopSubtitle = "Join 50,000+ people who have already transformed their love lives.";
-
+  static const String appBarTitleLovePlanAI = "LovePlanAI";
+  static const String appBarBottomTitle = "Your Perfect Date is Just a Few Questions Away 🌟";
 
 }

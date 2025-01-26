@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:ai_d_planner/app/core/constants/string_constants.dart';
 import 'package:beamer/beamer.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +133,7 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: multiBlocProvidersList,
       child: MaterialApp.router(
-        title: 'Marooned VPN',
+        title: StringConstants.appBarTitleLovePlanAI,
         builder: EasyLoading.init(),
         routeInformationParser: BeamerParser(),
         routerDelegate: routerDelegate,

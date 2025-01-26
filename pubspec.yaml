@@ -39,6 +39,7 @@ dependencies:
   form_builder_validators: ^11.1.1 # form builder validator use
   smooth_page_indicator: ^1.2.0+3
   pausable_timer: ^3.1.0
+  bottom_picker: ^2.10.1
 
   supabase_flutter: ^2.8.3
 

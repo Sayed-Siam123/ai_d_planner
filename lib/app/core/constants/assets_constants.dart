@@ -16,9 +16,9 @@ const copy = "${pngPath}copy_clipboard.png";
 const calender = "${pngPath}calender.png";
 const budget = "${pngPath}budget.png";
 const mapPin = "${pngPath}map_pin.png";
+const calenderIcon = "${pngPath}map_pin.png";
 const profilePicDummy = "${pngPath}profile_pic_dummy.png";
-
-//profile_pic_dummy.png
+const customQuestionIcon = "${pngPath}custom_question_icon.png";
 
 const homeNavActive = "${pngPath}home_nav_active.png";
 const homeNavInActive = "${pngPath}home_nav_inactive.png";

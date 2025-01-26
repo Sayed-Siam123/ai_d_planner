@@ -1,8 +1,10 @@
 import 'package:ai_d_planner/app/core/constants/size_constants.dart';
+import 'package:ai_d_planner/app/core/constants/string_constants.dart';
 import 'package:ai_d_planner/app/core/style/app_colors.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/core/widgets/custom_buttons_widget.dart';
+import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -51,9 +53,10 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: Column(
         children: [
-          Center(child: Text("Date AI",style: textRegularStyle(context,isWhiteColor: true,fontWeight: FontWeight.bold,fontSize: 24),)),
+          AppWidgets().gapH(10),
+          Center(child: Text(StringConstants.appBarTitleLovePlanAI,style: textRegularStyle(context,isWhiteColor: true,fontWeight: FontWeight.bold,fontSize: 24),)),
           AppWidgets().gapH24(),
-          Center(child: Text("Your Perfect Date is Just a Few Questions Away 🌟",textAlign: TextAlign.center,style: textRegularStyle(context,isWhiteColor: true,fontWeight: FontWeight.bold,fontSize: 20),)),
+          Center(child: Text(StringConstants.appBarBottomTitle,textAlign: TextAlign.center,style: textRegularStyle(context,isWhiteColor: true,fontWeight: FontWeight.bold,fontSize: 20),)),
         ],
       ),
     );
@@ -96,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         onPressed: () async {
-                          widget.pageController!.jumpToPage(4);
+                          widget.pageController!.jumpToPage(dashboardQuestion);
                         },
                       ),
                     ],

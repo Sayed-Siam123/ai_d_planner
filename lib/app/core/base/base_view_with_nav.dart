@@ -14,6 +14,7 @@ import 'package:icons_flutter/icons_flutter.dart';
 import '../../binding/central_dependecy_injection.dart';
 import '../../data/models/page_route_arguments.dart';
 import '../../modules/dashboard/tabs/home/home_page.dart';
+import '../../modules/dashboard/tabs/questions/bloc/question_page_bloc.dart';
 import '../../routes/app_pages.dart';
 import '../../services/bottom_nav_state/bloc/bottom_nav_cubit.dart';
 import '../../services/bottom_nav_state/bloc/bottom_nav_state.dart';
@@ -39,11 +40,19 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+
   PageController? pageController;
 
   int _currentIndex = 0;
 
   final GlobalKey<ScaffoldState> globalScaffoldKey = GlobalKey();
+
+  final _homePageKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _explorePageKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _chatPageKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _profilePageKey = GlobalKey();
+  final _quesAnsPageKey = GlobalKey();
+
 
   var internetProvider = getIt<InternetCubit>();
 
@@ -112,11 +121,11 @@ class _DashboardPageState extends State<DashboardPage> {
                           _currentIndex = index;
                         },
                         children: <Widget>[
-                          HomePage(pageController: pageController,),
-                          ExplorePage(pageController: pageController,),
-                          ChatBotPage(),
-                          ProfilePage(),
-                          QuestionPage(pageController: pageController,),
+                          HomePage(key: _homePageKey,pageController: pageController,),
+                          ExplorePage(key: _explorePageKey,pageController: pageController,),
+                          ChatBotPage(key: _chatPageKey,pageController: pageController,),
+                          ProfilePage(key: _profilePageKey,),
+                          QuestionPage(key: _quesAnsPageKey,pageController: pageController),
                         ],
                       ),
                     ),

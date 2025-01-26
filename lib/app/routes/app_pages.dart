@@ -48,6 +48,12 @@ final routerDelegate = BeamerDelegate(
   ).call,
 );
 
+const int dashboardHome = 0;
+const int dashboardExplore = 1;
+const int dashboardChatBot = 2;
+const int dashboardProfile = 3;
+const int dashboardQuestion = 4;
+
 void toReplacementNamed(path,{PageRouteArg? args}){
   routerDelegate.beamToReplacementNamed(path,data: args);
 }
