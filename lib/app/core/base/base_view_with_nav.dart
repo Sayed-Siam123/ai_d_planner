@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
+import 'package:ai_d_planner/app/core/constants/string_constants.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/chatbot/chat_bot_page.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/explore_page.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/profile_page.dart';
-import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/question_page.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/views/question_page.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/views/response_generation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,6 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
   final GlobalKey<ScaffoldState> _profilePageKey = GlobalKey();
   final _quesAnsPageKey = GlobalKey();
 
+  final _responseGenPageKey = GlobalKey();
 
   var internetProvider = getIt<InternetCubit>();
 
@@ -121,11 +124,12 @@ class _DashboardPageState extends State<DashboardPage> {
                           _currentIndex = index;
                         },
                         children: <Widget>[
-                          HomePage(key: _homePageKey,pageController: pageController,),
-                          ExplorePage(key: _explorePageKey,pageController: pageController,),
-                          ChatBotPage(key: _chatPageKey,pageController: pageController,),
-                          ProfilePage(key: _profilePageKey,),
-                          QuestionPage(key: _quesAnsPageKey,pageController: pageController),
+                          HomePage(key: _homePageKey,pageController: pageController,), //0
+                          ExplorePage(key: _explorePageKey,pageController: pageController,), //1
+                          //ChatBotPage(key: _chatPageKey,pageController: pageController,),
+                          ProfilePage(key: _profilePageKey,), //2
+                          QuestionPage(key: _quesAnsPageKey,pageController: pageController), //3
+                          ResponseGenerationPage(key: _responseGenPageKey,pageController: pageController,) //4
                         ],
                       ),
                     ),
@@ -214,7 +218,7 @@ class _DashboardPageState extends State<DashboardPage> {
     } else if (currentIndex == 2) {
       appBar = CustomAppBar.customAppBar(
         context,
-        "",
+        StringConstants.appBarTitleLovePlanAI,
         isCenterTitle: true,
         statusBarColor: AppColors.backgroundColor,
         navBarColor: AppColors.backgroundColor,
@@ -228,7 +232,7 @@ class _DashboardPageState extends State<DashboardPage> {
     } else if (currentIndex == 3) {
       appBar = CustomAppBar.customAppBar(
         context,
-        "Date AI",
+        StringConstants.appBarTitleLovePlanAI,
         isCenterTitle: true,
         statusBarColor: AppColors.backgroundColor,
         navBarColor: AppColors.backgroundColor,
@@ -364,15 +368,15 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                     exploreNavActive,
                   ),
                 ),
-                BottomNavigationBarItem(
-                  icon: iconsFunc(
-                    chatBotNavInActive
-                  ),
-                  label: "Chatbot",
-                  activeIcon: iconsFunc(
-                    chatBotNavActive
-                  ),
-                ),
+                // BottomNavigationBarItem(
+                //   icon: iconsFunc(
+                //     chatBotNavInActive
+                //   ),
+                //   label: "Chatbot",
+                //   activeIcon: iconsFunc(
+                //     chatBotNavActive
+                //   ),
+                // ),
                 BottomNavigationBarItem(
                   icon: iconsFunc(
                     profileNavInActive

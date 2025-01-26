@@ -1,18 +1,30 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:ai_d_planner/app/data/dummy_json/question_page_dummy_json.dart';
 import 'package:ai_d_planner/app/data/models/question_page_dummy_model.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/repository/gemini_repo.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../../core/utils/helper/print_log.dart';
+import '../../../../../data/models/plan_from_ai_model.dart';
 import 'question_page_event.dart';
 import 'question_page_state.dart';
 
 class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
+
+  GeminiRepo? geminiRepo;
+
   QuestionPageBloc() : super(QuestionPageState(questionPageStateStatus: QuestionPageStateStatus.init)) {
+
+    geminiRepo = GeminiRepo();
+
     on<FetchQuestionFromDummy>(_fetchQuestionFromDummy);
     on<SelectOption>(_selectOption);
     on<ResetOption>(_resetOption);
+    on<ResetAll>(_resetAll);
+    on<FetchFromGemini>(_fetchFromGemini);
   }
 
   _fetchQuestionFromDummy(FetchQuestionFromDummy event, Emitter<QuestionPageState> emit) async {
@@ -163,5 +175,37 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
         questionPageDummyData: updatedQuestions
     ));
   }
+  _resetAll(ResetAll event, Emitter<QuestionPageState> emit) async {
+    emit(state.copyWith(
+        questionPageStateStatus: QuestionPageStateStatus.init
+    ));
+  }
 
+  _fetchFromGemini(FetchFromGemini event, Emitter<QuestionPageState> emit) async {
+    emit(state.copyWith(
+        questionPageStateApiStatus: QuestionPageStateApiStatus.loading
+    ));
+
+    var data = await geminiRepo?.getPlansFromGemini();
+
+    log(data!.candidates![0].content!.parts![0].text!);
+    
+    var datam = await compute(deserializePlansFromText, data!.candidates![0].content!.parts![0].text!);
+    
+    printLog(datam?.plans![0].datePlanId.toString());
+
+    //WORKING --
+    // NOW NEED TO DO ACTUAL JSON WITH ACTUAL DATA
+
+    emit(state.copyWith(
+        questionPageStateApiStatus: QuestionPageStateApiStatus.success
+    ));
+
+  }
+
+}
+
+PlansFromAiModel? deserializePlansFromText(String data){
+  var dataMap = plansFromAiModelFromJson(data.toString());
+  return dataMap;
 }

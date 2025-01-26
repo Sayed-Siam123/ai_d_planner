@@ -31,3 +31,16 @@ class ResetOption extends QuestionPageEvent {
   // TODO: implement props
   List<Object?> get props => [questionIndex];
 }
+
+class ResetAll extends QuestionPageEvent {
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class FetchFromGemini extends QuestionPageEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}

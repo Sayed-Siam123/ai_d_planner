@@ -4,12 +4,15 @@ import 'package:ai_d_planner/app/core/style/app_colors.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/core/widgets/custom_buttons_widget.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_page_event.dart';
 import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../binding/central_dependecy_injection.dart';
 import '../../../../core/constants/assets_constants.dart';
 import '../../../../core/utils/helper/print_log.dart';
+import '../questions/bloc/question_page_bloc.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -99,6 +102,9 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         onPressed: () async {
+                          var questionBloc = getIt<QuestionPageBloc>();
+                          questionBloc.add(ResetAll());
+
                           widget.pageController!.jumpToPage(dashboardQuestion);
                         },
                       ),
