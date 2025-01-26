@@ -56,7 +56,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
         // Retrieve existing selected answers or initialize a new list
         selectedAnswersForMultiple = updatedQuestions[event.questionIndex!].selected != null
-            ? List<Map<String, dynamic>>.from(updatedQuestions[event.questionIndex!].selected)
+            ? List<Map<String, dynamic>>.from(updatedQuestions[event.questionIndex!].selected!)
             : [];
 
         if(selectedAnswersForMultiple.isNotEmpty && selectedAnswersForMultiple[0]["option"].toString().toLowerCase() == "custom"){
@@ -100,7 +100,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
         };
 
         List<Map<String, dynamic>> selectedAnswersForCustom = updatedQuestions[event.questionIndex!].selected != null
-            ? List<Map<String, dynamic>>.from(updatedQuestions[event.questionIndex!].selected)
+            ? List<Map<String, dynamic>>.from(updatedQuestions[event.questionIndex!].selected!)
             : [];
 
         if(selectedAnswersForCustom.isNotEmpty && selectedAnswersForCustom[0]["option"].toString().toLowerCase() != "custom"){
@@ -132,7 +132,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
       printLog("Handle single selection");
 
       List<Map<String, dynamic>> selectedAnswersForSingle = updatedQuestions[event.questionIndex!].selected != null
-          ? List<Map<String, dynamic>>.from(updatedQuestions[event.questionIndex!].selected)
+          ? List<Map<String, dynamic>>.from(updatedQuestions[event.questionIndex!].selected!)
           : [];
 
       Map<String, dynamic> selectedAnswer = {
@@ -186,13 +186,29 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
         questionPageStateApiStatus: QuestionPageStateApiStatus.loading
     ));
 
-    var data = await geminiRepo?.getPlansFromGemini();
 
-    log(data!.candidates![0].content!.parts![0].text!);
-    
-    var datam = await compute(deserializePlansFromText, data!.candidates![0].content!.parts![0].text!);
-    
-    printLog(datam?.plans![0].datePlanId.toString());
+    log(questionPageDummyModelToJson(event.questionList!));
+
+    var timeData = event.questionList![0].selected as List<Map<String,dynamic>>;
+
+    printLog(timeData);
+
+    //WILL WORK TOMORROW
+
+    // printLog(event.questionList![1].selected);
+
+    // String? time = _getTimeFormat(event.questionList![1].selected);
+    // printLog(time);
+
+    // var data = await geminiRepo?.getPlansFromGemini(
+    //
+    // );
+    //
+    // log(data!.candidates![0].content!.parts![0].text!);
+    //
+    // var datam = await compute(deserializePlansFromText, data!.candidates![0].content!.parts![0].text!);
+    //
+    // printLog(datam?.plans![0].datePlanId.toString());
 
     //WORKING --
     // NOW NEED TO DO ACTUAL JSON WITH ACTUAL DATA
@@ -201,6 +217,10 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
         questionPageStateApiStatus: QuestionPageStateApiStatus.success
     ));
 
+  }
+
+  String? _getTimeFormat(String? dateTime) {
+    return "";
   }
 
 }

@@ -11,6 +11,7 @@ import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_
 import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:bottom_picker/resources/arrays.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,8 +48,6 @@ class _QuestionPageState extends State<QuestionPage> {
     if(questionBloc.state.questionPageStateStatus != QuestionPageStateStatus.success){
       questionBloc.add(FetchQuestionFromDummy());
     }
-
-    questionBloc.add(FetchFromGemini());
   }
 
   @override
@@ -399,15 +398,15 @@ class _QuestionPageState extends State<QuestionPage> {
       bottomPickerTheme: BottomPickerTheme.plumPlate,
       pickerTitle: Text(
         'Set the event exact time and date',
-        style: TextStyle(
+        style: textRegularStyle(
+          context,
           fontWeight: FontWeight.bold,
           fontSize: 15,
           color: Colors.black,
         ),
       ),
       onSubmit: (date) {
-        printLog(date);
-        textEditingController?.text = date.toString();
+        textEditingController?.text = _getFormattedTime(date.toString());
       },
       onCloseButtonPressed: () {
         printLog('Picker closed');
@@ -420,6 +419,7 @@ class _QuestionPageState extends State<QuestionPage> {
           DateTime.now().year + 5, DateTime.now().month, DateTime.now().day),
       initialDateTime: DateTime.now(),
       buttonSingleColor: AppColors.primaryColor,
+      titlePadding: EdgeInsets.all(10),
     ).show(context!);
   }
 
@@ -487,7 +487,8 @@ class _QuestionPageState extends State<QuestionPage> {
       printLog("Form is valid. Submitting data...");
       var data = questionPageDummyModelToJson(questionList);
       log(data);
-      widget.pageController?.jumpToPage(dashboardResponseGeneration);
+      questionBloc.add(FetchFromGemini(pageController: widget.pageController,questionList: questionList));
+      //widget.pageController?.jumpToPage(dashboardResponseGeneration);
       // Add your submit logic here
     } else {
       // Show error message
@@ -505,5 +506,20 @@ class _QuestionPageState extends State<QuestionPage> {
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
+  }
+
+  String _getFormattedTime(String time){
+    try {
+      // Parse the input time string into a DateTime object
+      DateTime dateTime = DateTime.parse(time);
+
+      // Format the DateTime object into a readable string
+      String formattedTime = DateFormat('dd-MMM-yyyy, hh:mm a').format(dateTime);
+
+      return formattedTime;
+    } catch (e) {
+      // Handle parsing errors by returning an empty string or error message
+      return "Invalid time format";
+    }
   }
 }

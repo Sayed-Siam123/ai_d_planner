@@ -4,6 +4,7 @@ import 'package:ai_d_planner/app/core/constants/size_constants.dart';
 import 'package:ai_d_planner/app/core/style/app_colors.dart';
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:bottom_picker/resources/arrays.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -334,8 +335,7 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
         ),
       ),
       onSubmit: (date) {
-        printLog(date);
-        textEditingController?.text = date.toString();
+        textEditingController?.text = _getFormattedTime(date.toString());
       },
       onCloseButtonPressed: () {
         printLog('Picker closed');
@@ -347,6 +347,7 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
           DateTime.now().year + 5, DateTime.now().month, DateTime.now().day),
       initialDateTime: DateTime.now(),
       buttonSingleColor: AppColors.primaryColor,
+      titlePadding: EdgeInsets.all(10),
     ).show(context!);
   }
 
@@ -414,6 +415,7 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
       printLog("Form is valid. Submitting data...");
       var data = questionPageDummyModelToJson(questionList);
       log(data);
+
       // Add your submit logic here
     } else {
       // Show error message
@@ -432,4 +434,20 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
       curve: Curves.easeInOut,
     );
   }
+
+  String _getFormattedTime(String time){
+    try {
+      // Parse the input time string into a DateTime object
+      DateTime dateTime = DateTime.parse(time);
+
+      // Format the DateTime object into a readable string
+      String formattedTime = DateFormat('dd-MMM-yyyy, hh:mm a').format(dateTime);
+
+      return formattedTime;
+    } catch (e) {
+      // Handle parsing errors by returning an empty string or error message
+      return "Invalid time format";
+    }
+  }
+
 }
