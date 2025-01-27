@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/core/constants/size_constants.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/base/base_view.dart';
 import '../../../core/style/app_colors.dart';
@@ -33,26 +35,11 @@ class SplashPage extends BaseView {
   Widget body(BuildContext context) {
     // TODO: implement body
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: Swiper(
-            indicatorLayout: PageIndicatorLayout.SLIDE,
-            itemBuilder: (BuildContext context,int index){
-              return ClipRRect(borderRadius: BorderRadius.circular(swipeCardRadius),child: Image.network("https://via.assets.so/album.png?id=${index+1}&q=95&w=360&h=360&fit=fill",fit: BoxFit.fill,));
-            },
-            itemCount: 10,
-            // pagination: SwiperPagination(),
-            // control: SwiperControl(),
-            layout: SwiperLayout.STACK,
-            itemWidth: 300,
-            itemHeight: 300,
-            axisDirection: AxisDirection.right,
-            allowImplicitScrolling: true,
-            curve: Curves.easeInOut,
-            outer: false,
-          ),
+        Center(
+          child: Image.asset(loginLogo),
         ),
-
         // Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
         //   style: textRegularStyle(context,fontWeight: FontWeight.normal,languageSelect: LanguageSelect.gilroy,fontSize: 20),),
       ],
@@ -87,20 +74,25 @@ class SplashPage extends BaseView {
   }
 
   void _proceedToNext() async{
-    await Future.delayed(Duration(seconds: 2));
-    // toReplacementNamed(AppRoutes.login,args: PageRouteArg(
-    //   to: AppRoutes.login,
-    //   from: AppRoutes.splash,
-    //   pageRouteType: PageRouteType.pushReplacement,
-    //   isFromDashboardNav: false,
-    // ));
+    SupabaseClient _supabase = Supabase.instance.client;
 
-    toReplacementNamed(AppRoutes.dashboard,args: PageRouteArg(
-      to: AppRoutes.dashboard,
-      from: AppRoutes.splash,
-      pageRouteType: PageRouteType.pushReplacement,
-      isFromDashboardNav: false,
-    ));
+    await Future.delayed(Duration(seconds: 2));
+
+    if(_supabase.auth.currentUser != null){
+      toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
+        to: AppRoutes.getStarted,
+        from: AppRoutes.splash,
+        pageRouteType: PageRouteType.pushReplacement,
+        isFromDashboardNav: false,
+      ));
+    } else{
+      toReplacementNamed(AppRoutes.login,args: PageRouteArg(
+        to: AppRoutes.login,
+        from: AppRoutes.splash,
+        pageRouteType: PageRouteType.pushReplacement,
+        isFromDashboardNav: false,
+      ));
+    }
   }
 
 }

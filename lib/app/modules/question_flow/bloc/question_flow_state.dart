@@ -1,3 +1,4 @@
+import 'package:ai_d_planner/app/data/models/question_page_dummy_model.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../data/models/get_started_ques_model.dart';
@@ -12,7 +13,7 @@ enum QuestionFlowStateStatus{
 class QuestionFlowState extends Equatable{
 
   final QuestionFlowStateStatus? questionFlowStateStatus;
-  final List<GetStartedQuesModel>? getStartedQues;
+  final List<QuestionPageDummyModel>? getStartedQues;
 
   final int? currentIndex;
 
@@ -20,7 +21,7 @@ class QuestionFlowState extends Equatable{
 
   QuestionFlowState copyWith({
     QuestionFlowStateStatus? questionFlowStateStatus,
-    List<GetStartedQuesModel>? getStartedQues,
+    List<QuestionPageDummyModel>? getStartedQues,
     int? currentIndex
 }){
     return QuestionFlowState(

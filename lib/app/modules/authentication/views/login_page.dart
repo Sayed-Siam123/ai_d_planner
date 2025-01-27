@@ -9,6 +9,8 @@ import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/data/models/page_route_arguments.dart';
+import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_bloc.dart';
+import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_event.dart';
 import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +39,8 @@ class LoginPage extends BaseView {
   FocusNode? passwordFocus = FocusNode();
   bool? isPasswordShow;
   final passwordObscureCubit = getIt<PasswordObscureCubit>();
+  final authBloc = getIt<AuthenticationBloc>();
+
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -225,15 +229,11 @@ class LoginPage extends BaseView {
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 onPressed: () async {
-
                   if(_formKey.currentState!.validate()){
                     _formKey.currentState!.save();
-
-                    toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
-                      to: AppRoutes.getStarted,
-                      from: AppRoutes.login,
-                      pageRouteType: PageRouteType.pushReplacement,
-                      isFromDashboardNav: false,
+                    authBloc.add(InitiateLogin(
+                      email: emailController?.value.text,
+                      password: passwordController?.value.text
                     ));
                   }
                 },

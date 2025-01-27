@@ -180,7 +180,7 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
               padding: EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: state.plansFromAiModel!.plans![index].activities!.map((e) {
+                children: state.plansFromAiModel!.plans![index].activities!.map((activity) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 8.0),
                     child: Container(
@@ -195,19 +195,19 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(e.startTime.toString(),style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),),
+                            Text(activity.startTime.toString(),style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),),
                             AppWidgets().gapH16(),
                             RichText(
                               text: TextSpan(
                                 children: [
                                   // Normal part of the sentence
                                   TextSpan(
-                                    text: '✨ ${e.description!.split(' ').sublist(0, e.description!.split(' ').length - 2).join(' ')} ',
+                                    text: '✨ ${activity.description!.split(' ').sublist(0, activity.description!.split(' ').length - 2).join(' ')} ',
                                     style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
                                   ),
                                   // Bold last two words
                                   TextSpan(
-                                    text: e.description!.split(' ').sublist(e.description!.split(' ').length - 2).join(' '),
+                                    text: activity.description!.split(' ').sublist(activity.description!.split(' ').length - 2).join(' '),
                                     style: textRegularStyle(context, fontWeight: FontWeight.bold, fontSize: 20),
                                   ),
                                 ],
@@ -259,7 +259,6 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
               Image.asset(calenderGray,scale: 1.5),
               AppWidgets().gapW16(),
               Image.asset(share,scale: 1.5),
-
             ],
           ),
         ],

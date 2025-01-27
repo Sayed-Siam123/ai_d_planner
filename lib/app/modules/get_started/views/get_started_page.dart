@@ -7,6 +7,8 @@ import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/data/models/page_route_arguments.dart';
+import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_bloc.dart';
+import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_event.dart';
 import 'package:ai_d_planner/app/modules/get_started/bloc/get_started_bloc.dart';
 import 'package:ai_d_planner/app/modules/get_started/bloc/get_started_event.dart';
 import 'package:ai_d_planner/app/modules/get_started/bloc/get_started_state.dart';
@@ -14,6 +16,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/constants/size_constants.dart';
 import '../../../core/style/app_colors.dart';
@@ -33,6 +36,7 @@ class GetStartedPage extends BaseView {
   late PageController? pageController;
 
   final getStartedBloc = getIt<GetStartedBloc>();
+  final authBloc = getIt<AuthenticationBloc>();
 
   @override
   PreferredSizeWidget? appBar(BuildContext context) {
@@ -187,6 +191,9 @@ class GetStartedPage extends BaseView {
             fontSize: 16,
             fontWeight: FontWeight.w700,
             onPressed: () async {
+
+              // authBloc.add(Logout());
+
               toReplacementNamed(AppRoutes.quesFlow,args: PageRouteArg(
                 to: AppRoutes.quesFlow,
                 from: AppRoutes.getStarted,

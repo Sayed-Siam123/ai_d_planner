@@ -25,3 +25,10 @@ class InitiateLogin extends AuthenticationEvent {
   List<Object?> get props => [email,password];
 
 }
+
+class Logout extends AuthenticationEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+
+}
