@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:ai_d_planner/app/binding/central_dependecy_injection.dart';
 import 'package:ai_d_planner/app/core/style/app_colors.dart';
@@ -55,9 +56,9 @@ class _QuestionPageState extends State<QuestionPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(AppHelper().systemOverlayStyle(
-        color: AppColors.backgroundColor,
-        navBarColor: AppColors.backgroundColor,
-        isDarkBrightness: true,
+        color: AppColors.transparentPure,
+        navBarColor: AppColors.transparentPure,
+        isDarkBrightness: Platform.isIOS ? true : false,
       )); //forcefully change status bar color and nav bar color change
     });
 
@@ -92,7 +93,7 @@ class _QuestionPageState extends State<QuestionPage> {
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: Column(
         children: [
-          AppWidgets().gapH(10),
+          AppWidgets().gapH(20),
           Row(
             children: [
               Material(

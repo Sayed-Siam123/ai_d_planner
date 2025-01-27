@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_app_version_checker/flutter_app_version_checker.dart';
 
 import '../../binding/central_dependecy_injection.dart';
 import '../../routes/app_pages.dart';
 import '../../routes/app_routes.dart';
 import '../connection_manager/internet_cubit/internet_cubit.dart';
 import '../constants/enum_constants.dart';
+import '../custom_lib/app_version_checker/flutter_app_version_checker.dart';
 import '../style/app_colors.dart';
 import '../style/app_style.dart';
 import '../utils/helper/app_helper.dart';

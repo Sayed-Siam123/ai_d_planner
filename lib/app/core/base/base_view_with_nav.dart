@@ -175,17 +175,19 @@ class _DashboardPageState extends State<DashboardPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         SystemChrome.setSystemUIOverlayStyle(AppHelper().systemOverlayStyle(
-          color: AppColors.backgroundColor,
-          navBarColor: AppColors.backgroundColor,
-          isDarkBrightness: currentIndex == 0 ? true : false,
+          color: AppColors.transparentPure,
+          navBarColor: AppColors.transparentPure,
+          isDarkBrightness: currentIndex != 0
+              ? (Platform.isIOS ? false : true)  // Reverse for non-zero index
+              : (Platform.isIOS ? true : false),
         )); //forcefully change status bar color and nav bar color change
       });
     });
 
     PreferredSizeWidget appBar = CustomAppBar.noAppBar(
-      statusBarColor: AppColors.backgroundColor,
+      statusBarColor: AppColors.transparentPure,
       isDarkBrightness: true,
-      navBarColor: AppColors.backgroundColor,
+      navBarColor: AppColors.transparentPure,
     );
 
     if (currentIndex == 0) {
@@ -197,8 +199,8 @@ class _DashboardPageState extends State<DashboardPage> {
     } else if (currentIndex == 1) {
       appBar = CustomAppBar.customAppBar(
         context,
-        "Your Favourite Date Plans!!",
-        isCenterTitle: false,
+        StringConstants.appBarTitleLovePlanAI,
+        isCenterTitle: true,
         statusBarColor: AppColors.backgroundColor,
         navBarColor: AppColors.backgroundColor,
         backgroundColor: AppColors.backgroundColor,
@@ -225,9 +227,9 @@ class _DashboardPageState extends State<DashboardPage> {
         backgroundColor: AppColors.backgroundColor,
         isDarkBrightness: true,
         elevation: 0.0,
-        onBackTap: () {
-          animateToPage(context, index: 0);
-        },
+        // onBackTap: () {
+        //   animateToPage(context, index: 0);
+        // },
       );
     } else if (currentIndex == 3) {
       appBar = CustomAppBar.customAppBar(

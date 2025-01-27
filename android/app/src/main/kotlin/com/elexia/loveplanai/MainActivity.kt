@@ -1,4 +1,4 @@
-package com.example.ai_d_planner
+package com.elexia.loveplanai
 
 import io.flutter.embedding.android.FlutterActivity
 

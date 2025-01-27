@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/core/constants/size_constants.dart';
@@ -48,7 +49,7 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
       SystemChrome.setSystemUIOverlayStyle(AppHelper().systemOverlayStyle(
         color: AppColors.backgroundColor,
         navBarColor: AppColors.backgroundColor,
-        isDarkBrightness: false,
+        isDarkBrightness: Platform.isIOS ? false : true,
       )); //forcefully change status bar color and nav bar color change
     });
 
@@ -59,6 +60,7 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
       child: SafeArea(
         child: Column(
           children: [
+            AppWidgets().gapH(20),
             _customAppBar(context),
             AppWidgets().gapH24(),
             Expanded(

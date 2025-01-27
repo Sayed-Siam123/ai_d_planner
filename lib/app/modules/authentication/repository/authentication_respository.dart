@@ -51,6 +51,7 @@ class AuthenticationRepository{
       return response;
     } on AuthException catch (e) {
       // Handle specific AuthException
+      print(e.message);
       AppWidgets().getSnackBar(message: e.message,status: SnackBarStatus.error);
       return null; // Return the error message to the caller
     } catch (e) {
