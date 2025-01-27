@@ -47,9 +47,9 @@ class Plan {
 class Activity {
   final String? name;
   final String? startTime;
-  final int? durationHours;
+  final double? durationHours;
   final String? description;
-  final int? estimatedCost;
+  final double? estimatedCost;
   final String? location;
 
   Activity({
@@ -64,9 +64,9 @@ class Activity {
   factory Activity.fromJson(Map<String, dynamic> json) => Activity(
     name: json["name"],
     startTime: json["startTime"],
-    durationHours: json["durationHours"],
+    durationHours: double.parse(json["durationHours"].toString()),
     description: json["description"],
-    estimatedCost: json["estimatedCost"],
+    estimatedCost: double.parse(json["estimatedCost"].toString()),
     location: json["location"],
   );
 

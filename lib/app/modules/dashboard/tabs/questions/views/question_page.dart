@@ -192,10 +192,10 @@ class _QuestionPageState extends State<QuestionPage> {
 
   _getQuestionTile(BuildContext? context, QuestionPageState state, index) {
     bool isCustomSelected =
-        state.questionPageDummyData![index].selected != null &&
-            state.questionPageDummyData![index].selected
+        state.questionPageDummyData![index].selectedData != null &&
+            state.questionPageDummyData![index].selectedData
                 is List<Map<String, dynamic>> &&
-            (state.questionPageDummyData![index].selected
+            (state.questionPageDummyData![index].selectedData
                     as List<Map<String, dynamic>>)
                 .any((selected) =>
                     selected["option"].toString().toLowerCase() == "custom");
@@ -236,38 +236,28 @@ class _QuestionPageState extends State<QuestionPage> {
               Wrap(
                 spacing: 15,
                 runSpacing: 15,
-                children:
-                    state.questionPageDummyData![index].options!.map((option) {
-                  int optionIndex = state.questionPageDummyData![index].options!
-                      .indexOf(option);
+                children: state.questionPageDummyData![index].options!.map((option) {
+                  int optionIndex = state.questionPageDummyData![index].options!.indexOf(option);
 
                   // Determine if the option is selected
                   bool isSelected = false;
-                  var selectedAnswers =
-                      state.questionPageDummyData![index].selected;
+                  List<SelectedOption>? selectedAnswers = state.questionPageDummyData![index].selectedData;
 
-                  if (selectedAnswers != null &&
-                      selectedAnswers is List<Map<String, dynamic>>) {
-                    // Handle both multiple and single selection since `selected` is a list
+                  if (selectedAnswers != null) {
+                    // Check if the option is selected
                     isSelected = selectedAnswers.any((selected) =>
-                        selected["optionID"] == optionIndex &&
-                        selected["option"].toString().toLowerCase() ==
-                            option.toLowerCase());
+                    selected.optionID == optionIndex &&
+                        selected.option?.toLowerCase() == option.toLowerCase());
                   }
 
                   // Special case: custom option selection
-                  if (option.toLowerCase() == "custom" &&
-                      selectedAnswers != null &&
-                      selectedAnswers is List<Map<String, dynamic>>) {
+                  if (option.toLowerCase() == "custom" && selectedAnswers != null) {
                     isSelected = selectedAnswers.any((selected) =>
-                        selected["option"].toString().toLowerCase() ==
-                        "custom");
+                    selected.option?.toLowerCase() == "custom");
                   }
 
                   return Material(
-                    color: isSelected
-                        ? AppColors.primaryColor
-                        : AppColors.whitePure,
+                    color: isSelected ? AppColors.primaryColor : AppColors.whitePure,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(roundRadius),
                       side: BorderSide(
@@ -280,10 +270,10 @@ class _QuestionPageState extends State<QuestionPage> {
                         // Trigger the appropriate event for single or multiple selection
                         questionBloc.add(SelectOption(
                           questionIndex: index,
-                          selectedAnswer: {
-                            "optionID": optionIndex,
-                            "option": option,
-                          },
+                          selectedAnswer: SelectedOption(
+                            optionID: optionIndex,
+                            option: option,
+                          ),
                         ));
                       },
                       borderRadius: BorderRadius.circular(roundRadius),
@@ -291,56 +281,55 @@ class _QuestionPageState extends State<QuestionPage> {
                         padding: const EdgeInsets.all(13.0),
                         child: option.toLowerCase() != "custom"
                             ? Text(
-                                option,
-                                style: textRegularStyle(
-                                  context,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  isWhiteColor: isSelected,
-                                ),
-                              )
+                          option,
+                          style: textRegularStyle(
+                            context,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            isWhiteColor: isSelected,
+                          ),
+                        )
                             : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.asset(
-                                    customQuestionIcon,
-                                    scale: 1.8,
-                                  ),
-                                  AppWidgets().gapW8(),
-                                  Text(
-                                    option,
-                                    style: textRegularStyle(
-                                      context,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      isWhiteColor: isSelected,
-                                    ),
-                                  ),
-                                ],
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              customQuestionIcon,
+                              scale: 1.8,
+                            ),
+                            AppWidgets().gapW8(),
+                            Text(
+                              option,
+                              style: textRegularStyle(
+                                context,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                isWhiteColor: isSelected,
                               ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
                 }).toList(),
               ),
               AppWidgets().gapH12(),
-              isCustomSelected
+              // Display a text field if "custom" is selected
+              state.questionPageDummyData![index].selectedData?.any(
+                    (selected) => selected.option?.toLowerCase() == "custom",
+              ) ??
+                  false
                   ? _getTextField(
-                      context,
-                      state.questionPageDummyData![index].ques,
-                      state.questionPageDummyData![index].ques,
-                      state.questionPageDummyData![index].textEditingController,
-                      state.questionPageDummyData![index].focusNode,
-                      textFieldType: "text",
-                      isActive: true,
-                      isReadOnly:
-                          state.questionPageDummyData![index].textFieldType ==
-                                      "dateField" ||
-                                  state.questionPageDummyData![index]
-                                          .textFieldType ==
-                                      "location"
-                              ? true
-                              : false)
+                context,
+                state.questionPageDummyData![index].ques,
+                state.questionPageDummyData![index].ques,
+                state.questionPageDummyData![index].textEditingController,
+                state.questionPageDummyData![index].focusNode,
+                textFieldType: "text",
+                isActive: true,
+                isReadOnly: state.questionPageDummyData![index].textFieldType == "dateField" ||
+                    state.questionPageDummyData![index].textFieldType == "location",
+              )
                   : const SizedBox(),
             ],
           ),
@@ -436,11 +425,10 @@ class _QuestionPageState extends State<QuestionPage> {
       if (question.isRequired == true) {
         if (question.options != null && question.options!.isNotEmpty) {
           // Check if "Custom" is selected
-          if (question.selected != null &&
-              question.selected is List<Map<String, dynamic>>) {
-            bool isCustomSelected = question.selected.any((selected) =>
-                selected["option"] != null &&
-                selected["option"].toString().toLowerCase() == "custom");
+          if (question.selectedData != null) {
+            bool isCustomSelected = question.selectedData!.any((selected) =>
+            selected.option != null &&
+                selected.option!.toLowerCase() == "custom");
 
             if (isCustomSelected) {
               // Check if textEditingController is empty for "Custom"
@@ -453,7 +441,7 @@ class _QuestionPageState extends State<QuestionPage> {
               }
             } else {
               // General validation for non-custom options
-              if (question.selected.isEmpty) {
+              if (question.selectedData!.isEmpty) {
                 isValid = false;
                 int i = questionList.indexOf(question);
                 _scrollToQuestion(i);
@@ -461,7 +449,7 @@ class _QuestionPageState extends State<QuestionPage> {
                 break;
               }
             }
-          } else if (question.selected == null) {
+          } else {
             // If nothing is selected
             isValid = false;
             int i = questionList.indexOf(question);
@@ -485,15 +473,15 @@ class _QuestionPageState extends State<QuestionPage> {
     if (isValid) {
       // Proceed with submission
       printLog("Form is valid. Submitting data...");
-      var data = questionPageDummyModelToJson(questionList);
-      log(data);
       questionBloc.add(FetchFromGemini(pageController: widget.pageController,questionList: questionList));
-      //widget.pageController?.jumpToPage(dashboardResponseGeneration);
       // Add your submit logic here
     } else {
       // Show error message
       printLog("Validation failed: $errorMessage");
-      AppWidgets().getSnackBar(status: SnackBarStatus.error,message: errorMessage);
+      AppWidgets().getSnackBar(
+        status: SnackBarStatus.error,
+        message: errorMessage,
+      );
     }
   }
 

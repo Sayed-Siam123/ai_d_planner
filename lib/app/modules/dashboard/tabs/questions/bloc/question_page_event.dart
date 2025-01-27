@@ -14,7 +14,7 @@ class SelectOption extends QuestionPageEvent {
 
   final int? questionIndex;
 
-  final dynamic selectedAnswer;
+  final SelectedOption? selectedAnswer;
 
   SelectOption({this.questionIndex,this.selectedAnswer});
 
