@@ -79,8 +79,14 @@ class SplashPage extends BaseView {
     await Future.delayed(Duration(seconds: 2));
 
     if(_supabase.auth.currentUser != null){
-      toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
-        to: AppRoutes.getStarted,
+      // toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
+      //   to: AppRoutes.getStarted,
+      //   from: AppRoutes.splash,
+      //   pageRouteType: PageRouteType.pushReplacement,
+      //   isFromDashboardNav: false,
+      // ));
+      toReplacementNamed(AppRoutes.dashboard,args: PageRouteArg(
+        to: AppRoutes.dashboard,
         from: AppRoutes.splash,
         pageRouteType: PageRouteType.pushReplacement,
         isFromDashboardNav: false,

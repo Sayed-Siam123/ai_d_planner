@@ -4,8 +4,10 @@ import 'dart:developer';
 import 'package:ai_d_planner/app/core/utils/helper/app_helper.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/data/dummy_json/question_page_dummy_json.dart';
+import 'package:ai_d_planner/app/data/models/GetPlanResponseModel.dart';
 import 'package:ai_d_planner/app/data/models/question_page_dummy_model.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/repository/gemini_repo.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/repository/response_supabase_repository.dart';
 import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -19,16 +21,19 @@ import 'question_page_state.dart';
 class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
   GeminiRepo? geminiRepo;
+  ResponseSupaBaseRepository? responseSupaBaseRepository;
 
   QuestionPageBloc() : super(QuestionPageState(questionPageStateStatus: QuestionPageStateStatus.init)) {
 
     geminiRepo = GeminiRepo();
+    responseSupaBaseRepository = ResponseSupaBaseRepository();
 
     on<FetchQuestionFromDummy>(_fetchQuestionFromDummy);
     on<SelectOption>(_selectOption);
     on<ResetOption>(_resetOption);
     on<ResetAll>(_resetAll);
     on<FetchFromGemini>(_fetchFromGemini);
+    on<ChangeStatusFav>(_changeStatusFav);
   }
 
   _fetchQuestionFromDummy(FetchQuestionFromDummy event, Emitter<QuestionPageState> emit) async {
@@ -205,10 +210,13 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
     var plansData = await compute(deserializePlansFromText, data!.candidates![0].content!.parts![0].text!);
 
     if(plansData != null){
+      await _storePlansInDB(timeData,plansData.plans,location);
+
       emit(state.copyWith(
         questionPageStateApiStatus: QuestionPageStateApiStatus.success,
-        plansFromAiModel: plansData
+        plansFromDB: await _getLastThreePlans()
       ));
+
       event.pageController?.jumpToPage(dashboardResponseGeneration);
     } else{
       AppWidgets().getSnackBar(status: SnackBarStatus.error,message: "Something went wrong, Please try again");
@@ -216,6 +224,20 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
     AppHelper().hideLoader();
 
+  }
+
+  _changeStatusFav(ChangeStatusFav event, Emitter<QuestionPageState> emit) async{
+    AppHelper().showLoader(hasMask: true,dismissOnTap: true);
+
+    await responseSupaBaseRepository?.changeFavStatus(
+      id: event.planID,
+      status: event.status
+    );
+
+    emit(state.copyWith(
+        plansFromDB: await _getLastThreePlans()
+    ));
+    AppHelper().hideLoader();
   }
 
   String? _getTimeFormat(String? dateTime) {
@@ -239,6 +261,29 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
     return formattedDate;
   }
+
+  _storePlansInDB(String? dateDateTime,List<Plan>? plans,location) async{
+    for(var plan in plans!){
+      await responseSupaBaseRepository?.createPlans(plan: jsonEncode(plan.toJson()),dateTime: dateDateTime,location: location);
+    }
+  }
+
+  _getAllPlans() async{
+    var data = await responseSupaBaseRepository?.getAllPlans();
+    printLog(data!.length);
+  }
+
+  Future<List<GetPlanResponseModel>?> _getLastThreePlans() async{
+    var data = await responseSupaBaseRepository?.getAllPlans();
+    data!.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+    List<GetPlanResponseModel> latestThree = data.length > 3
+        ? data.sublist(0, 3)
+        : data;
+
+    return latestThree;
+  }
+
+
 
 }
 

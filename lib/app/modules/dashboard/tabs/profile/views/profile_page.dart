@@ -1,14 +1,20 @@
 import 'dart:io';
 
+import 'package:ai_d_planner/app/binding/central_dependecy_injection.dart';
 import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/core/constants/size_constants.dart';
 import 'package:ai_d_planner/app/core/style/app_colors.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
+import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_bloc.dart';
+import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_event.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/bloc/profile_bloc.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/bloc/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/utils/helper/app_helper.dart';
+import '../../../../../core/utils/helper/app_helper.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -18,6 +24,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  var authBloc = getIt<AuthenticationBloc>();
+  var profileBloc = getIt<ProfileBloc>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -26,9 +42,20 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             AppWidgets().gapH(40),
-            Image.asset(profilePicDummy,height: 80,),
+            // Image.asset(profilePicDummy,height: 80,),
+            Icon(Icons.account_circle,size: 110,color: AppColors.primaryColor,),
             AppWidgets().gapH(16),
-            Text("Leslie Alex",style: textRegularStyle(context,fontSize: 18,fontWeight: FontWeight.w600),),
+            BlocBuilder<ProfileBloc,ProfileState>(
+              builder: (context, state) {
+                Widget widget = const SizedBox();
+
+                if(state.profileStateStatus == ProfileStateStatus.success){
+                  widget = Text("${state.profileName}",style: textRegularStyle(context,fontSize: 18,fontWeight: FontWeight.w600),);
+                }
+
+                return widget;
+              },
+            ),
             AppWidgets().gapH(24),
             _successRateContainer(context),
             AppWidgets().gapH(24),
@@ -38,7 +65,9 @@ class _ProfilePageState extends State<ProfilePage> {
             AppWidgets().gapH(12),
             _profileOption(context,icon: Icons.support_agent,title: "Support",onTap: () {},),
             AppWidgets().gapH(12),
-            _profileOption(context,icon: Icons.logout,title: "Log out",onTap: () {},),
+            _profileOption(context,icon: Icons.logout,title: "Log out",onTap: () {
+              authBloc.add(Logout());
+            },),
           ],
         ),
       ),

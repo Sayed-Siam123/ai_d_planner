@@ -52,3 +52,15 @@ class FetchFromGemini extends QuestionPageEvent {
   // TODO: implement props
   List<Object?> get props => [pageController,questionList];
 }
+
+class ChangeStatusFav extends QuestionPageEvent {
+
+  final int? planID;
+  final bool? status;
+
+  ChangeStatusFav({this.planID,this.status});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [planID,status];
+}

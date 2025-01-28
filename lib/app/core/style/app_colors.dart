@@ -73,6 +73,7 @@ class AppColors {
   static const textGrayShade5 = Color(0xFFBBBBBB);
   static const textGrayShade6 = Color(0xFF949494);
   static const textGrayShade7 = Color(0xFF828282);
+  static const textGrayShade8 = Color(0xFF484C52);
 
   static const textGreen = Color(0xFF12A84F);
   static const textGreenNew = Color(0xFF598F17);

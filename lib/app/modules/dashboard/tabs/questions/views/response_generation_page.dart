@@ -7,6 +7,7 @@ import 'package:ai_d_planner/app/core/constants/size_constants.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_page_event.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_page_state.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/views/question_answer_dialog_widget.dart';
 import 'package:card_swiper/card_swiper.dart';
@@ -70,7 +71,7 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return _planItemWidget(context, index, state);
                     },
-                    itemCount: state.plansFromAiModel!.plans!.length,
+                    itemCount: state.plansFromDB!.length,
                     itemWidth: double.maxFinite,
                     axisDirection: AxisDirection.right,
                     allowImplicitScrolling: true,
@@ -175,14 +176,14 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _topLevel(context,state!.plansFromAiModel!.plans![index!].datePlanId!.toString()),
+          _topLevel(context,state!.plansFromDB![index!].id.toString(),state.plansFromDB![index].plan!.datePlanId.toString(),isFav: state.plansFromDB![index].isFav),
           Expanded(
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: state.plansFromAiModel!.plans![index].activities!.map((activity) {
+                children: state.plansFromDB![index].plan!.activities!.map((activity) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 8.0),
                     child: Container(
@@ -204,12 +205,20 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                                 children: [
                                   // Normal part of the sentence
                                   TextSpan(
-                                    text: '✨ ${activity.description!.split(' ').sublist(0, activity.description!.split(' ').length - 2).join(' ')} ',
+                                    text: '✨ ${activity.description!.replaceAll(".", "")} at ',
+                                    style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
+                                  ),
+                                  TextSpan(
+                                    text: activity.location != null && activity.location!.split(' ').length > 2
+                                        ? '${activity.location!.toLowerCase().split(' ').sublist(0, activity.location!.split(' ').length - 2).join(' ')} '
+                                        : '${activity.location?.toLowerCase() ?? ''} ',
                                     style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
                                   ),
                                   // Bold last two words
                                   TextSpan(
-                                    text: activity.description!.split(' ').sublist(activity.description!.split(' ').length - 2).join(' '),
+                                    text: activity.location != null && activity.location!.split(' ').length > 2
+                                        ? activity.location!.toLowerCase().split(' ').sublist(activity.location!.split(' ').length - 2).join(' ')
+                                        : '',
                                     style: textRegularStyle(context, fontWeight: FontWeight.bold, fontSize: 20),
                                   ),
                                 ],
@@ -221,9 +230,6 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                     ),
                   );
                 },).toList(),
-                // children: [
-                //   Text(jsonEncode(state.plansFromAiModel!.plans![index].activities!)),
-                // ],
               ),
             ),
           ),
@@ -235,7 +241,7 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                 style: textRegularStyle(context,fontWeight: FontWeight.w600,fontSize: 20),
                 children: [
                   TextSpan(
-                      text: "\$${state.plansFromAiModel!.plans![index].totalEstimatedCost!.toString()}",
+                      text: "\$${state.plansFromDB![index].plan!.totalEstimatedCost!.toString()}",
                       style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),
                   ),
                 ]
@@ -247,16 +253,30 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
     );
   }
 
-  _topLevel(BuildContext? context,String? planID) {
+  _topLevel(BuildContext? context,String? planID,String? datePlanID,{bool? isFav}) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(child: Text("Plan 0${planID.toString()}",style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),)),
+          Expanded(child: Text("Plan 0${datePlanID.toString()}",style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),)),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(favIcon,scale: 1.5,),
+              Material(
+                color: AppColors.transparentPure,
+                borderRadius: BorderRadius.circular(roundRadius),
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(roundRadius),
+                    onTap: () {
+                      questionBloc.add(ChangeStatusFav(
+                        planID: int.parse(planID.toString()),
+                        status: !isFav
+                      ));
+                    },
+                    child: Icon(!isFav! ? Icons.favorite_border_rounded : Icons.favorite_rounded,color: !isFav ? AppColors.textGrayShade8 : AppColors.red,size: 27,)),
+              ),
               AppWidgets().gapW16(),
               Image.asset(calenderGray,scale: 1.5),
               AppWidgets().gapW16(),

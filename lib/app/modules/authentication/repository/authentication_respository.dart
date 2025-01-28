@@ -21,7 +21,7 @@ class AuthenticationRepository{
         await createUserProfile(
             name: name!,
             role: "user",
-            authId: response.user!.id
+            authId: user.id
         );
         await _supabase.auth.signOut();
         return response;
@@ -98,5 +98,16 @@ class AuthenticationRepository{
       printLog("Error creating profile: $e");
     }
   }
+
+
+  /*
+  *final data = await _supabase
+          .from('followers_with_names')
+          .select('*')
+          .eq(
+            'user_id',
+            _currentUuid,
+          )
+  * */
 
 }

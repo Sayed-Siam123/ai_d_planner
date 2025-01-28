@@ -8,4 +8,5 @@ class ApiEndPoints {
 
 class DBConfig {
   static const String profileTable = "profile";
+  static const String plansTable = "plans";
 }

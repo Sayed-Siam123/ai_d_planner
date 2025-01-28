@@ -4,6 +4,9 @@ import 'package:ai_d_planner/app/core/style/app_colors.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/core/widgets/custom_buttons_widget.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/bloc/profile_bloc.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/bloc/profile_event.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/bloc/profile_state.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_page_event.dart';
 import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -26,11 +29,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  var profileBloc = getIt<ProfileBloc>();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     printLog("Home page");
+
+    if(profileBloc.state.profileStateStatus != ProfileStateStatus.success){
+      profileBloc.add(FetchProfileData());
+    }
   }
 
   @override

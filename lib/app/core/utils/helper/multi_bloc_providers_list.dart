@@ -1,4 +1,6 @@
 import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_bloc.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_bloc.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/bloc/profile_bloc.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_page_bloc.dart';
 import 'package:ai_d_planner/app/modules/get_started/bloc/get_started_bloc.dart';
 import 'package:ai_d_planner/app/modules/question_flow/bloc/question_flow_bloc.dart';
@@ -31,5 +33,11 @@ final List<SingleChildWidget> multiBlocProvidersList  = [
     ),
     BlocProvider<QuestionPageBloc>(
       create: (context) => getIt<QuestionPageBloc>(),
+    ),
+    BlocProvider<ExploreBloc>(
+      create: (context) => getIt<ExploreBloc>(),
+    ),
+    BlocProvider<ProfileBloc>(
+      create: (context) => getIt<ProfileBloc>(),
     ),
   ];
