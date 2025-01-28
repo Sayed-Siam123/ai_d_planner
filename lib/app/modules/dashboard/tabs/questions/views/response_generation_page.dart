@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/core/constants/size_constants.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
@@ -11,6 +12,7 @@ import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_page_state.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/views/question_answer_dialog_widget.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -176,7 +178,13 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _topLevel(context,state!.plansFromDB![index!].id.toString(),state.plansFromDB![index].plan!.datePlanId.toString(),isFav: state.plansFromDB![index].isFav),
+          _topLevel(context,state!.plansFromDB![index!].id.toString(),state.plansFromDB![index].plan!.datePlanId.toString(),
+              isFav: state.plansFromDB![index].isFav,
+            title: "Date plan ${state.plansFromDB![index].plan!.datePlanId.toString()}",
+            desc: "",
+            location: state.plansFromDB![index].location,
+            dateTime: state.plansFromDB![index].dateDateTime
+          ),
           Expanded(
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
@@ -253,7 +261,7 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
     );
   }
 
-  _topLevel(BuildContext? context,String? planID,String? datePlanID,{bool? isFav}) {
+  _topLevel(BuildContext? context,String? planID,String? datePlanID,{bool? isFav,title,desc,location,dateTime}) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
@@ -278,7 +286,21 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                     child: Icon(!isFav! ? Icons.favorite_border_rounded : Icons.favorite_rounded,color: !isFav ? AppColors.textGrayShade8 : AppColors.red,size: 27,)),
               ),
               AppWidgets().gapW16(),
-              Image.asset(calenderGray,scale: 1.5),
+              Material(
+                color: AppColors.transparentPure,
+                borderRadius: BorderRadius.circular(roundRadius),
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(roundRadius),
+                    onTap: () async{
+                      await add2calender(
+                        dateTime: dateTime,
+                        eventTitle: title,
+                        eventDescription: desc,
+                        eventLocation: location
+                      );
+                    },
+                    child: Image.asset(calenderGray,scale: 1.5)),
+              ),
               AppWidgets().gapW16(),
               Image.asset(share,scale: 1.5),
             ],
@@ -287,4 +309,31 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
       ),
     );
   }
+
+  add2calender({String? eventTitle,String? eventDescription,String? eventLocation,String? dateTime}){
+    final Event event = Event(
+      title: '$eventTitle',
+      description: '$eventDescription',
+      location: '$eventLocation',
+      startDate: _getDateFromAPI(dateTime)!,
+      endDate: _getDateFromAPI(dateTime)!,
+      // iosParams: IOSParams(
+      //   reminder: Duration(/* Ex. hours:1 */), // on iOS, you can set alarm notification after your event.
+      //   url: 'https://www.example.com', // on iOS, you can set url to your event.
+      // ),
+      // androidParams: AndroidParams(
+      //   emailInvites: [], // on Android, you can add invite emails to your event.
+      // ),
+    );
+
+    Add2Calendar.addEvent2Cal(event);
+  }
+
+  DateTime? _getDateFromAPI(String? dateTime) {
+    // Parse the input string
+    DateFormat inputFormat = DateFormat("dd-MMM-yyyy, hh:mm a");
+    DateTime parsedDate = inputFormat.parse(dateTime!);
+    return parsedDate;
+  }
+
 }

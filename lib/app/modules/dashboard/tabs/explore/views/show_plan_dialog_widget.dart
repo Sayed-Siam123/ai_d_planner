@@ -1,8 +1,10 @@
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:ai_d_planner/app/binding/central_dependecy_injection.dart';
 import 'package:ai_d_planner/app/data/models/GetPlanResponseModel.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_bloc.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_event.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_page_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/assets_constants.dart';
@@ -37,7 +39,13 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _topLevel(context, widget.planData!.id.toString(),widget.planData!.plan!.datePlanId.toString(),isFav: widget.planData!.isFav),
+          _topLevel(context, widget.planData!.id.toString(),widget.planData!.plan!.datePlanId.toString(),
+              isFav: widget.planData!.isFav,
+              title: "Date plan ${widget.planData!.plan!.datePlanId.toString()}",
+              desc: "",
+              location: widget.planData!.location.toString(),
+              dateTime: widget.planData!.dateDateTime.toString()
+          ),
           Divider(height: 0,),
           Expanded(
             child: SingleChildScrollView(
@@ -115,7 +123,7 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
     );
   }
 
-  _topLevel(BuildContext? context,String? planID,String? datePlanID,{bool? isFav}) {
+  _topLevel(BuildContext? context,String? planID,String? datePlanID,{bool? isFav,title,desc,location,dateTime}) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
@@ -141,7 +149,21 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
                     child: Icon(!isFav! ? Icons.favorite_border_rounded : Icons.favorite_rounded,color: !isFav ? AppColors.textGrayShade8 : AppColors.red,size: 27,)),
               ),
               AppWidgets().gapW16(),
-              Image.asset(calenderGray,scale: 1.5),
+              Material(
+                color: AppColors.transparentPure,
+                borderRadius: BorderRadius.circular(roundRadius),
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(roundRadius),
+                    onTap: () async{
+                      await add2calender(
+                          dateTime: dateTime,
+                          eventTitle: title,
+                          eventDescription: desc,
+                          eventLocation: location
+                      );
+                    },
+                    child: Image.asset(calenderGray,scale: 1.5)),
+              ),
               AppWidgets().gapW16(),
               Image.asset(share,scale: 1.5),
             ],
@@ -150,4 +172,31 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
       ),
     );
   }
+
+  add2calender({String? eventTitle,String? eventDescription,String? eventLocation,String? dateTime}){
+    final Event event = Event(
+      title: '$eventTitle',
+      description: '$eventDescription',
+      location: '$eventLocation',
+      startDate: _getDateFromAPI(dateTime)!,
+      endDate: _getDateFromAPI(dateTime)!,
+      // iosParams: IOSParams(
+      //   reminder: Duration(/* Ex. hours:1 */), // on iOS, you can set alarm notification after your event.
+      //   url: 'https://www.example.com', // on iOS, you can set url to your event.
+      // ),
+      // androidParams: AndroidParams(
+      //   emailInvites: [], // on Android, you can add invite emails to your event.
+      // ),
+    );
+
+    Add2Calendar.addEvent2Cal(event);
+  }
+
+  DateTime? _getDateFromAPI(String? dateTime) {
+    // Parse the input string
+    DateFormat inputFormat = DateFormat("dd-MMM-yyyy, hh:mm a");
+    DateTime parsedDate = inputFormat.parse(dateTime!);
+    return parsedDate;
+  }
+
 }

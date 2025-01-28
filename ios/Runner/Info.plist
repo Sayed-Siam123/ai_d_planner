@@ -45,5 +45,12 @@
     <true/>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
+
+    <key>NSCalendarsUsageDescription</key>
+    <string>required for the calender access</string>
+
+    <key>NSContactsUsageDescription</key>
+    <string>Required for the location autocomplete</string>
+
   </dict>
 </plist>
