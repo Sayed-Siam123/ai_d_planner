@@ -23,7 +23,7 @@ class PlansFromAiModel {
 class Plan {
   final int? datePlanId;
   final List<Activity>? activities;
-  final int? totalEstimatedCost;
+  final dynamic totalEstimatedCost;
 
   Plan({
     this.datePlanId,

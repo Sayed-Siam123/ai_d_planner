@@ -67,4 +67,17 @@ class ResponseSupaBaseRepository {
     }
   }
 
+  Future<void> deletePlan({int? id}) async {
+    try {
+      final response = await _supabase
+          .from(DBConfig.plansTable)
+          .delete()
+          .eq('id', id!);
+
+    } catch (e) {
+      // Handle any exception thrown by Supabase
+      AppWidgets().getSnackBar(message: e,status: SnackBarStatus.error);
+    }
+  }
+
 }

@@ -102,9 +102,9 @@ class _HomePageState extends State<HomePage> {
                       AppWidgets().gapH24(),
                       CustomAppMaterialButton(
                         title: "Generate My Plan! 🎉",
-                        backgroundColor: AppColors.customHex("D0A2DA").withValues(alpha: 0.1),
-                        borderColor: AppColors.customHex("D0A2DA"),
-                        textColor: AppColors.customHex("D0A2DA"),
+                        backgroundColor: AppColors.transparentPure,
+                        borderColor: AppColors.primaryColor,
+                        textColor: AppColors.primaryColor,
                         usePrefixIcon: false,
                         needSplashEffect: true,
                         borderRadius: 50,

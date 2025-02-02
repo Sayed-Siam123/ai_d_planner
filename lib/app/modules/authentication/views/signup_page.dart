@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ai_d_planner/app/core/base/base_view.dart';
 import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_bloc.dart';
 import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_event.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -244,9 +245,38 @@ class SignupPage extends BaseView {
               }
             },
           ),
-          AppWidgets().gapH(40),
+          AppWidgets().gapH(30),
+          // !isKeyboardOpen! ? Spacer() : SizedBox(),
+          !isKeyboardOpen! ? Text.rich(TextSpan(
+              text: StringConstants.alreadyHaveAnyAccount,
+              style: textRegularStyle(context, fontWeight: FontWeight.w500),
+              children: [
+                TextSpan(text: " "),
+                TextSpan(
+                  text: StringConstants.signIn,
+                  style: textRegularStyle(context,
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.w700)
+                      .copyWith(decoration: TextDecoration.underline),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      _tapOnSignIn();
+                    },
+                )
+              ])) : SizedBox(),
+          !isKeyboardOpen ? AppWidgets().gapH(10) : SizedBox(),
         ],
       ),
     );
+  }
+
+  void _tapOnSignIn() {
+    toReplacementNamed(AppRoutes.login,args: PageRouteArg(
+      to: AppRoutes.login,
+      from: AppRoutes.signup,
+      pageRouteType: PageRouteType.pushReplacement,
+      isFromDashboardNav: false,
+      isBackAction: true
+    ));
   }
 }

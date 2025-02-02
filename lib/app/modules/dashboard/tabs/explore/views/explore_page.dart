@@ -1,3 +1,4 @@
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:ai_d_planner/app/binding/central_dependecy_injection.dart';
 import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/core/constants/size_constants.dart';
@@ -149,10 +150,10 @@ class _ExplorePageState extends State<ExplorePage> {
       },
       child: GridView.count(
           crossAxisCount: 2,
-          childAspectRatio: 7.0 / 10.0,
-          shrinkWrap: true,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+          childAspectRatio: 7.5 / 10.0,
+          shrinkWrap: false,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
           physics: AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(vertical: 20.0),
           children: List<Widget>.generate(plansList.length, (index) {
@@ -166,7 +167,6 @@ class _ExplorePageState extends State<ExplorePage> {
                 },
                 child: GridTile(
                   child: Container(
-                    padding: EdgeInsets.all(20.0),
                     decoration: BoxDecoration(
                         color: AppColors.transparentPure,
                         borderRadius: BorderRadius.circular(boxRadius),
@@ -184,49 +184,112 @@ class _ExplorePageState extends State<ExplorePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(child: Text(_getDateFormat(plansList[index].dateDateTime!)!,style: textRegularStyle(context,fontSize: 12,fontWeight: FontWeight.bold),)),
-                            Row(
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10.0,20.0,20.0,0.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Material(
+                                color: AppColors.transparentPure,
+                                borderRadius: BorderRadius.circular(roundRadius),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(roundRadius),
+                                  onTap: () {
+                                    exploreBloc.add(DeletePlan(
+                                      planID: int.parse(plansList[index].id.toString()),
+                                    ));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.delete,color: AppColors.primaryColor,size: 20,),
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Material(
+                                    color: AppColors.transparentPure,
+                                    borderRadius: BorderRadius.circular(roundRadius),
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(roundRadius),
+                                      onTap: () {
+                                        exploreBloc.add(ChangeStatusFav(
+                                            planID: int.parse(plansList[index].id.toString()),
+                                            status: !plansList[index].isFav!,
+                                        ));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(!plansList[index].isFav! ? Icons.favorite_border_rounded : Icons.favorite_rounded,color: !plansList[index].isFav! ? AppColors.textGrayShade8 : AppColors.red,size: 20,),
+                                      ),
+                                    ),
+                                  ),
+                                  AppWidgets().gapW(2),
+                                  Material(
+                                    color: AppColors.transparentPure,
+                                    borderRadius: BorderRadius.circular(roundRadius),
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(roundRadius),
+                                      onTap: () async{
+                                        await add2calender(
+                                          dateTime: plansList[index].dateDateTime!,
+                                          eventTitle: "Date plan ${plansList[index].id.toString()}",
+                                          eventDescription: "",
+                                          eventLocation: plansList[index].location!,
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset(calenderGray,height: 18,width: 18,),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        // AppWidgets().gapH16(),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset(copy,height: 15,width: 15,),
-                                AppWidgets().gapW(10),
-                                Image.asset(share,height: 15,width: 15,),
+                                Expanded(child: Text("Date in ${plansList[index].location!}",style: textRegularStyle(context,fontSize: 21,fontWeight: FontWeight.bold),)),
+                                AppWidgets().gapH16(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(mapPin,height: 20,width: 20,color: AppColors.primaryColor),
+                                    AppWidgets().gapW8(),
+                                    Expanded(child: Text(plansList[index].location!,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),))
+                                  ],
+                                ),
+                                AppWidgets().gapH8(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(budget,height: 20,width: 20,color: AppColors.primaryColor),
+                                    AppWidgets().gapW8(),
+                                    Text("\$${plansList[index].plan!.totalEstimatedCost.toString()}",style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),)
+                                  ],
+                                ),
+                                AppWidgets().gapH8(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(calender,height: 20,width: 20,color: AppColors.primaryColor),
+                                    AppWidgets().gapW8(),
+                                    Text(_getDateFormat(plansList[index].dateDateTime!)!,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),)
+                                  ],
+                                ),
                               ],
                             ),
-                          ],
-                        ),
-                        AppWidgets().gapH16(),
-                        Text("Date in ${plansList[index].location!}",style: textRegularStyle(context,fontSize: 16,fontWeight: FontWeight.bold),),
-                        Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(mapPin,height: 20,width: 20,color: AppColors.primaryColor),
-                            AppWidgets().gapW8(),
-                            Expanded(child: Text(plansList[index].location!,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 12,color: AppColors.textGrayShade7),))
-                          ],
-                        ),
-                        AppWidgets().gapH8(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(budget,height: 20,width: 20,color: AppColors.primaryColor),
-                            AppWidgets().gapW8(),
-                            Text("\$${plansList[index].plan!.totalEstimatedCost.toString()}",style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 12,color: AppColors.textGrayShade7),)
-                          ],
-                        ),
-                        AppWidgets().gapH8(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(calender,height: 20,width: 20,color: AppColors.primaryColor),
-                            AppWidgets().gapW8(),
-                            Text(_getDateFormat(plansList[index].dateDateTime!)!,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 12,color: AppColors.textGrayShade7),)
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -271,4 +334,31 @@ class _ExplorePageState extends State<ExplorePage> {
           );
         });
   }
+
+  add2calender({String? eventTitle,String? eventDescription,String? eventLocation,String? dateTime}){
+    final Event event = Event(
+      title: '$eventTitle',
+      description: '$eventDescription',
+      location: '$eventLocation',
+      startDate: _getDateFromAPI(dateTime)!,
+      endDate: _getDateFromAPI(dateTime)!,
+      // iosParams: IOSParams(
+      //   reminder: Duration(/* Ex. hours:1 */), // on iOS, you can set alarm notification after your event.
+      //   url: 'https://www.example.com', // on iOS, you can set url to your event.
+      // ),
+      // androidParams: AndroidParams(
+      //   emailInvites: [], // on Android, you can add invite emails to your event.
+      // ),
+    );
+
+    Add2Calendar.addEvent2Cal(event);
+  }
+
+  DateTime? _getDateFromAPI(String? dateTime) {
+    // Parse the input string
+    DateFormat inputFormat = DateFormat("dd-MMM-yyyy, hh:mm a");
+    DateTime parsedDate = inputFormat.parse(dateTime!);
+    return parsedDate;
+  }
+
 }

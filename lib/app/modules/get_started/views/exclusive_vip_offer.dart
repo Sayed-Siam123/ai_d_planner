@@ -257,17 +257,12 @@ class ExclusiveVipOffer extends BaseView {
             children: [
               Text("What we serve:",style: textRegularStyle(context,fontSize: 16,fontWeight: FontWeight.bold),),
               AppWidgets().gapH8(),
-              _whatWeHave(context),
+              _whatWeHave(context,"See the full date plan instantly","we help you to plan your date.",menuList),
               AppWidgets().gapH12(),
-              _whatWeHave(context),
+              _whatWeHave(context,"Proven Results","we help you to plan your date.",favActive),
               AppWidgets().gapH12(),
-              _whatWeHave(context),
+              _whatWeHave(context,"Ai Driven","we help you to plan your date.",aiBrain),
               AppWidgets().gapH12(),
-              _whatWeHave(context),
-              AppWidgets().gapH12(),
-              _whatWeHave(context),
-              AppWidgets().gapH12(),
-              _whatWeHave(context),
             ],
           ),
         ),
@@ -330,7 +325,7 @@ class ExclusiveVipOffer extends BaseView {
     );
   }
 
-  _whatWeHave(BuildContext context) {
+  _whatWeHave(BuildContext context,title,subtitle,image) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -344,17 +339,17 @@ class ExclusiveVipOffer extends BaseView {
                     width: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(boxRadius10P),
-                        color: AppColors.primaryColor.withValues(alpha: 0.04)),
+                        color: AppColors.customHex("D70365").withValues(alpha: 0.04)),
                     child: SvgPicture.asset(
-                      menuList,
+                      image,
                       fit: BoxFit.scaleDown,
                     )),
                 AppWidgets().gapW8(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("See the full date plan instantly",style: textRegularStyle(context,fontSize: 16,fontWeight: FontWeight.w700),),
-                    Text("We help you to plan your date.",style: textRegularStyle(context,fontSize: 16,fontWeight: FontWeight.normal),),
+                    Text("$title",style: textRegularStyle(context,fontSize: 16,fontWeight: FontWeight.w700),),
+                    Text("$subtitle",style: textRegularStyle(context,fontSize: 16,fontWeight: FontWeight.normal),),
                   ],
                 ),
               ],

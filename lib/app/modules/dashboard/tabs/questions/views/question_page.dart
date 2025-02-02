@@ -48,6 +48,7 @@ class _QuestionPageState extends State<QuestionPage> {
     printLog("Question page");
     if(questionBloc.state.questionPageStateStatus != QuestionPageStateStatus.success){
       questionBloc.add(FetchQuestionFromDummy());
+      questionBloc.add(FetchRegenerateQuestionFromDummy());
     }
   }
 
@@ -168,7 +169,7 @@ class _QuestionPageState extends State<QuestionPage> {
                   ),
                   AppWidgets().gapH24(),
                   CustomAppMaterialButton(
-                    title: "Submit",
+                    title: "Generate",
                     backgroundColor: AppColors.primaryColor,
                     borderColor: AppColors.primaryColor,
                     usePrefixIcon: false,
@@ -202,14 +203,28 @@ class _QuestionPageState extends State<QuestionPage> {
                     selected["option"].toString().toLowerCase() == "custom");
 
     return Column(
+      key: state.questionPageDummyData![index].questionKey,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppWidgets().gapH12(),
-        Text(state.questionPageDummyData![index].ques ?? "",
-          style: textRegularStyle(
-              context,
-              fontSize: state.questionPageDummyData![index].hint != null ? 16 : 18,
-              fontWeight: state.questionPageDummyData![index].hint != null ? FontWeight.w600 : FontWeight.bold
+        Text.rich(
+          TextSpan(
+            text: state.questionPageDummyData![index].ques ?? "",
+            style: textRegularStyle(
+                context,
+                fontSize: state.questionPageDummyData![index].hint != null ? 16 : 18,
+                fontWeight: state.questionPageDummyData![index].hint != null ? FontWeight.w600 : FontWeight.bold
+            ),
+            children: [
+              // TextSpan(
+              //   text: " ${index.toString()}",
+              //   style: textRegularStyle(
+              //       context,
+              //       fontSize: state.questionPageDummyData![index].hint != null ? 16 : 18,
+              //       fontWeight: state.questionPageDummyData![index].hint != null ? FontWeight.w600 : FontWeight.bold
+              //   ),
+              // ),
+            ]
           ),
         ),
         AppWidgets().gapH12(),
@@ -266,7 +281,7 @@ class _QuestionPageState extends State<QuestionPage> {
                       ),
                     ),
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async{
                         FocusScope.of(context!).unfocus();
                         // Trigger the appropriate event for single or multiple selection
                         questionBloc.add(SelectOption(
@@ -276,6 +291,7 @@ class _QuestionPageState extends State<QuestionPage> {
                             option: option,
                           ),
                         ));
+                        // await _scrollToNextSingleMCQQuestion(index);
                       },
                       borderRadius: BorderRadius.circular(roundRadius),
                       child: Padding(
@@ -382,8 +398,7 @@ class _QuestionPageState extends State<QuestionPage> {
     );
   }
 
-  void _showDateTimePicker(
-      BuildContext? context, TextEditingController? textEditingController) {
+/*  void _showDateTimePicker(BuildContext? context, TextEditingController? textEditingController) {
     BottomPicker.dateTime(
       bottomPickerTheme: BottomPickerTheme.plumPlate,
       pickerTitle: Text(
@@ -411,6 +426,37 @@ class _QuestionPageState extends State<QuestionPage> {
       buttonSingleColor: AppColors.primaryColor,
       titlePadding: EdgeInsets.all(10),
     ).show(context!);
+  }*/
+
+  _showDateTimePicker(BuildContext context,TextEditingController? textEditingController) async {
+    // First: Show Date Picker
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year+1),
+    );
+
+    if (pickedDate == null) return null; // User canceled date picker
+
+    // Second: Show Time Picker
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+    );
+
+    if (pickedTime == null) return null; // User canceled time picker
+
+    // Combine date and time
+    var date = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+
+    textEditingController?.text = _getFormattedTime(date.toString());
   }
 
   void _setLocationData(
@@ -436,7 +482,7 @@ class _QuestionPageState extends State<QuestionPage> {
               if (question.textEditingController.text.trim().isEmpty) {
                 isValid = false;
                 int i = questionList.indexOf(question);
-                _scrollToQuestion(i);
+                _scrollToQuestionThatNotAnswered(i);
                 errorMessage = "Please provide input for: ${question.ques}";
                 break;
               }
@@ -445,7 +491,7 @@ class _QuestionPageState extends State<QuestionPage> {
               if (question.selectedData!.isEmpty) {
                 isValid = false;
                 int i = questionList.indexOf(question);
-                _scrollToQuestion(i);
+                _scrollToQuestionThatNotAnswered(i);
                 errorMessage = "Please answer: ${question.ques}";
                 break;
               }
@@ -454,7 +500,7 @@ class _QuestionPageState extends State<QuestionPage> {
             // If nothing is selected
             isValid = false;
             int i = questionList.indexOf(question);
-            _scrollToQuestion(i);
+            _scrollToQuestionThatNotAnswered(i);
             errorMessage = "Please answer: ${question.ques}";
             break;
           }
@@ -463,7 +509,7 @@ class _QuestionPageState extends State<QuestionPage> {
           if (question.textEditingController.text.trim().isEmpty) {
             isValid = false;
             int i = questionList.indexOf(question);
-            _scrollToQuestion(i);
+            _scrollToQuestionThatNotAnswered(i);
             errorMessage = "Please fill in: ${question.ques}";
             break;
           }
@@ -486,7 +532,39 @@ class _QuestionPageState extends State<QuestionPage> {
     }
   }
 
-  void _scrollToQuestion(int index) {
+  _scrollToNextSingleMCQQuestion(int currentIndex) {
+    double questionHeight = 120.0; // Height of each question item
+
+    // Iterate through the questions starting from the next question
+    for (int i = currentIndex + 1; i < questionBloc.state.questionPageDummyData!.length; i++) {
+      var question = questionBloc.state.questionPageDummyData![i];
+
+      // Check if the question is a single MCQ (not multiple-select and not custom-select)
+      if (!question.isMultipleSelect! &&
+          !question.selectedData!.any((option) => option.option!.toLowerCase() == "custom")) {
+        // Calculate the target scroll position
+        double targetScrollPosition = i * questionHeight;
+
+        // Ensure the target scroll position does not exceed the maximum scroll extent
+        if (_scrollController.hasClients) {
+          double maxScrollExtent = _scrollController.position.maxScrollExtent;
+          if (targetScrollPosition > maxScrollExtent) {
+            targetScrollPosition = maxScrollExtent;
+          }
+        }
+
+        // Scroll to this question
+        _scrollController.animateTo(
+          targetScrollPosition,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+        break; // Stop after scrolling to the next valid question
+      }
+    }
+  }
+
+  void _scrollToQuestionThatNotAnswered(int index) {
 
     double questionHeight = 120.0;
 

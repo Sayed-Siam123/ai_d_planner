@@ -12,10 +12,137 @@ class GeminiRepo{
 
   final client = ApiClient(customBaseUrl: ApiEndPoints.baseUrlGemini);
 
-  static String dataString({required String location, required String date,required String time,required String budget}) =>
-      """Answer only using your current data to the best of your ability.\n\n•⁠  ⁠Given:\n\n    - location: ${location.toString()}.\n\n    - Maximum distance radius: 5 mile. Time limit: 5 hours.\n\n    - Preferred date: ${date.toString()}. \n\n    - Preferred start time: ${time.toString()}.\n\n    - Date Type: Food and Activities.\n\n    - Preferred cuisine(if food mentioned in date type): Mediterranean Kebabs, Italian, surprise me.\n\n    - Preferred Activities(if activities mentioned in date type): Nothing.\n\n    - Date Mood: Energetic and fun.\n\n    - Total combined budget: ${budget.toString()}.\n\n•⁠  ⁠Generate 3 distinct comprehensive date plans with each activity/ event in order and with start time and duration mentioned for each. Ensure to strictly adhere to location, radius, and budget. But for others, if there are no good matches within the location, radius, and budget, then improvise. Ensure for any cost mentioned, it is for 2 people combined, and not only per person. Give in a proper format. It is fine if it is hypothetical and not real time date plan, as long as you use real places that existed as of your last knowledge. Do not include any other information and only give response in format below for each of the dates. the structure needs to be this but content can vary and so can each of the events, however give proper location for each according to your last knowledge. Format:\n\n•⁠  ⁠Date Plan 1:\n\n    - Activity 1: A at X. Start Time:  PM. Duration:  hour. Description:  (Estimated Cost: \$). Location: .\n\n    - Activity 2: Y at C. Start Time: PM. Duration: hours. Description: (Estimated Cost: \$). Location: .\n\n    - Activity 3: E at F. Start Time: PM. Duration: hour. Description: (Estimated Cost: \$10). Location:\n\n    - Estimated Total Cost (Date Plan 1): \$. \n\n{\n  \"plans\": [\n    {\n      \"datePlanId\": 1,\n      \"activities\": [\n        {\n          \"name\": \"Dinner at The Italian Place (hypothetical)\",\n          \"startTime\": \"6:00 PM\",\n          \"durationHours\": 2,\n          \"description\": \"Enjoy a delicious Italian dinner.\",\n          \"estimatedCost\": 20,\n          \"location\": \"A hypothetical Italian restaurant in X, near the Y.\"\n        },\n        {\n          \"name\": \"Ice Cream and stroll at X\",\n          \"startTime\": \"A\",\n          \"durationHours\": B,\n          \"description\": \"Enjoy a relaxed evening stroll in the park and have some (food name or anything else you can suggest).\",\n          \"estimatedCost\": 10,\n          \"location\": \"X\"\n        },\n        {\n          \"name\": \"Street Food at a roadside stall (hypothetical)\",\n          \"startTime\": \"A\",\n          \"durationHours\": B,\n          \"description\": \"Enjoy some late-night street food.\",\n          \"estimatedCost\": 10,\n          \"location\": \"A hypothetical street food stall near Tongi.\"\n        }\n      ],\n      \"totalEstimatedCost\": 40\n    },\n    {\n      \"datePlanId\": 2,\n      \"activities\": [\n        {\n          \"name\": \"Dinner at a Mediterranean restaurant (hypothetical)\",\n          \"startTime\": \"6:00 PM\",\n          \"durationHours\": 2,\n          \"description\": \"Try some Mediterranean kebabs.\",\n          \"estimatedCost\": 25,\n          \"location\": \"A hypothetical Mediterranean restaurant in Tongi.\"\n        },\n        {\n          \"name\": \"Karaoke Night at a local Karaoke place (hypothetical)\",\n          \"startTime\": \"8:30 PM\",\n          \"durationHours\": 2,\n          \"description\": \"Sing your hearts out with your date.\",\n          \"estimatedCost\": 20,\n          \"location\": \"A hypothetical Karaoke place near Tongi.\"\n        },\n        {\n          \"name\": \"Enjoy a rickshaw ride at Tongi (hypothetical)\",\n          \"startTime\": \"10:30 PM\",\n          \"durationHours\": 1,\n          \"description\": \"Enjoy a fun ride.\",\n          \"estimatedCost\": 10,\n          \"location\": \"Tongi.\"\n        }\n      ],\n      \"totalEstimatedCost\": 55\n    },\n    {\n      \"datePlanId\": 3,\n      \"activities\": [\n        {\n          \"name\": \"Dinner at a Restaurant (hypothetical)\",\n          \"startTime\": \"6:00 PM\",\n          \"durationHours\": 2,\n          \"description\": \"Enjoy dinner.\",\n          \"estimatedCost\": 20,\n          \"location\": \"A hypothetical restaurant in Tongi.\"\n        },\n        {\n          \"name\": \"Visit a local park (hypothetical)\",\n          \"startTime\": \"8:00 PM\",\n          \"durationHours\": 2,\n          \"description\": \"Spend some time at the park, maybe play some games if available.\",\n          \"estimatedCost\": 5,\n          \"location\": \"A hypothetical local park near Tongi.\"\n        },\n        {\n          \"name\": \"Enjoy dessert at a shop (hypothetical)\",\n          \"startTime\": \"10:00 PM\",\n          \"durationHours\": 1,\n          \"description\": \"Enjoy desserts.\",\n          \"estimatedCost\": 10,\n          \"location\": \"A hypothetical dessert shop in Tongi.\"\n        }\n      ],\n      \"totalEstimatedCost\": 35\n    }\n  ]\n}""";
+  //Bowling, Arcade, GoKarting, or similar activities
 
-  Future<GeminiResponse?> getPlansFromGemini({String? location, String? date,String? time,String? budget}) async{
+  // - Dietary restrictions:
+  // - Strictly filter for Halal/ Kosher/ Gluten-Free (Celiac Disease) requirements, Only suggest non-compliant restaurants if unavoidable, and explicitly mention it in response.
+  // - For other preferences (vegetarian, vegan, pescatarian) or allergies (nut, dairy, etc.), ensure suitable options but do not strictly filter. Note if options are limited, and mention accordingly in response.
+
+  static String dataString({
+    required String location,
+    required String date,
+    required String time,
+    required String budget,
+    required String duration,
+    required String dateType,
+    required String foodType,
+    required String activityType,
+    required String dateMoodType,
+    required String dateDietRestrictions,
+  }) =>
+      """Answer only using your current data to the best of your ability.
+
+•Given:
+    - location: ${location.toString()}.
+    - Maximum distance radius: 5 mile.
+    - Maximum Date duration: ${duration.toString()}.
+    - Preferred start time: ${time.toString()}.
+    - Date Type: ${dateType.toString()}.
+    - Preferred cuisine(if food mentioned in date type): ${foodType.toString()}.
+    - Preferred Activities(if activities mentioned in date type): ${activityType.toString()}.
+    - Date Mood: ${dateMoodType.toString()}.
+    - Total combined budget for whole date for 2 people: ${budget.toString()}.
+    - Ensure all estimated costs include taxes and tips where applicable.
+    - Reservations are ok but must be explicitly mentioned in the generated answer if required.
+    - Dietary restrictions:
+        - Strictly filter for ${dateDietRestrictions.toString()} requirements, Only suggest non-compliant restaurants if unavoidable, and explicitly mention it in response.
+        - For other preferences (vegetarian, vegan, pescatarian) or allergies (nut, dairy, etc.), ensure suitable options but do not strictly filter. Note if options are limited, and mention accordingly in response.
+
+•Generate 3 distinct date plans, each listing activities/events in order with start time and duration. Strictly follow location, radius, and budget. If no good matches fit all criteria, improvise while staying as close as possible to the given requirements.
+
+•For each date plan, structure the response exactly as follows:
+
+•Date Plan 1:
+    - Activity 1: A at X. Start Time: PM. Duration: hour. Description: (Estimated Cost: \$). Location: .
+    - Activity 2: Y at C. Start Time: PM. Duration: hours. Description: (Estimated Cost: \$). Location: .
+    - Activity 3: E at F. Start Time: PM. Duration: hour. Description: (Estimated Cost: \$10). Location:
+    - Etc. as there can be more than 3 or even less
+    - Estimated Total Cost (Date Plan 1): \$.
+
+
+{
+  "plans": [
+    {
+      "datePlanId": 1,
+      "activities": [
+        {
+          "name": "Dinner at a Mediterranean Restaurant (hypothetical)",
+          "startTime": "4:00 PM",
+          "durationHours": 1.5,
+          "description": "Enjoy Mediterranean kebabs and a cozy dining atmosphere.",
+          "estimatedCost": 40,
+          "location": "RPM Raceway, Queens, NY."        
+        },
+        {
+          "name": "Bowling at Whitestone Lanes",
+          "startTime": "5:45 PM",
+          "durationHours": 1.5,
+          "description": "Fun and competitive bowling experience.",
+          "estimatedCost": 30,
+          "location": "Whitestone Lanes, Flushing, NY."
+        },
+        {
+          "name": "Dessert at Spot Dessert Bar",
+          "startTime": "7:30 PM",
+          "durationHours": 1,
+          "description": "Indulge in delicious desserts with a creative twist.",
+          "estimatedCost": 20,
+          "location": "Spot Dessert Bar, Flushing, NY."
+        }
+      ],
+      "totalEstimatedCost": 90
+    },
+    {
+      "datePlanId": 2,
+      "activities": [
+        {
+          "name": "Go-Karting at RPM Raceway",
+          "startTime": "4:00 PM",
+          "durationHours": 2,
+          "description": "Thrilling indoor go-karting experience.",
+          "estimatedCost": 50,
+          "location": "RPM Raceway, Queens, NY."
+        },
+        {
+          "name": "Dinner at an Italian Restaurant",
+          "startTime": "6:30 PM",
+          "durationHours": 2,
+          "description": "Enjoy authentic Italian cuisine with a great ambiance.",
+          "estimatedCost": 50,
+          "location": "RPM Raceway, Queens, NY."
+        }
+      ],
+      "totalEstimatedCost": 100
+    },
+    {
+      "datePlanId": 3,
+      "activities": [
+        {
+          "name": "Arcade Games at Dave & Buster's",
+          "startTime": "4:00 PM",
+          "durationHours": 2,
+          "description": "Play classic and modern arcade games.",
+          "estimatedCost": 40,
+          "location": "Dave & Buster's, Queens, NY."
+        },
+        {
+          "name": "Dinner at a Surprise Location",
+          "startTime": "6:30 PM",
+          "durationHours": 2,
+          "description": "Surprise choice based on available options (e.g., Mediterranean, Italian).",
+          "estimatedCost": 60,
+          "location": "RPM Raceway, Queens, NY."
+        }
+      ],
+      "totalEstimatedCost": 100
+    }
+  ]
+}
+
+Please provide the output in JSON format. Please provide location address also.
+""";
+
+  Future<GeminiResponse?> getPlansFromGemini({String? location, String? date,String? time,String? budget,String? duration, String? dateType, String? foodType, String? activityType, String? dateMoodType, String? dateDietRestrictions}) async{
     var response = await client.post(
         ApiEndPoints.getPrompt,
         {
@@ -23,7 +150,18 @@ class GeminiRepo{
             {
               "parts": [
                 {
-                  "text": dataString(location: location!,date: date!,time: time!,budget: budget!)
+                  "text": dataString(
+                      location: location!,
+                      date: date!,
+                      time: time!,
+                      budget: budget!,
+                      duration: duration!,
+                      activityType: activityType!,
+                      dateDietRestrictions: dateDietRestrictions!,
+                      dateMoodType: dateMoodType!,
+                      dateType: dateType!,
+                      foodType: foodType!
+                  )
                 }
               ]
             }

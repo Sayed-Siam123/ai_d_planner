@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:ai_d_planner/app/core/utils/helper/app_helper.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/data/dummy_json/question_page_dummy_json.dart';
+import 'package:ai_d_planner/app/data/dummy_json/regenerate_question_dummy_json.dart';
 import 'package:ai_d_planner/app/data/models/GetPlanResponseModel.dart';
 import 'package:ai_d_planner/app/data/models/question_page_dummy_model.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/repository/gemini_repo.dart';
@@ -29,8 +30,10 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
     responseSupaBaseRepository = ResponseSupaBaseRepository();
 
     on<FetchQuestionFromDummy>(_fetchQuestionFromDummy);
+    on<FetchRegenerateQuestionFromDummy>(_fetchRegenerateQuestionFromDummy);
     on<SelectOption>(_selectOption);
     on<ResetOption>(_resetOption);
+    on<ResetRegenerateQues>(_resetRegenerate);
     on<ResetAll>(_resetAll);
     on<FetchFromGemini>(_fetchFromGemini);
     on<ChangeStatusFav>(_changeStatusFav);
@@ -49,8 +52,23 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
       questionPageDummyData: listData
     ));
   }
+  _fetchRegenerateQuestionFromDummy(FetchRegenerateQuestionFromDummy event, Emitter<QuestionPageState> emit) async {
+    emit(state.copyWith(
+        questionPageStateStatus: QuestionPageStateStatus.loading,
+        regenerateQuestionPageDummyData: []
+    ));
+
+    var listData = questionPageDummyModelFromJson(jsonEncode(getRegenerateQuestionDummy));
+
+    emit(state.copyWith(
+        questionPageStateStatus: QuestionPageStateStatus.success,
+        regenerateQuestionPageDummyData: listData
+    ));
+  }
+
   _selectOption(SelectOption event, Emitter<QuestionPageState> emit) async {
-    List<QuestionPageDummyModel> updatedQuestions = List.from(state.questionPageDummyData!); // Clone the list
+
+    List<QuestionPageDummyModel> updatedQuestions = !event.isFromRegenerationDialog! ? List.from(state.questionPageDummyData!) : List.from(state.regenerateQuestionPageDummyData!); // Clone the list
 
     printLog(event.selectedAnswer?.option.toString().toLowerCase());
 
@@ -161,9 +179,11 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
     }
 
     // Emit updated state
-    emit(state.copyWith(
+    !event.isFromRegenerationDialog! ? emit(state.copyWith(
       questionPageDummyData: updatedQuestions,
-    ));
+    )) : emit(state.copyWith(
+      regenerateQuestionPageDummyData: updatedQuestions,
+    ));;
   }
   _resetOption(ResetOption event, Emitter<QuestionPageState> emit) async {
 
@@ -177,6 +197,21 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
         questionPageDummyData: updatedQuestions
     ));
   }
+
+  _resetRegenerate(ResetRegenerateQues event, Emitter<QuestionPageState> emit) async {
+
+    List<QuestionPageDummyModel> updatedQuestions = List.from(state.regenerateQuestionPageDummyData!); // Clone the list
+
+    for(var question in updatedQuestions){
+      updatedQuestions[updatedQuestions.indexOf(question)] = updatedQuestions[updatedQuestions.indexOf(question)].copyWith(
+        selected: [],
+      );
+    }
+
+    emit(state.copyWith(
+        regenerateQuestionPageDummyData: updatedQuestions
+    ));
+  }
   _resetAll(ResetAll event, Emitter<QuestionPageState> emit) async {
     emit(state.copyWith(
         questionPageStateStatus: QuestionPageStateStatus.init
@@ -188,7 +223,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
         questionPageStateApiStatus: QuestionPageStateApiStatus.loading
     ));
 
-    AppHelper().showLoader(dismissOnTap: false,hasMask: true);
+    AppHelper().showLoader(dismissOnTap: true,hasMask: true);
 
     var dataList = questionPageDummyModelFromJson(questionPageDummyModelToJson(event.questionList!));
 
@@ -196,7 +231,25 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
     var time = _getTimeFormat(timeData);
     var date = _getDateFormat(timeData);
     var location = dataList[0].selectedData?[0].option;
-    var budget = dataList[3].selectedData?[0].option;
+    var budget = dataList[11].selectedData?[0].option;
+    var duration = dataList[4].selectedData?[0].option;
+    var dateType = dataList[5].selectedData?[0].option;
+    var dateMoodType = dataList[7].selectedData?[0].option;
+    var dateDietRestrictions = dataList[12].selectedData?[0].option;
+
+    String formatOptions(List<String?> options) {
+      if (options.contains("Surprise me!")) {
+        return options.where((option) => option != "Surprise me!").join(", ") +
+            (options.length > 1 ? " or Surprise me!" : "Surprise me!");
+      }
+      return options.join(", ");
+    }
+
+    var foodOptions = dataList[9].selectedData?.map((e) => e.option).toList() ?? [];
+    var foodType = formatOptions(foodOptions);
+
+    var activityOptions = dataList[10].selectedData?.map((e) => e.option).toList() ?? [];
+    var activityType = formatOptions(activityOptions);
 
     // printLog("$time and $date and $location and $budget");
 
@@ -204,7 +257,13 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
       date: date,
       time: time,
       location: location,
-      budget: budget
+      budget: budget,
+      foodType: foodType,
+      dateType: dateType,
+      dateMoodType: dateMoodType,
+      dateDietRestrictions: dateDietRestrictions,
+      activityType: activityType,
+      duration: duration
     );
 
     var plansData = await compute(deserializePlansFromText, data!.candidates![0].content!.parts![0].text!);

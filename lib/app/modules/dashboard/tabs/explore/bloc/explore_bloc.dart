@@ -18,6 +18,7 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
     responseSupaBaseRepository = ResponseSupaBaseRepository();
     on<FetchAllPlans>(_fetchAllPlans);
     on<ChangeStatusFav>(_changeStatusFav);
+    on<DeletePlan>(_deletePlan);
   }
 
   // void _init(InitEvent event, Emitter<ExploreState> emit) async {
@@ -73,6 +74,22 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
     await responseSupaBaseRepository?.changeFavStatus(
         id: event.planID,
         status: event.status
+    );
+
+    await _getAllPlans(emit);
+
+    AppHelper().hideLoader();
+  }
+
+  void _deletePlan(DeletePlan event, Emitter<ExploreState> emit) async {
+    emit(state.copyWith(
+        exploreStateStatus: ExploreStateStatus.loading
+    ));
+
+    AppHelper().showLoader(hasMask: true);
+
+    await responseSupaBaseRepository?.deletePlan(
+        id: event.planID,
     );
 
     await _getAllPlans(emit);

@@ -10,17 +10,23 @@ class FetchQuestionFromDummy extends QuestionPageEvent {
   List<Object?> get props => [];
 }
 
+class FetchRegenerateQuestionFromDummy extends QuestionPageEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
 class SelectOption extends QuestionPageEvent {
 
   final int? questionIndex;
-
   final SelectedOption? selectedAnswer;
+  final bool? isFromRegenerationDialog;
 
-  SelectOption({this.questionIndex,this.selectedAnswer});
+  SelectOption({this.questionIndex,this.selectedAnswer,this.isFromRegenerationDialog = false});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [selectedAnswer,questionIndex];
+  List<Object?> get props => [selectedAnswer,questionIndex,isFromRegenerationDialog];
 }
 
 class ResetOption extends QuestionPageEvent {
@@ -32,6 +38,13 @@ class ResetOption extends QuestionPageEvent {
   @override
   // TODO: implement props
   List<Object?> get props => [questionIndex];
+}
+
+class ResetRegenerateQues extends QuestionPageEvent {
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
 }
 
 class ResetAll extends QuestionPageEvent {

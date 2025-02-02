@@ -19,3 +19,14 @@ class ChangeStatusFav extends ExploreEvent {
   // TODO: implement props
   List<Object?> get props => [planID,status];
 }
+
+class DeletePlan extends ExploreEvent {
+
+  final int? planID;
+
+  DeletePlan({this.planID});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [planID];
+}

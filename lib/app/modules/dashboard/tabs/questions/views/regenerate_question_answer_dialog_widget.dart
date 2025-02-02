@@ -89,7 +89,7 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
                     ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       // controller: _scrollController,
-                      itemCount: state.questionPageDummyData!.length,
+                      itemCount: state.regenerateQuestionPageDummyData!.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return _getQuestionTile(context, state, index);
@@ -97,7 +97,7 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
                     ),
                     AppWidgets().gapH24(),
                     CustomAppMaterialButton(
-                      title: "Submit",
+                      title: "Regenerate",
                       backgroundColor: AppColors.primaryColor,
                       borderColor: AppColors.primaryColor,
                       usePrefixIcon: false,
@@ -106,7 +106,7 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       onPressed: () async {
-                        validateAndSubmit(context,state.questionPageDummyData!);
+                        validateAndSubmit(context,state.regenerateQuestionPageDummyData!);
                       },
                     ),
                   ],
@@ -125,10 +125,10 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
 
   _getQuestionTile(BuildContext? context, QuestionPageState state, index) {
     bool isCustomSelected =
-        state.questionPageDummyData![index].selectedData != null &&
-            state.questionPageDummyData![index].selectedData
+        state.regenerateQuestionPageDummyData![index].selectedData != null &&
+            state.regenerateQuestionPageDummyData![index].selectedData
             is List<Map<String, dynamic>> &&
-            (state.questionPageDummyData![index].selectedData
+            (state.regenerateQuestionPageDummyData![index].selectedData
             as List<Map<String, dynamic>>)
                 .any((selected) =>
             selected["option"].toString().toLowerCase() == "custom");
@@ -137,28 +137,28 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppWidgets().gapH12(),
-        Text(state.questionPageDummyData![index].ques ?? "",
+        Text(state.regenerateQuestionPageDummyData![index].ques ?? "",
           style: textRegularStyle(
               context,
-              fontSize: state.questionPageDummyData![index].hint != null ? 16 : 18,
-              fontWeight: state.questionPageDummyData![index].hint != null ? FontWeight.w600 : FontWeight.bold
+              fontSize: state.regenerateQuestionPageDummyData![index].hint != null ? 16 : 18,
+              fontWeight: state.regenerateQuestionPageDummyData![index].hint != null ? FontWeight.w600 : FontWeight.bold
           ),
         ),
         AppWidgets().gapH12(),
-        if (state.questionPageDummyData![index].isMultipleSelect == false &&
-            state.questionPageDummyData![index].options!.isEmpty)
+        if (state.regenerateQuestionPageDummyData![index].isMultipleSelect == false &&
+            state.regenerateQuestionPageDummyData![index].options!.isEmpty)
         // Text("TextField")
           _getTextField(
               context,
-              state.questionPageDummyData![index].ques,
-              state.questionPageDummyData![index].hint,
-              state.questionPageDummyData![index].textEditingController,
-              state.questionPageDummyData![index].focusNode,
-              textFieldType: state.questionPageDummyData![index].textFieldType,
+              state.regenerateQuestionPageDummyData![index].ques,
+              state.regenerateQuestionPageDummyData![index].hint,
+              state.regenerateQuestionPageDummyData![index].textEditingController,
+              state.regenerateQuestionPageDummyData![index].focusNode,
+              textFieldType: state.regenerateQuestionPageDummyData![index].textFieldType,
               isActive: true,
-              isReadOnly: state.questionPageDummyData![index].textFieldType ==
+              isReadOnly: state.regenerateQuestionPageDummyData![index].textFieldType ==
                   "dateField" ||
-                  state.questionPageDummyData![index].textFieldType ==
+                  state.regenerateQuestionPageDummyData![index].textFieldType ==
                       "location"
                   ? true
                   : false)
@@ -169,12 +169,12 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
               Wrap(
                 spacing: 15,
                 runSpacing: 15,
-                children: state.questionPageDummyData![index].options!.map((option) {
-                  int optionIndex = state.questionPageDummyData![index].options!.indexOf(option);
+                children: state.regenerateQuestionPageDummyData![index].options!.map((option) {
+                  int optionIndex = state.regenerateQuestionPageDummyData![index].options!.indexOf(option);
 
                   // Determine if the option is selected
                   bool isSelected = false;
-                  List<SelectedOption>? selectedAnswers = state.questionPageDummyData![index].selectedData;
+                  List<SelectedOption>? selectedAnswers = state.regenerateQuestionPageDummyData![index].selectedData;
 
                   if (selectedAnswers != null) {
                     // Check if the option is selected
@@ -203,6 +203,7 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
                         // Trigger the appropriate event for single or multiple selection
                         questionBloc.add(SelectOption(
                           questionIndex: index,
+                          isFromRegenerationDialog: true,
                           selectedAnswer: SelectedOption(
                             optionID: optionIndex,
                             option: option,
@@ -248,20 +249,20 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
               ),
               AppWidgets().gapH12(),
               // Display a text field if "custom" is selected
-              state.questionPageDummyData![index].selectedData?.any(
+              state.regenerateQuestionPageDummyData![index].selectedData?.any(
                     (selected) => selected.option?.toLowerCase() == "custom",
               ) ??
                   false
                   ? _getTextField(
                 context,
-                state.questionPageDummyData![index].ques,
-                state.questionPageDummyData![index].ques,
-                state.questionPageDummyData![index].textEditingController,
-                state.questionPageDummyData![index].focusNode,
+                state.regenerateQuestionPageDummyData![index].ques,
+                state.regenerateQuestionPageDummyData![index].ques,
+                state.regenerateQuestionPageDummyData![index].textEditingController,
+                state.regenerateQuestionPageDummyData![index].focusNode,
                 textFieldType: "text",
                 isActive: true,
-                isReadOnly: state.questionPageDummyData![index].textFieldType == "dateField" ||
-                    state.questionPageDummyData![index].textFieldType == "location",
+                isReadOnly: state.regenerateQuestionPageDummyData![index].textFieldType == "dateField" ||
+                    state.regenerateQuestionPageDummyData![index].textFieldType == "location",
               )
                   : const SizedBox(),
             ],
@@ -473,7 +474,8 @@ class _QuestionAnswerDialogWidgetState extends State<QuestionAnswerDialogWidget>
       // Proceed with submission
       printLog("Form is valid. Submitting data...");
       Navigator.pop(context!);
-      questionBloc.add(FetchFromGemini(pageController: widget.pageController,questionList: questionList));
+      //questionBloc.add(FetchFromGemini(pageController: widget.pageController,questionList: questionList));
+      questionBloc.add(ResetRegenerateQues());
       // Add your submit logic here
     } else {
       // Show error message

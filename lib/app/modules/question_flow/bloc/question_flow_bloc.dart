@@ -25,44 +25,9 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
     ));
   }
 
-  _selectOption(SelectOption event, Emitter<QuestionFlowState> emit) async {
+  /*_selectOption(SelectOption event, Emitter<QuestionFlowState> emit) async {
 
     List<QuestionPageDummyModel> updatedQuestions = List.from(state.getStartedQues!); // Clone the list
-
-    /*    if (updatedQuestions[event.questionIndex!].isMultipleSelect!) {
-      // Handle multiple selection
-      printLog("Handle multiple selection");
-      List<dynamic>? selectedAnswers = updatedQuestions[event.questionIndex!].selected ?? [];
-
-      if (selectedAnswers!.contains(event.selectedAnswer)) {
-        // Deselect the answer
-        selectedAnswers.remove(event.selectedAnswer);
-      } else {
-        // Select the answer
-        selectedAnswers.add(event.selectedAnswer);
-      }
-
-      printLog(selectedAnswers);
-
-      updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
-        selected: selectedAnswers,
-      );
-
-    } else {
-      // Handle single selection
-      printLog("Handle single selection");
-      if (updatedQuestions[event.questionIndex!].selected == null ||
-          updatedQuestions[event.questionIndex!].selected != event.selectedAnswer) {
-        updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
-          selected: event.selectedAnswer,
-        );
-      } else if (updatedQuestions[event.questionIndex!].selected == event.selectedAnswer) {
-        // Deselect the answer
-        updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
-          selected: null,
-        );
-      }
-    }*/
 
     if (updatedQuestions[event.questionIndex!].isMultipleSelect!) {
       // Handle multiple selection
@@ -126,6 +91,122 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
     emit(state.copyWith(
         getStartedQues: updatedQuestions
     ));
+  }*/
+
+  _selectOption(SelectOption event, Emitter<QuestionFlowState> emit) async {
+    List<QuestionPageDummyModel> updatedQuestions = List.from(state.getStartedQues!); // Clone the list
+
+    printLog(event.selectedAnswer?.option.toString().toLowerCase());
+
+    // Starting from multiple selection process
+    if (updatedQuestions[event.questionIndex!].isMultipleSelect!) {
+      // For multiple selection
+      List<SelectedOption> selectedAnswers = [];
+
+      if (event.selectedAnswer?.option.toString().toLowerCase() != "custom") {
+        printLog("Handle multiple selection");
+
+        // Retrieve existing selected answers or initialize a new list
+        selectedAnswers = updatedQuestions[event.questionIndex!].selectedData ?? [];
+
+        if (selectedAnswers.isNotEmpty && selectedAnswers[0].option?.toLowerCase() == "custom") {
+          selectedAnswers = [];
+        }
+
+        SelectedOption selectedAnswer = SelectedOption(
+          optionID: event.selectedAnswer?.optionID,
+          option: event.selectedAnswer?.option,
+        );
+
+        // Check if the answer already exists in the list
+        bool exists = selectedAnswers.any((answer) =>
+        answer.optionID == selectedAnswer.optionID &&
+            answer.option == selectedAnswer.option);
+
+        if (exists) {
+          // Deselect the answer
+          selectedAnswers.removeWhere((answer) =>
+          answer.optionID == selectedAnswer.optionID &&
+              answer.option == selectedAnswer.option);
+        } else {
+          // Select the answer
+          selectedAnswers.add(selectedAnswer);
+        }
+
+        printLog(selectedAnswers);
+
+        // Update the question with the modified selected answers
+        updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          selected: selectedAnswers,
+        );
+      } else {
+        // For "custom" option, handle as single selection stored in a list
+        printLog("Handle single selection for 'custom'");
+
+        SelectedOption selectedAnswer = SelectedOption(
+          optionID: event.selectedAnswer?.optionID,
+          option: event.selectedAnswer?.option,
+        );
+
+        List<SelectedOption> selectedAnswersForCustom = updatedQuestions[event.questionIndex!].selectedData ?? [];
+
+        if (selectedAnswersForCustom.isNotEmpty &&
+            selectedAnswersForCustom[0].option?.toLowerCase() != "custom") {
+          selectedAnswersForCustom = [];
+        }
+
+        // Check if the selected answer already exists in the list
+        bool exists = selectedAnswersForCustom.any((answer) =>
+        answer.optionID == selectedAnswer.optionID &&
+            answer.option == selectedAnswer.option);
+
+        if (exists) {
+          // Deselect the answer by removing it from the list
+          selectedAnswersForCustom.removeWhere((answer) =>
+          answer.optionID == selectedAnswer.optionID &&
+              answer.option == selectedAnswer.option);
+        } else {
+          // Select the answer by adding it to the list
+          selectedAnswersForCustom = [selectedAnswer]; // Clear any existing and add the new custom selection
+        }
+
+        // Update the question with the modified selected answers
+        updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          selected: selectedAnswersForCustom,
+        );
+      }
+    } else {
+      // Handle single selection (when isMultipleSelect is false)
+      printLog("Handle single selection");
+
+      List<SelectedOption> selectedAnswers = updatedQuestions[event.questionIndex!].selectedData ?? [];
+
+      SelectedOption selectedAnswer = SelectedOption(
+        optionID: event.selectedAnswer?.optionID,
+        option: event.selectedAnswer?.option,
+      );
+
+      if (selectedAnswers.isEmpty ||
+          !(selectedAnswers.any((answer) =>
+          answer.optionID == selectedAnswer.optionID &&
+              answer.option == selectedAnswer.option))) {
+        // Select the answer (replace the existing selection for single-select)
+        selectedAnswers = [selectedAnswer];
+      } else {
+        // Deselect the answer
+        selectedAnswers = [];
+      }
+
+      // Update the question with the modified selected answers
+      updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+        selected: selectedAnswers,
+      );
+    }
+
+    // Emit updated state
+    emit(state.copyWith(
+      getStartedQues: updatedQuestions,
+    ));
   }
 
   _fetchDummyQues(FetchDummyQues event, Emitter<QuestionFlowState> emit) async {
@@ -176,9 +257,9 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
 
     return isValid;
   }*/
-  Future<bool> validateCurrentQuestion({
-    required QuestionPageDummyModel question,
-  }) async {
+
+  /*
+  Future<bool> validateCurrentQuestion({required QuestionPageDummyModel question,}) async {
     bool isValid = true;
     String errorMessage = '';
 
@@ -195,6 +276,56 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
       } else {
         isValid = false;
         errorMessage = "No options available to answer: ${question.ques}";
+      }
+    }
+
+    if (!isValid) {
+      // Show snackbar if validation fails
+      await AppWidgets().getSnackBar(
+        status: SnackBarStatus.error,
+        message: errorMessage,
+        position: MobileSnackBarPosition.top,
+      );
+      printLog("Validation failed: $errorMessage");
+    }
+
+    return isValid;
+  }
+*/
+
+  Future<bool> validateCurrentQuestion({required QuestionPageDummyModel question}) async {
+    bool isValid = true;
+    String errorMessage = '';
+
+    // Check if the question is required
+    if (question.isRequired == true) {
+      if (question.options != null && question.options!.isNotEmpty) {
+        // Check if "Custom" is selected
+        if (question.selectedData != null && question.selectedData!.isNotEmpty) {
+          bool isCustomSelected = question.selectedData!.any((selected) =>
+          selected.option != null && selected.option!.toLowerCase() == "custom");
+
+          if (isCustomSelected) {
+            // Check if textEditingController is empty for "Custom"
+            if (question.textEditingController.text.trim().isEmpty) {
+              isValid = false;
+              errorMessage = "Please provide input for: ${question.ques}";
+            }
+          } else {
+            // General validation for non-custom options
+            isValid = true; // Since at least one option is selected
+          }
+        } else {
+          // If nothing is selected
+          isValid = false;
+          errorMessage = "Please answer: ${question.ques}";
+        }
+      } else {
+        // For textFieldType (non-options)
+        if (question.textEditingController.text.trim().isEmpty) {
+          isValid = false;
+          errorMessage = "Please fill in: ${question.ques}";
+        }
       }
     }
 

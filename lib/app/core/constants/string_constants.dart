@@ -12,6 +12,8 @@ class StringConstants {
   static const String or = "Or";
   static const String signInWith = "Sign in With";
   static const String dontHaveAnyAccount = "Don't have an account?";
+  static const String alreadyHaveAnyAccount = "Already have an account?";
+
   static const String signUp = "Sign Up";
 
   //TODO:: SIGNUP

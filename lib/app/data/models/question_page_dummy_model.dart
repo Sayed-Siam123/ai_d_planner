@@ -9,6 +9,7 @@ String questionPageDummyModelToJson(List<QuestionPageDummyModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class QuestionPageDummyModel {
+  GlobalKey? questionKey;
   final String? ques;
   final String? hint;
   final String? textFieldType;
@@ -20,6 +21,7 @@ class QuestionPageDummyModel {
   List<SelectedOption>? selectedData; // Using SelectedOption class here
 
   QuestionPageDummyModel({
+    this.questionKey,
     this.ques,
     this.hint,
     this.isMultipleSelect,
@@ -34,6 +36,7 @@ class QuestionPageDummyModel {
 
   factory QuestionPageDummyModel.fromJson(Map<String, dynamic> json) =>
       QuestionPageDummyModel(
+        questionKey: GlobalKey(),
         ques: json["ques"],
         hint: json["hint"],
         isMultipleSelect: json["isMultipleSelect"],

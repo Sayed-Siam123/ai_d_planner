@@ -41,7 +41,7 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
         children: [
           _topLevel(context, widget.planData!.id.toString(),widget.planData!.plan!.datePlanId.toString(),
               isFav: widget.planData!.isFav,
-              title: "Date plan ${widget.planData!.plan!.datePlanId.toString()}",
+              title: "Date plan ${widget.planData!.id.toString()}",
               desc: "",
               location: widget.planData!.location.toString(),
               dateTime: widget.planData!.dateDateTime.toString()
@@ -61,7 +61,8 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
                       decoration: BoxDecoration(
                           border: Border.all(
                               color: AppColors.textFieldBorderColor
-                          )
+                          ),
+                        borderRadius: BorderRadius.circular(boxRadius10P),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -129,7 +130,7 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(child: Text("Plan 0${datePlanID.toString()}",style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),)),
+          Expanded(child: Text("$title",style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),)),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,

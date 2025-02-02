@@ -14,13 +14,19 @@ import 'package:ai_d_planner/app/modules/question_flow/bloc/question_flow_bloc.d
 import 'package:ai_d_planner/app/modules/question_flow/bloc/question_flow_event.dart';
 import 'package:ai_d_planner/app/modules/question_flow/bloc/question_flow_state.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:bottom_picker/bottom_picker.dart';
+import 'package:bottom_picker/resources/arrays.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/constants/assets_constants.dart';
 import '../../../core/constants/string_constants.dart';
 import '../../../core/utils/helper/print_log.dart';
 import '../../../core/widgets/custom_buttons_widget.dart';
+import '../../../core/widgets/text_field_widget.dart';
 import '../../../data/models/question_page_dummy_model.dart';
 import '../../../routes/app_pages.dart';
 import '../../../routes/app_routes.dart';
@@ -162,75 +168,121 @@ class QuestionFlowPage extends BaseView {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   AppWidgets().gapH12(),
-                                  Wrap(
-                                    spacing: 15,
-                                    runSpacing: 15,
-                                    children: questions.options!.map((option) {
-                                      int optionIndex =
-                                          questions.options!.indexOf(option);
+                                  if (state.getStartedQues![questionIndex].isMultipleSelect == false &&
+                                      state.getStartedQues![questionIndex].options!.isEmpty)
+                                  // Text("TextField")
+                                    _getTextField(
+                                        context,
+                                        state.getStartedQues![questionIndex].ques,
+                                        state.getStartedQues![questionIndex].hint,
+                                        state.getStartedQues![questionIndex].textEditingController,
+                                        state.getStartedQues![questionIndex].focusNode,
+                                        textFieldType: state.getStartedQues![questionIndex].textFieldType,
+                                        isActive: true,
+                                        isReadOnly: state.getStartedQues![questionIndex].textFieldType ==
+                                            "dateField" ||
+                                            state.getStartedQues![questionIndex].textFieldType ==
+                                                "location"
+                                            ? true
+                                            : false)
+                                  else
+                                    Wrap(
+                                      spacing: 15,
+                                      runSpacing: 15,
+                                      children: questions.options!.map((option) {
+                                        int optionIndex = questions.options!.indexOf(option);
 
-                                      // Determine selection status for single or multiple selection
-                                      bool isSelected;
+                                        // Determine if the option is selected
+                                        bool isSelected = false;
+                                        List<SelectedOption>? selectedAnswers = questions.selectedData;
 
-                                      if (questions.isMultipleSelect!) {
-                                        // For multiple selection, check if the option is selected in any of the selected data
-                                        isSelected = questions.selectedData!
-                                            .any((selected) =>
-                                                selected.optionID ==
-                                                    optionIndex &&
-                                                selected.option == option);
-                                      } else {
-                                        // For single selection, check if the first selected option matches the current option
-                                        isSelected = questions
-                                                    .selectedData?.isNotEmpty ==
-                                                true &&
-                                            questions.selectedData?.first
-                                                    .optionID ==
-                                                optionIndex &&
-                                            questions.selectedData?.first
-                                                    .option ==
-                                                option;
-                                      }
+                                        if (selectedAnswers != null) {
+                                          // Check if the option is selected
+                                          isSelected = selectedAnswers.any((selected) =>
+                                          selected.optionID == optionIndex &&
+                                              selected.option?.toLowerCase() == option.toLowerCase());
+                                        }
 
-                                      return Material(
-                                        color: isSelected
-                                            ? AppColors.primaryColor
-                                            : AppColors.whitePure,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              roundRadius),
-                                          side: BorderSide(
-                                            color: AppColors.primaryColor
-                                                .withOpacity(0.15),
+                                        // Special case: custom option selection
+                                        if (option.toLowerCase() == "custom" && selectedAnswers != null) {
+                                          isSelected = selectedAnswers.any((selected) =>
+                                          selected.option?.toLowerCase() == "custom");
+                                        }
+
+                                        return Material(
+                                          color: isSelected ? AppColors.primaryColor : AppColors.whitePure,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(roundRadius),
+                                            side: BorderSide(
+                                              color: AppColors.primaryColor.withOpacity(0.15),
+                                            ),
                                           ),
-                                        ),
-                                        child: InkWell(
-                                          onTap: () {
-                                            quesFlowBloc.add(SelectOption(
+                                          child: InkWell(
+                                            onTap: () {
+                                              FocusScope.of(context!).unfocus();
+                                              // Trigger the appropriate event for single or multiple selection
+                                              quesFlowBloc.add(SelectOption(
                                                 questionIndex: questionIndex,
                                                 selectedAnswer: SelectedOption(
-                                                    option: option,
-                                                    optionID: optionIndex)));
-                                            //isSelected ? AppColors.primaryColor :
-                                          },
-                                          borderRadius: BorderRadius.circular(
-                                              roundRadius),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(13.0),
-                                            child: Text(
-                                              option,
-                                              style: textRegularStyle(
-                                                context,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                isWhiteColor: isSelected,
+                                                  optionID: optionIndex,
+                                                  option: option,
+                                                ),
+                                              ));
+                                            },
+                                            borderRadius: BorderRadius.circular(roundRadius),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(13.0),
+                                              child: option.toLowerCase() != "custom"
+                                                  ? Text(
+                                                option,
+                                                style: textRegularStyle(
+                                                  context,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  isWhiteColor: isSelected,
+                                                ),
+                                              ) : Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Image.asset(
+                                                    customQuestionIcon,
+                                                    scale: 1.8,
+                                                  ),
+                                                  AppWidgets().gapW8(),
+                                                  Text(
+                                                    option,
+                                                    style: textRegularStyle(
+                                                      context,
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w500,
+                                                      isWhiteColor: isSelected,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  AppWidgets().gapH12(),
+
+                                  // Display a text field if "custom" is selected
+                                  questions.selectedData?.any(
+                                        (selected) => selected.option?.toLowerCase() == "custom",
+                                  ) ?? false
+                                      ? _getTextField(
+                                    context,
+                                    questions.ques,
+                                    questions.ques,
+                                    questions.textEditingController,
+                                    questions.focusNode,
+                                    textFieldType: "text",
+                                    isActive: true,
+                                    isReadOnly: questions.textFieldType == "dateField" ||
+                                        questions.textFieldType == "location",
+                                  )
+                                      : const SizedBox(),
                                 ],
                               );
                             },
@@ -298,6 +350,101 @@ class QuestionFlowPage extends BaseView {
       }
     }
   }
+
+  _getTextField(BuildContext? context, title, hint,
+      TextEditingController controller, FocusNode? focusNode,
+      {bool? isReadOnly, bool? isActive, String? textFieldType = "text"}) {
+    return CustomTextFieldWidget(
+      context: context!,
+      hint: hint,
+      name: title,
+      errorText: StringConstants.emailError,
+      isPasswordType: false,
+      showStar: true,
+      keyboardType: KeyboardType.text,
+      autoFillEnabled: false,
+      controller: controller,
+      focusNode: focusNode,
+      isReadOnly: isReadOnly!,
+      fieldEnable: isActive,
+      fillColor: AppColors.whitePure,
+      borderColor: AppColors.textFieldBorderColor,
+      hasCustomIcon: true,
+      showSuffixIcon: true,
+      suffixIcon: textFieldType == "location"
+          ? Image.asset(
+        mapPin,
+        scale: 2,
+      )
+          : textFieldType == "dateField"
+          ? Image.asset(
+        calender,
+        scale: 2,
+      )
+          : null,
+      onTap: () {
+        if (textFieldType == "dateField") {
+          printLog("Open date selector");
+          _showDateTimePicker(context, controller);
+        } else if (textFieldType == "location") {
+          printLog("Open location selector");
+          _setLocationData(context, controller);
+        }
+      },
+    );
+  }
+
+  _showDateTimePicker(BuildContext context,TextEditingController? textEditingController) async {
+    // First: Show Date Picker
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year+1),
+    );
+
+    if (pickedDate == null) return null; // User canceled date picker
+
+    // Second: Show Time Picker
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+    );
+
+    if (pickedTime == null) return null; // User canceled time picker
+
+    // Combine date and time
+    var date = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+
+    textEditingController?.text = _getFormattedTime(date.toString());
+  }
+
+  void _setLocationData(
+      BuildContext? context, TextEditingController? textEditingController) {
+    textEditingController?.text = "New York";
+  }
+
+  String _getFormattedTime(String time){
+    try {
+      // Parse the input time string into a DateTime object
+      DateTime dateTime = DateTime.parse(time);
+
+      // Format the DateTime object into a readable string
+      String formattedTime = DateFormat('dd-MMM-yyyy, hh:mm a').format(dateTime);
+
+      return formattedTime;
+    } catch (e) {
+      // Handle parsing errors by returning an empty string or error message
+      return "Invalid time format";
+    }
+  }
+
 
   @override
   void didChangeDependencies() {

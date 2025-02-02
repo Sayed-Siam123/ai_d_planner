@@ -10,7 +10,7 @@ import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_page_event.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_page_state.dart';
-import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/views/question_answer_dialog_widget.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/views/regenerate_question_answer_dialog_widget.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -108,10 +108,9 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: CustomAppMaterialButton(
                 title: "Regenerate My Plan",
-                backgroundColor: AppColors.customHex("D0A2DA").withValues(
-                    alpha: 0.1),
-                borderColor: AppColors.customHex("D0A2DA"),
-                textColor: AppColors.customHex("D0A2DA"),
+                backgroundColor: AppColors.transparentPure,
+                borderColor: AppColors.primaryColor,
+                textColor: AppColors.primaryColor,
                 usePrefixIcon: false,
                 needSplashEffect: true,
                 borderRadius: 50,
@@ -125,9 +124,6 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
             ),
             AppWidgets().gapH12(),
             Text("We’ll create something unforgettable this time!",style: textRegularStyle(context,fontSize: 14,fontWeight: FontWeight.w400),),
-            AppWidgets().gapH24(),
-            AppWidgets().gapH24(),
-            AppWidgets().gapH24(),
             AppWidgets().gapH24(),
           ],
         ),
@@ -199,7 +195,8 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: AppColors.textFieldBorderColor
-                        )
+                        ),
+                        borderRadius: BorderRadius.circular(boxRadius10P),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -216,16 +213,16 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                                     text: '✨ ${activity.description!.replaceAll(".", "")} at ',
                                     style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
                                   ),
-                                  TextSpan(
-                                    text: activity.location != null && activity.location!.split(' ').length > 2
-                                        ? '${activity.location!.toLowerCase().split(' ').sublist(0, activity.location!.split(' ').length - 2).join(' ')} '
-                                        : '${activity.location?.toLowerCase() ?? ''} ',
-                                    style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
-                                  ),
+                                  // TextSpan(
+                                  //   text: activity.location != null && activity.location!.split(' ').length > 2
+                                  //       ? '${activity.location!.toLowerCase().split(' ').sublist(0, activity.location!.split(' ').length - 2).join(' ')} '
+                                  //       : '${activity.location?.toLowerCase() ?? ''} ',
+                                  //   style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
+                                  // ),
                                   // Bold last two words
                                   TextSpan(
-                                    text: activity.location != null && activity.location!.split(' ').length > 2
-                                        ? activity.location!.toLowerCase().split(' ').sublist(activity.location!.split(' ').length - 2).join(' ')
+                                    text: activity.location != null
+                                        ? activity.location!.toString()
                                         : '',
                                     style: textRegularStyle(context, fontWeight: FontWeight.bold, fontSize: 20),
                                   ),
