@@ -13,12 +13,14 @@ import 'explore_state.dart';
 class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
 
   ResponseSupaBaseRepository? responseSupaBaseRepository;
+  bool ascending = true;
 
   ExploreBloc() : super(ExploreState(exploreStateStatus: ExploreStateStatus.init)) {
     responseSupaBaseRepository = ResponseSupaBaseRepository();
     on<FetchAllPlans>(_fetchAllPlans);
     on<ChangeStatusFav>(_changeStatusFav);
     on<DeletePlan>(_deletePlan);
+    on<SortPlansByDateEvent>(_sortPlansByDateEvent);
   }
 
   // void _init(InitEvent event, Emitter<ExploreState> emit) async {
@@ -95,6 +97,43 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
     await _getAllPlans(emit);
 
     AppHelper().hideLoader();
+  }
+
+  void _sortPlansByDateEvent(SortPlansByDateEvent event, Emitter<ExploreState> emit) async {
+    // Get current lists from state
+    List<GetPlanResponseModel> favList = List.from(state.favList!);
+    List<GetPlanResponseModel> upcoming = List.from(state.upcomingList!);
+    List<GetPlanResponseModel> passed = List.from(state.passedList!);
+
+    // Sort the lists
+    favList = sortPlans(favList, ascending: event.ascending);
+    upcoming = sortPlans(upcoming, ascending: event.ascending);
+    passed = sortPlans(passed, ascending: event.ascending);
+
+    ascending = !ascending;
+
+    // Emit the sorted lists
+    emit(state.copyWith(
+      exploreStateStatus: ExploreStateStatus.success,
+      favList: favList,
+      upcomingList: upcoming,
+      passedList: passed,
+    ));
+  }
+
+  List<GetPlanResponseModel> sortPlans(List<GetPlanResponseModel> plans, {bool ascending = true}) {
+    plans.sort((a, b) {
+      DateTime? dateA = _getDateFromAPI(a.dateDateTime!);
+      DateTime? dateB = _getDateFromAPI(b.dateDateTime!);
+
+      if (dateA == null && dateB == null) return 0;
+      if (dateA == null) return 1;
+      if (dateB == null) return -1;
+
+      return ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
+    });
+
+    return plans;
   }
 
   DateTime? _getDateFromAPI(String? dateTime) {

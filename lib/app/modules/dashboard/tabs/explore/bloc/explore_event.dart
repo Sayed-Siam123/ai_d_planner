@@ -30,3 +30,13 @@ class DeletePlan extends ExploreEvent {
   // TODO: implement props
   List<Object?> get props => [planID];
 }
+
+class SortPlansByDateEvent extends ExploreEvent {
+  final bool ascending;
+
+  SortPlansByDateEvent({required this.ascending});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [ascending];
+}

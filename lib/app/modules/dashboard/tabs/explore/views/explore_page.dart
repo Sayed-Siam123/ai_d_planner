@@ -36,6 +36,7 @@ class _ExplorePageState extends State<ExplorePage> {
     super.initState();
     if(exploreBloc.state.exploreStateStatus != ExploreStateStatus.success){
       exploreBloc.add(FetchAllPlans());
+      exploreBloc.add(SortPlansByDateEvent(ascending: exploreBloc.ascending));
     }
   }
 

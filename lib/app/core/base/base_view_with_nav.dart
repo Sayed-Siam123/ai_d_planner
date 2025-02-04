@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/core/constants/string_constants.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/chatbot/chat_bot_page.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_bloc.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_event.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/views/explore_page.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/views/profile_page.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/views/question_page.dart';
@@ -22,6 +24,7 @@ import '../../services/bottom_nav_state/bloc/bottom_nav_cubit.dart';
 import '../../services/bottom_nav_state/bloc/bottom_nav_state.dart';
 import '../connection_manager/internet_cubit/internet_cubit.dart';
 import '../constants/enum_constants.dart';
+import '../constants/size_constants.dart';
 import '../style/app_colors.dart';
 import '../style/app_style.dart';
 import '../utils/helper/app_helper.dart';
@@ -58,6 +61,8 @@ class _DashboardPageState extends State<DashboardPage> {
   final _responseGenPageKey = GlobalKey();
 
   var internetProvider = getIt<InternetCubit>();
+  var exploreBloc = getIt<ExploreBloc>();
+
 
   @override
   void initState(){
@@ -207,7 +212,26 @@ class _DashboardPageState extends State<DashboardPage> {
         isDarkBrightness: true,
         elevation: 0.0,
         actionWidget: [
-          Icon(Icons.filter_list_outlined,size: 24,),
+          /*
+          * exploreBloc.add(SortPlansByDateEvent(ascending: ascending));
+          * */
+
+          Material(
+            color: AppColors.transparentPure,
+            borderRadius: BorderRadius.circular(roundRadius),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(roundRadius),
+              onTap: () {
+                exploreBloc.add(SortPlansByDateEvent(ascending: exploreBloc.ascending));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.filter_list_outlined,size: 24,),
+              ),
+            ),
+          ),
+
+
           AppWidgets().gapW16(),
           Icon(AntDesign.filter,size: 24),
           AppWidgets().gapW16(),
