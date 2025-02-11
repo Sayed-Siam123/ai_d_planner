@@ -11,20 +11,23 @@ enum AuthenticationStateStatus{
 
 class AuthenticationState extends Equatable{
   final AuthenticationStateStatus? authenticationStateStatus;
+  final String? fullName;
 
-  const AuthenticationState({this.authenticationStateStatus});
+  const AuthenticationState({this.authenticationStateStatus,this.fullName});
 
   AuthenticationState copyWith({
     AuthenticationStateStatus? authenticationStateStatus,
+    String? fullName,
 }){
     return AuthenticationState(
-      authenticationStateStatus: authenticationStateStatus ?? this.authenticationStateStatus
+      authenticationStateStatus: authenticationStateStatus ?? this.authenticationStateStatus,
+      fullName: fullName ?? this.fullName,
     );
 }
 
   @override
   // TODO: implement props
-  List<Object?> get props => [authenticationStateStatus];
+  List<Object?> get props => [authenticationStateStatus,fullName];
 
 
 

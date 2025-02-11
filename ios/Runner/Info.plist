@@ -52,5 +52,24 @@
     <key>NSContactsUsageDescription</key>
     <string>Required for the location autocomplete</string>
 
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.brainstormdevelopment.loveplanai</string>
+            </array>
+        </dict>
+    </array>
+
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>https</string>
+        <string>http</string>
+    </array>
+
+    <key>SignInWithApple</key>
+    <true/>
+
   </dict>
 </plist>

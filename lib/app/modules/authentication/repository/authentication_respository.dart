@@ -99,6 +99,24 @@ class AuthenticationRepository{
     }
   }
 
+  Future<bool> getUserProfileByID(userID) async {
+    try {
+      final response = await _supabase
+          .from(DBConfig.profileTable)
+          .select('*')
+          .eq(
+        'user_uid',
+        userID,
+      );
+
+      //return responseModelFromJson(jsonEncode(response));
+      return response.isNotEmpty ? true : false;
+    } catch (e) {
+      // Handle any exception thrown by Supabase
+      return false;
+    }
+  }
+
 
   /*
   *final data = await _supabase

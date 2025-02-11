@@ -1,4 +1,4 @@
-package com.elexia.loveplanai
+package com.brainstormdevelopment.loveplanai
 
 import io.flutter.embedding.android.FlutterActivity
 

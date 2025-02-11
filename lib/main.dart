@@ -113,7 +113,7 @@ initializeSupaBase() async{
 
   await Supabase.initialize(
     url: supaBaseURL.toString(),
-    anonKey: supaBaseKey.toString()
+    anonKey: supaBaseKey.toString(),
   );
 }
 

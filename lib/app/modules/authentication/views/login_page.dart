@@ -87,11 +87,9 @@ class LoginPage extends BaseView {
     return false;
   }
 
-  _socialMediaLogoWidget(logo) {
+  _socialMediaLogoWidget(logo, {VoidCallback? onTap = null}) {
     return InkWell(
-      onTap: () {
-
-      },
+      onTap: () => onTap!.call(),
       borderRadius: BorderRadius.circular(boxRadius),
       child: Container(
         height: 70,
@@ -250,10 +248,12 @@ class LoginPage extends BaseView {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _socialMediaLogoWidget(appleLogo),
-                  AppWidgets().gapW24(),
-                  _socialMediaLogoWidget(fbLogo),
-                  AppWidgets().gapW24(),
+                  Platform.isIOS ? _socialMediaLogoWidget(appleLogo,onTap: () {
+                    authBloc.add(InitiateLoginWithApple());
+                  },) : const SizedBox(),
+                  Platform.isIOS ? AppWidgets().gapW24() : AppWidgets().gapW(0),
+                  // _socialMediaLogoWidget(fbLogo),
+                  // AppWidgets().gapW24(),
                   _socialMediaLogoWidget(googleLogo),
                 ],
               ),

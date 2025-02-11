@@ -41,6 +41,8 @@ dependencies:
   bottom_picker: ^2.10.1
   dio: ^5.7.0
   add_2_calendar: ^3.0.1
+  sign_in_with_apple: ^6.1.4
+  crypto: ^3.0.6
 
   supabase_flutter: ^2.8.3
 

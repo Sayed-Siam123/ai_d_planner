@@ -26,6 +26,14 @@ class InitiateLogin extends AuthenticationEvent {
 
 }
 
+class InitiateLoginWithApple extends AuthenticationEvent {
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+
+}
+
 class Logout extends AuthenticationEvent {
   @override
   // TODO: implement props
