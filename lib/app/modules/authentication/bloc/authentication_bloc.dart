@@ -42,8 +42,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       emit(state.copyWith(
           authenticationStateStatus: AuthenticationStateStatus.success
       ));
-      _getBackMethod();
-      AppWidgets().getSnackBar(message: "Signup Completed! Please Login",status: SnackBarStatus.success);
+      _getForwardMethod();
+      AppWidgets().getSnackBar(message: "Signup Completed!",status: SnackBarStatus.success);
     } else{
       emit(state.copyWith(
           authenticationStateStatus: AuthenticationStateStatus.error

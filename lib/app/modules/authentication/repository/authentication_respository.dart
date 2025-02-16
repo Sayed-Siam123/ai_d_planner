@@ -23,7 +23,7 @@ class AuthenticationRepository{
             role: "user",
             authId: user.id
         );
-        await _supabase.auth.signOut();
+        // await _supabase.auth.signOut();
         return response;
       } else{
         printLog('User not authenticated');

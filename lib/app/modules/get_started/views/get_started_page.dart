@@ -15,6 +15,7 @@ import 'package:ai_d_planner/app/modules/get_started/bloc/get_started_state.dart
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -87,13 +88,15 @@ class GetStartedPage extends BaseView {
 
   @override
   void onPopBack(BuildContext context) {
+    var _supabase = Supabase.instance.client;
+    _supabase.auth.currentUser == null ?
     toReplacementNamed(AppRoutes.login,args: PageRouteArg(
       to: AppRoutes.login,
       from: AppRoutes.getStarted,
       pageRouteType: PageRouteType.pushReplacement,
       isFromDashboardNav: false,
       isBackAction: true
-    ));
+    )) : null;
   }
 
   @override
@@ -125,34 +128,43 @@ class GetStartedPage extends BaseView {
     return Column(
       children: [
         AppWidgets().gapH(30),
-        Swiper(
-          controller: swiperController,
-          indicatorLayout: PageIndicatorLayout.SLIDE,
-          itemBuilder: (BuildContext context, int index) {
-            return ClipRRect(
-                borderRadius: BorderRadius.circular(swipeCardRadius),
-                child: Image.network(
-                  "https://via.assets.so/album.png?id=${index + 1}&q=95&w=360&h=360&fit=fill",
-                  fit: BoxFit.fill,
-                ));
-          },
-          itemCount: 3,
-          onIndexChanged: (value) {
-            //pageController!.jumpToPage(value);
-            getStartedBloc.add(ChangeSlideIndicator(currentIndex: value));
-          },
-          autoplay: true,
-          autoplayDelay: 2000,
-          autoplayDisableOnInteraction: true,
-          // pagination: SwiperPagination(),
-          // control: SwiperControl(),
-          layout: SwiperLayout.STACK,
-          itemWidth: 300,
-          itemHeight: 300,
-          axisDirection: AxisDirection.right,
-          allowImplicitScrolling: true,
-          curve: Curves.easeInOut,
-          outer: false,
+        Card(
+          shadowColor: AppColors.textGrayShade5.withValues(alpha: 0.8),
+          elevation: 20,
+          color: AppColors.transparentPure,
+          margin: EdgeInsets.symmetric(horizontal: 15,vertical: 2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(swipeCardRadius),
+          ),
+          child: Swiper(
+            controller: swiperController,
+            indicatorLayout: PageIndicatorLayout.SLIDE,
+            itemBuilder: (BuildContext context, int index) {
+              return ClipRRect(
+                  borderRadius: BorderRadius.circular(swipeCardRadius),
+                  child: Image.network(
+                    "https://via.assets.so/album.png?id=${index + 1}&q=95&w=360&h=360&fit=fill",
+                    fit: BoxFit.fill,
+                  ));
+            },
+            itemCount: 3,
+            onIndexChanged: (value) {
+              //pageController!.jumpToPage(value);
+              getStartedBloc.add(ChangeSlideIndicator(currentIndex: value));
+            },
+            autoplay: false,
+            // autoplayDelay: 2000,
+            autoplayDisableOnInteraction: false,
+            // pagination: SwiperPagination(),
+            // control: SwiperControl(),
+            layout: SwiperLayout.STACK,
+            itemWidth: 290.w,
+            itemHeight: 500,
+            axisDirection: AxisDirection.right,
+            // allowImplicitScrolling: true,
+            curve: Curves.easeInOut,
+            scrollDirection: Axis.horizontal,
+          ),
         ),
         AppWidgets().gapH12(),
         BlocBuilder<GetStartedBloc, GetStartedState>(

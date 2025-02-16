@@ -31,7 +31,7 @@ class AppColors {
   static const primaryLiteColor = Color(0xFF563078);
   static const secondaryColor = Color(0xFFC02231);
   // static const backgroundColor = Color(0xFFF9F9F9);
-  static const backgroundColor = Color(0xFFFFF9F6);
+  static const backgroundColor = Color(0xFFFFF9F5);
   static const backgroundColorNew = Color(0xFFE2ECF4);
   static const accentColor = Color(0xFF703E97);
   static const errorColor = Color(0xFFED3675);

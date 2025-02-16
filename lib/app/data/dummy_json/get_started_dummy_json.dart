@@ -145,11 +145,11 @@ var getStartedDummy = [
     "isRequired" : false,
     "textFieldType" : "text",
     "options" : [
-      "Vegetarian.",
+      "Vegetarian",
       "Vegan.",
       "Halal",
-      "Kosher.",
-      "No restrictions."
+      "Kosher",
+      "No restrictions",
       "Custom"
     ]
   },

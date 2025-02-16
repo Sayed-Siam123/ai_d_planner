@@ -210,7 +210,7 @@ class QuestionFlowPage extends BaseView {
                                         }
 
                                         return Material(
-                                          color: isSelected ? AppColors.primaryColor : AppColors.whitePure,
+                                          color: isSelected ? AppColors.primaryColor : AppColors.transparentPure,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(roundRadius),
                                             side: BorderSide(
@@ -233,15 +233,19 @@ class QuestionFlowPage extends BaseView {
                                             child: Padding(
                                               padding: const EdgeInsets.all(13.0),
                                               child: option.toLowerCase() != "custom"
-                                                  ? Text(
-                                                option,
-                                                style: textRegularStyle(
-                                                  context,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  isWhiteColor: isSelected,
-                                                ),
-                                              ) : Row(
+                                                  ? Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                        child: Text(
+                                                          option,
+                                                          textAlign: TextAlign.center,
+                                                          style: textRegularStyle(
+                                                        context,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w500,
+                                                        isWhiteColor: isSelected,
+                                                      ),
+                                                    ),
+                                                  ) : Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Image.asset(
@@ -249,13 +253,17 @@ class QuestionFlowPage extends BaseView {
                                                     scale: 1.8,
                                                   ),
                                                   AppWidgets().gapW8(),
-                                                  Text(
-                                                    option,
-                                                    style: textRegularStyle(
-                                                      context,
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.w500,
-                                                      isWhiteColor: isSelected,
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                    child: Text(
+                                                      option,
+                                                      textAlign: TextAlign.center,
+                                                      style: textRegularStyle(
+                                                        context,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w500,
+                                                        isWhiteColor: isSelected,
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -477,13 +485,26 @@ class QuestionFlowPage extends BaseView {
   }
 
   void _onBackMethod() {
-    toReplacementNamed(AppRoutes.getStarted,
-        args: PageRouteArg(
-            to: AppRoutes.getStarted,
-            from: AppRoutes.quesFlow,
-            pageRouteType: PageRouteType.pushReplacement,
-            isFromDashboardNav: false,
-            isBackAction: true));
+
+    if (quesFlowBloc.state.currentIndex == 0) {
+      // If it's the first question, go back to the previous screen
+      toReplacementNamed(AppRoutes.getStarted,
+          args: PageRouteArg(
+              to: AppRoutes.getStarted,
+              from: AppRoutes.quesFlow,
+              pageRouteType: PageRouteType.pushReplacement,
+              isFromDashboardNav: false,
+              isBackAction: true));
+    } else {
+      // Otherwise, move to the previous question
+      pageController!.previousPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+
+      // Update the bloc state to reflect the previous question
+      quesFlowBloc.add(ChangeToNext(pageCurrentIndex: quesFlowBloc.state.currentIndex! - 1));
+    }
   }
 
   _getButtonName() {
