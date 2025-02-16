@@ -80,7 +80,7 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                     curve: Curves.easeInOut,
                     outer: false,
                     viewportFraction: 0.85,
-                    scale: 0.90,
+                    scale: 0.95,
                     onIndexChanged: (value) {
                       getStartedBloc.add(ChangeSlideIndicator(currentIndex: value));
                     },
@@ -167,9 +167,18 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
 
   _planItemWidget(BuildContext? context, int? index,QuestionPageState? state) {
     return Container(
+      margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: AppColors.whitePure,
         borderRadius: BorderRadius.circular(boxRadius),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 2,
+            offset: Offset(0, 4), // Shadow position
+          ),
+        ]
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,12 +208,12 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                         borderRadius: BorderRadius.circular(boxRadius10P),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(activity.startTime.toString(),style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),),
-                            AppWidgets().gapH16(),
+                            AppWidgets().gapH8(),
                             RichText(
                               text: TextSpan(
                                 children: [

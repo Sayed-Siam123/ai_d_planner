@@ -65,13 +65,13 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
                         borderRadius: BorderRadius.circular(boxRadius10P),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(18.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(activity.startTime.toString(),style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),),
-                            AppWidgets().gapH16(),
-                            RichText(
+                            AppWidgets().gapH8(),
+                            /*RichText(
                               text: TextSpan(
                                 children: [
                                   // Normal part of the sentence
@@ -89,6 +89,30 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
                                   TextSpan(
                                     text: activity.location != null && activity.location!.split(' ').length > 2
                                         ? activity.location!.toLowerCase().split(' ').sublist(activity.location!.split(' ').length - 2).join(' ')
+                                        : '',
+                                    style: textRegularStyle(context, fontWeight: FontWeight.bold, fontSize: 20),
+                                  ),
+                                ],
+                              ),
+                            ),*/
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  // Normal part of the sentence
+                                  TextSpan(
+                                    text: '✨ ${activity.description!.replaceAll(".", "")} at ',
+                                    style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
+                                  ),
+                                  // TextSpan(
+                                  //   text: activity.location != null && activity.location!.split(' ').length > 2
+                                  //       ? '${activity.location!.toLowerCase().split(' ').sublist(0, activity.location!.split(' ').length - 2).join(' ')} '
+                                  //       : '${activity.location?.toLowerCase() ?? ''} ',
+                                  //   style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
+                                  // ),
+                                  // Bold last two words
+                                  TextSpan(
+                                    text: activity.location != null
+                                        ? activity.location!.toString()
                                         : '',
                                     style: textRegularStyle(context, fontWeight: FontWeight.bold, fontSize: 20),
                                   ),

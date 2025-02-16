@@ -330,8 +330,8 @@ var getQuestionPageDummy = [
       "Vegan.",
       "Halal",
       "Kosher.",
-      "No restrictions."
-          "Custom"
+      "No restrictions.",
+      "Custom"
     ]
   },
   {

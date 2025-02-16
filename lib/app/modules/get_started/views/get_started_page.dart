@@ -128,14 +128,27 @@ class GetStartedPage extends BaseView {
     return Column(
       children: [
         AppWidgets().gapH(30),
-        Card(
-          shadowColor: AppColors.textGrayShade5.withValues(alpha: 0.8),
-          elevation: 20,
-          color: AppColors.transparentPure,
+        Container(
           margin: EdgeInsets.symmetric(horizontal: 15,vertical: 2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(swipeCardRadius),
+          decoration: BoxDecoration(
+              color: AppColors.transparentPure,
+              borderRadius: BorderRadius.circular(swipeCardRadius),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                  offset: Offset(0, 4), // Shadow position
+                ),
+              ]
           ),
+          // shadowColor: AppColors.textGrayShade5.withValues(alpha: 0.8),
+          // elevation: 20,
+          // color: AppColors.transparentPure,
+          // margin: EdgeInsets.symmetric(horizontal: 15,vertical: 2),
+          // shape: RoundedRectangleBorder(
+          //   borderRadius: BorderRadius.circular(swipeCardRadius),
+          // ),
           child: Swiper(
             controller: swiperController,
             indicatorLayout: PageIndicatorLayout.SLIDE,

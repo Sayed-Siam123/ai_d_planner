@@ -24,6 +24,15 @@ var getStartedDummy = [
     ]
   },
   {
+    "ques" : "Your date location",
+    "hint" : "Please write down your address",
+    "isMultipleSelect" : false,
+    "isRequired" : true,
+    "textFieldType" : "text",
+    "options" : []
+    //this will be text_field widget - isMultipleSelect --> false and options would be empty
+  },
+  {
     "ques" : "When is your date, and what time do you want to start?",
     "hint" : "Please enter time and date",
     "isMultipleSelect" : false,

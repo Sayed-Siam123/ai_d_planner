@@ -297,15 +297,18 @@ class _QuestionPageState extends State<QuestionPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(13.0),
                         child: option.toLowerCase() != "custom"
-                            ? Text(
-                          option,
-                          style: textRegularStyle(
-                            context,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            isWhiteColor: isSelected,
-                          ),
-                        )
+                            ? Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                option,
+                                style: textRegularStyle(
+                                  context,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  isWhiteColor: isSelected,
+                                ),
+                              ),
+                            )
                             : Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -314,13 +317,16 @@ class _QuestionPageState extends State<QuestionPage> {
                               scale: 1.8,
                             ),
                             AppWidgets().gapW8(),
-                            Text(
-                              option,
-                              style: textRegularStyle(
-                                context,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                isWhiteColor: isSelected,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                option,
+                                style: textRegularStyle(
+                                  context,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  isWhiteColor: isSelected,
+                                ),
                               ),
                             ),
                           ],

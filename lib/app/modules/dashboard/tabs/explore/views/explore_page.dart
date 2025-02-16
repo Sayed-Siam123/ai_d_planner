@@ -153,13 +153,13 @@ class _ExplorePageState extends State<ExplorePage> {
           crossAxisCount: 2,
           childAspectRatio: 7.5 / 10.0,
           shrinkWrap: false,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5,
+          crossAxisSpacing: 3,
+          mainAxisSpacing: 15,
           physics: AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(vertical: 20.0),
           children: List<Widget>.generate(plansList.length, (index) {
             return Material(
-              color: AppColors.whitePure,
+              //color: AppColors.whitePure,
               borderRadius: BorderRadius.circular(boxRadius),
               child: InkWell(
                 borderRadius: BorderRadius.circular(boxRadius),
@@ -167,132 +167,133 @@ class _ExplorePageState extends State<ExplorePage> {
                   await _openDetailsDialog(context,plansList[index]);
                 },
                 child: GridTile(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: AppColors.transparentPure,
-                        borderRadius: BorderRadius.circular(boxRadius),
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 2),
-                            blurRadius: 66,
-                            spreadRadius: 0,
-                            color: AppColors.whitePure.withValues(
-                              alpha: 0.15,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 7.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.whitePure,
+                          borderRadius: BorderRadius.circular(boxRadius),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                              offset: Offset(0, 4), // Shadow position
                             ),
-                          )
-                        ]
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10.0,20.0,20.0,0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Material(
-                                color: AppColors.transparentPure,
-                                borderRadius: BorderRadius.circular(roundRadius),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(roundRadius),
-                                  onTap: () {
-                                    exploreBloc.add(DeletePlan(
-                                      planID: int.parse(plansList[index].id.toString()),
-                                    ));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.delete,color: AppColors.primaryColor,size: 20,),
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Material(
-                                    color: AppColors.transparentPure,
-                                    borderRadius: BorderRadius.circular(roundRadius),
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(roundRadius),
-                                      onTap: () {
-                                        exploreBloc.add(ChangeStatusFav(
-                                            planID: int.parse(plansList[index].id.toString()),
-                                            status: !plansList[index].isFav!,
-                                        ));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Icon(!plansList[index].isFav! ? Icons.favorite_border_rounded : Icons.favorite_rounded,color: !plansList[index].isFav! ? AppColors.textGrayShade8 : AppColors.red,size: 20,),
-                                      ),
-                                    ),
-                                  ),
-                                  AppWidgets().gapW(2),
-                                  Material(
-                                    color: AppColors.transparentPure,
-                                    borderRadius: BorderRadius.circular(roundRadius),
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(roundRadius),
-                                      onTap: () async{
-                                        await add2calender(
-                                          dateTime: plansList[index].dateDateTime!,
-                                          eventTitle: "Date plan ${plansList[index].id.toString()}",
-                                          eventDescription: "",
-                                          eventLocation: plansList[index].location!,
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(calenderGray,height: 18,width: 18,),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        // AppWidgets().gapH16(),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          ]
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(10.0,20.0,20.0,0.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(child: Text("Date in ${plansList[index].location!}",style: textRegularStyle(context,fontSize: 21,fontWeight: FontWeight.bold),)),
-                                AppWidgets().gapH16(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Image.asset(mapPin,height: 20,width: 20,color: AppColors.primaryColor),
-                                    AppWidgets().gapW8(),
-                                    Expanded(child: Text(plansList[index].location!,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),))
-                                  ],
+                                Material(
+                                  color: AppColors.transparentPure,
+                                  borderRadius: BorderRadius.circular(roundRadius),
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(roundRadius),
+                                    onTap: () {
+                                      exploreBloc.add(DeletePlan(
+                                        planID: int.parse(plansList[index].id.toString()),
+                                      ));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.delete,color: AppColors.primaryColor,size: 20,),
+                                    ),
+                                  ),
                                 ),
-                                AppWidgets().gapH8(),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Image.asset(budget,height: 20,width: 20,color: AppColors.primaryColor),
-                                    AppWidgets().gapW8(),
-                                    Text("\$${plansList[index].plan!.totalEstimatedCost.toString()}",style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),)
-                                  ],
-                                ),
-                                AppWidgets().gapH8(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Image.asset(calender,height: 20,width: 20,color: AppColors.primaryColor),
-                                    AppWidgets().gapW8(),
-                                    Text(_getDateFormat(plansList[index].dateDateTime!)!,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),)
+                                    Material(
+                                      color: AppColors.transparentPure,
+                                      borderRadius: BorderRadius.circular(roundRadius),
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(roundRadius),
+                                        onTap: () {
+                                          exploreBloc.add(ChangeStatusFav(
+                                              planID: int.parse(plansList[index].id.toString()),
+                                              status: !plansList[index].isFav!,
+                                          ));
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(!plansList[index].isFav! ? Icons.favorite_border_rounded : Icons.favorite_rounded,color: !plansList[index].isFav! ? AppColors.textGrayShade8 : AppColors.red,size: 20,),
+                                        ),
+                                      ),
+                                    ),
+                                    AppWidgets().gapW(2),
+                                    Material(
+                                      color: AppColors.transparentPure,
+                                      borderRadius: BorderRadius.circular(roundRadius),
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(roundRadius),
+                                        onTap: () async{
+                                          await add2calender(
+                                            dateTime: plansList[index].dateDateTime!,
+                                            eventTitle: "Date plan ${plansList[index].id.toString()}",
+                                            eventDescription: "",
+                                            eventLocation: plansList[index].location!,
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.asset(calenderGray,height: 18,width: 18,),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      ],
+                          // AppWidgets().gapH16(),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(child: Text("Date in ${plansList[index].location!}",style: textRegularStyle(context,fontSize: 21,fontWeight: FontWeight.bold),)),
+                                  AppWidgets().gapH16(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset(mapPin,height: 20,width: 20,color: AppColors.primaryColor),
+                                      AppWidgets().gapW8(),
+                                      Expanded(child: Text(plansList[index].location!,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),))
+                                    ],
+                                  ),
+                                  AppWidgets().gapH8(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset(budget,height: 20,width: 20,color: AppColors.primaryColor),
+                                      AppWidgets().gapW8(),
+                                      Text("\$${plansList[index].plan!.totalEstimatedCost.toString()}",style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),)
+                                    ],
+                                  ),
+                                  AppWidgets().gapH8(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset(calender,height: 20,width: 20,color: AppColors.primaryColor),
+                                      AppWidgets().gapW8(),
+                                      Text(_getDateFormat(plansList[index].dateDateTime!)!,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),)
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

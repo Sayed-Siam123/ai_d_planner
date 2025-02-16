@@ -101,9 +101,9 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
 
   void _sortPlansByDateEvent(SortPlansByDateEvent event, Emitter<ExploreState> emit) async {
     // Get current lists from state
-    List<GetPlanResponseModel> favList = List.from(state.favList!);
-    List<GetPlanResponseModel> upcoming = List.from(state.upcomingList!);
-    List<GetPlanResponseModel> passed = List.from(state.passedList!);
+    List<GetPlanResponseModel> favList = List.from(state.favList ?? []);
+    List<GetPlanResponseModel> upcoming = List.from(state.upcomingList ?? []);
+    List<GetPlanResponseModel> passed = List.from(state.passedList ?? []);
 
     // Sort the lists
     favList = sortPlans(favList, ascending: event.ascending);
