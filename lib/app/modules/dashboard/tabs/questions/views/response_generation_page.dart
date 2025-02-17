@@ -214,12 +214,12 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                           children: [
                             Text(activity.startTime.toString(),style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),),
                             AppWidgets().gapH8(),
-                            RichText(
+                            /*RichText(
                               text: TextSpan(
                                 children: [
                                   // Normal part of the sentence
                                   TextSpan(
-                                    text: '✨ ${activity.description!.replaceAll(".", "")} at ',
+                                    text: '✨ ${activity.name!.replaceAll(".", "")}',
                                     style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
                                   ),
                                   // TextSpan(
@@ -229,15 +229,16 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
                                   //   style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
                                   // ),
                                   // Bold last two words
-                                  TextSpan(
-                                    text: activity.location != null
-                                        ? activity.location!.toString()
-                                        : '',
-                                    style: textRegularStyle(context, fontWeight: FontWeight.bold, fontSize: 20),
-                                  ),
+                                  // TextSpan(
+                                  //   text: activity.location != null
+                                  //       ? "Location - ${activity.location!.toString()}"
+                                  //       : '',
+                                  //   style: textRegularStyle(context, fontWeight: FontWeight.bold, fontSize: 20),
+                                  // ),
                                 ],
                               ),
-                            ),
+                            ),*/
+                            ActivityText(name: activity.name!.toString()),
                           ],
                         ),
                       ),
@@ -342,4 +343,45 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
     return parsedDate;
   }
 
+}
+
+class ActivityText extends StatelessWidget {
+  final String name;
+
+  const ActivityText({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    // List of common prepositions
+    List<String> prepositions = ['at', 'on', 'in', 'to', 'over'];
+
+    // Find the first preposition in the text
+    RegExp regex = RegExp(r'\b(' + prepositions.join('|') + r')\b', caseSensitive: false);
+    Match? match = regex.firstMatch(name);
+
+    if (match != null) {
+      int index = match.start; // Position of the preposition
+
+      return RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: '✨ ${name.substring(0, index)}', // Normal text before preposition
+              style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
+            ),
+            TextSpan(
+              text: name.substring(index), // Bold text after preposition
+              style: textRegularStyle(context, fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // If no preposition is found, display the full text normally
+      return Text(
+        '✨ ${name.replaceAll(".", "")}',
+        style: textRegularStyle(context, fontWeight: FontWeight.normal, fontSize: 20),
+      );
+    }
+  }
 }

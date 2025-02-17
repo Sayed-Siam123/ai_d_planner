@@ -12,6 +12,7 @@ import '../../../../../core/constants/size_constants.dart';
 import '../../../../../core/style/app_colors.dart';
 import '../../../../../core/style/app_style.dart';
 import '../../../../../core/widgets/app_widgets.dart';
+import '../../questions/views/response_generation_page.dart';
 
 class ShowPlanDialogWidget extends StatefulWidget {
 
@@ -95,7 +96,7 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
                                 ],
                               ),
                             ),*/
-                            RichText(
+                            /*RichText(
                               text: TextSpan(
                                 children: [
                                   // Normal part of the sentence
@@ -118,7 +119,8 @@ class _ShowPlanDialogWidgetState extends State<ShowPlanDialogWidget> {
                                   ),
                                 ],
                               ),
-                            ),
+                            ),*/
+                            ActivityText(name: activity.name!.toString()),
                           ],
                         ),
                       ),

@@ -30,35 +30,52 @@ class GeminiRepo{
     required String dateMoodType,
     required String dateDietRestrictions,
   }) =>
-      """Answer only using your current data to the best of your ability.
+      """Answer only in the format outlined below and nothing else. Do not include any placeholders. 
+      Explicitly mention the name of the places for each activity. Try to fill the given time duration as much as possible. 
+      If the budget is used up, recommend a free activity. Every activity MUST have a specific place name and address. 
+      Do NOT respond with "near [place name]" or "to be determined" for locations. If a specific place can't be found within the given radius, extend the search radius as needed to find a named location. 
+      For example, do NOT say "Enjoy dessert at a local bakery near [X]". Instead, find a specific bakery and provide its name and address. Do NOT leave any locations as "TBD."
 
 •Given:
     - location: ${location.toString()}.
-    - Maximum distance radius: 5 mile.
+    
+    - Maximum distance radius: 10 miles from the initial location.
+      Activities within a date plan should ideally be no more than 5 miles apart, 
+      but prioritize finding suitable activities over strict 5-mile adherence if necessary.
+      
     - Maximum Date duration: ${duration.toString()}.
+    
     - Preferred start time: ${time.toString()}.
+    
     - Date Type: ${dateType.toString()}.
-    - Preferred cuisine(if food mentioned in date type): ${foodType.toString()}.
-    - Preferred Activities(if activities mentioned in date type): ${activityType.toString()}.
+    
+    - Preferred cuisine: ${foodType.toString()}.
+    
+    - Preferred Activities: ${activityType.toString()}.
+    
     - Date Mood: ${dateMoodType.toString()}.
-    - Total combined budget for whole date for 2 people: ${budget.toString()}.
-    - Ensure all estimated costs include taxes and tips where applicable.
-    - Reservations are ok but must be explicitly mentioned in the generated answer if required.
+    
+    - Total budget (2 people): ${budget.toString()} (including taxes/tips).
+    
+    - Reservations: Okay (mention explicitly if required).
+    
     - Dietary restrictions:
-        - Strictly filter for ${dateDietRestrictions.toString()} requirements, Only suggest non-compliant restaurants if unavoidable, and explicitly mention it in response.
-        - For other preferences (vegetarian, vegan, pescatarian) or allergies (nut, dairy, etc.), ensure suitable options but do not strictly filter. Note if options are limited, and mention accordingly in response.
+        - Strictly filter for ${dateDietRestrictions.toString()}.
+        - For other preferences/allergies (vegetarian, vegan, pescatarian, nut, dairy, etc.), ensure suitable options but do not strictly filter, note limitations.
 
-•Generate 3 distinct date plans, each listing activities/events in order with start time and duration. Strictly follow location, radius, and budget. If no good matches fit all criteria, improvise while staying as close as possible to the given requirements.
+•Generate 3 distinct date plans.  Prioritize finding locations within the 10-mile radius of the starting location (${location.toString()}).
 
 •For each date plan, structure the response exactly as follows:
 
 •Date Plan 1:
-    - Activity 1: A at X. Start Time: PM. Duration: hour. Description: (Estimated Cost: \$). Location: .
-    - Activity 2: Y at C. Start Time: PM. Duration: hours. Description: (Estimated Cost: \$). Location: .
-    - Activity 3: E at F. Start Time: PM. Duration: hour. Description: (Estimated Cost: \$10). Location:
-    - Etc. as there can be more than 3 or even less
-    - Estimated Total Cost (Date Plan 1): \$.
+    Activity 1: [Action (4-8 words)] at [Place Name]. Start Time: [Time]. Duration: [Duration]. (Estimated Cost: \$[Cost]). Location: [Address].
+    Activity 2: [Action (4-8 words)] at [Place Name]. Start Time: [Time]. Duration: [Duration]. (Estimated Cost: \$[Cost]). Location: [Address].
+    Activity 3: [Action (4-8 words)] at [Place Name]. Start Time: [Time]. Duration: [Duration]. (Estimated Cost: \$[Cost]). Location: [Address].
+    ... (More or fewer activities possible)
 
+    Estimated Total Cost (Date Plan 1): \$[Total Cost].
+    
+    Same format for Date Plan 2 and Date Plan 3.
 
 {
   "plans": [
@@ -66,76 +83,92 @@ class GeminiRepo{
       "datePlanId": 1,
       "activities": [
         {
-          "name": "Dinner at a Mediterranean Restaurant (hypothetical)",
-          "startTime": "4:00 PM",
-          "durationHours": 1.5,
-          "description": "Enjoy Mediterranean kebabs and a cozy dining atmosphere.",
-          "estimatedCost": 40,
-          "location": "RPM Raceway, Queens, NY."        
+          "name": "[Activities you can generate suitable like - Kick off the [evening,morning or any other you can suggest] with [dinner,lunch or any other you can suggest] at [place name]]",
+          "startTime": "[any time with AM/PM]",
+          "durationHours": [1.5 or another duration] hours,
+          "description": "[describe something in your words]",
+          "estimatedCost": [estimated cost],
+          "location": [location,address]    
         },
         {
-          "name": "Bowling at Whitestone Lanes",
-          "startTime": "5:45 PM",
-          "durationHours": 1.5,
-          "description": "Fun and competitive bowling experience.",
-          "estimatedCost": 30,
-          "location": "Whitestone Lanes, Flushing, NY."
+          "name": "[Activities you can generate suitable like - Bowling at Whitestone Lanes]",
+          "startTime": "[any time with AM/PM]",
+          "durationHours": [1.5 or another duration] hours,
+          "description": "[describe something in your words]",
+          "estimatedCost": [estimated cost],
+          "location": [location,address]
         },
         {
-          "name": "Dessert at Spot Dessert Bar",
-          "startTime": "7:30 PM",
-          "durationHours": 1,
-          "description": "Indulge in delicious desserts with a creative twist.",
-          "estimatedCost": 20,
-          "location": "Spot Dessert Bar, Flushing, NY."
+          "name": "[Activities you can generate suitable like - Dessert at Spot Dessert Bar]",
+          "startTime": "[any time with AM/PM]",
+          "durationHours": [1.5 or another duration] hours,
+          "description": [describe something in your words]",
+          "estimatedCost": [estimated cost],
+          "location": [location,address]
         }
       ],
-      "totalEstimatedCost": 90
+      "totalEstimatedCost": [estimated cost]
     },
     {
-      "datePlanId": 2,
+      "datePlanId": 1,
       "activities": [
         {
-          "name": "Go-Karting at RPM Raceway",
-          "startTime": "4:00 PM",
-          "durationHours": 2,
-          "description": "Thrilling indoor go-karting experience.",
-          "estimatedCost": 50,
-          "location": "RPM Raceway, Queens, NY."
+          "name": "[Activities you can generate suitable like - Kick off the [evening,morning or any other you can suggest] with [dinner,lunch or any other you can suggest] at [place name]]",
+          "startTime": "[any time with AM/PM]",
+          "durationHours": [1.5 or another duration] hours,
+          "description": "[describe something in your words]",
+          "estimatedCost": [estimated cost],
+          "location": [location,address]    
         },
         {
-          "name": "Dinner at an Italian Restaurant",
-          "startTime": "6:30 PM",
-          "durationHours": 2,
-          "description": "Enjoy authentic Italian cuisine with a great ambiance.",
-          "estimatedCost": 50,
-          "location": "RPM Raceway, Queens, NY."
+          "name": "[Activities you can generate suitable like - Bowling at Whitestone Lanes]",
+          "startTime": "[any time with AM/PM]",
+          "durationHours": [1.5 or another duration] hours,
+          "description": "[describe something in your words]",
+          "estimatedCost": [estimated cost],
+          "location": [location,address]
+        },
+        {
+          "name": "[Activities you can generate suitable like - Dessert at Spot Dessert Bar]",
+          "startTime": "[any time with AM/PM]",
+          "durationHours": [1.5 or another duration] hours,
+          "description": [describe something in your words]",
+          "estimatedCost": [estimated cost],
+          "location": [location,address]
         }
       ],
-      "totalEstimatedCost": 100
+      "totalEstimatedCost": [estimated cost]
     },
     {
-      "datePlanId": 3,
+      "datePlanId": 1,
       "activities": [
         {
-          "name": "Arcade Games at Dave & Buster's",
-          "startTime": "4:00 PM",
-          "durationHours": 2,
-          "description": "Play classic and modern arcade games.",
-          "estimatedCost": 40,
-          "location": "Dave & Buster's, Queens, NY."
+          "name": "[Activities you can generate suitable like - Kick off the [evening,morning or any other you can suggest] with [dinner,lunch or any other you can suggest] at [place name]]",
+          "startTime": "[any time]",
+          "durationHours": [1.5 or another duration] hours,
+          "description": "[describe something in your words]",
+          "estimatedCost": [estimated cost],
+          "location": [location,address]    
         },
         {
-          "name": "Dinner at a Surprise Location",
-          "startTime": "6:30 PM",
-          "durationHours": 2,
-          "description": "Surprise choice based on available options (e.g., Mediterranean, Italian).",
-          "estimatedCost": 60,
-          "location": "RPM Raceway, Queens, NY."
+          "name": "[Activities you can generate suitable like - Bowling at Whitestone Lanes]",
+          "startTime": "[any time]",
+          "durationHours": [1.5 or another duration] hours,
+          "description": "[describe something in your words]",
+          "estimatedCost": [estimated cost],
+          "location": [location,address]
+        },
+        {
+          "name": "[Activities you can generate suitable like - Dessert at Spot Dessert Bar]",
+          "startTime": "[any time]",
+          "durationHours": [1.5 or another duration] hours,
+          "description": [describe something in your words]",
+          "estimatedCost": [estimated cost],
+          "location": [location,address]
         }
       ],
-      "totalEstimatedCost": 100
-    }
+      "totalEstimatedCost": [estimated cost]
+    },
   ]
 }
 
