@@ -9,7 +9,7 @@ var getStartedDummy = [
       "I can’t remember",
       "I nail it every time (but could use some help)",
     ]
-  },
+  }, //0
   {
     "ques" : "What’s the hardest part about planning a date?",
     "isMultipleSelect" : false,
@@ -22,7 +22,7 @@ var getStartedDummy = [
       "Juggling time to plan.",
       "Custom"
     ]
-  },
+  }, //1
   {
     "ques" : "Your date location",
     "hint" : "Please write down your address",
@@ -31,7 +31,7 @@ var getStartedDummy = [
     "textFieldType" : "text",
     "options" : []
     //this will be text_field widget - isMultipleSelect --> false and options would be empty
-  },
+  }, //2
   {
     "ques" : "When is your date, and what time do you want to start?",
     "hint" : "Please enter time and date",
@@ -39,7 +39,7 @@ var getStartedDummy = [
     "isRequired" : true,
     "textFieldType" : "dateField",
     "options" : []
-  },
+  }, //3
   {
     "ques" : "Total Time Limit?",
     "isMultipleSelect" : false,
@@ -51,7 +51,7 @@ var getStartedDummy = [
       "5+ hours",
       "Full day"
     ]
-  },
+  }, //4
   {
     "ques" : "What kind of date are you planning?",
     "isMultipleSelect" : false,
@@ -63,7 +63,7 @@ var getStartedDummy = [
       "Activities only.",
       "Custom"
     ]
-  },
+  }, //5
   {
     "ques" : "Do you have a preference for indoor or outdoor activities?",
     "isMultipleSelect" : false,
@@ -74,7 +74,7 @@ var getStartedDummy = [
       "Outdoor (like picnics, stargazing, and more).",
       "No preference."
     ]
-  },
+  }, //6
   {
     "ques" : "What’s the vibe you’re going for?",
     "isMultipleSelect" : false,
@@ -87,7 +87,7 @@ var getStartedDummy = [
       "Energetic and fun.",
       "Custom"
     ]
-  },
+  }, //7
   {
     "ques" : "What does your partner enjoy most?",
     "isMultipleSelect" : true,
@@ -101,7 +101,7 @@ var getStartedDummy = [
       "Relaxing activities 💆‍♀️",
       "Custom"
     ]
-  },
+  }, //8
   {
     "ques" : "What kind of food would you love for this date?",
     "isMultipleSelect" : true,
@@ -118,7 +118,7 @@ var getStartedDummy = [
       "Surprise me!",
       "Custom"
     ]
-  },
+  }, //9
   {
     "ques" : "What activities sound fun to you?",
     "isMultipleSelect" : true,
@@ -135,7 +135,7 @@ var getStartedDummy = [
       "Surprise me!",
       "Custom"
     ]
-  },
+  }, //10
   {
     "ques" : "What’s your total budget for this date?",
     "isMultipleSelect" : false,
@@ -147,7 +147,7 @@ var getStartedDummy = [
       "\$250+",
       "Custom"
     ]
-  },
+  }, //11
   {
     "ques" : "Do you or your partner have any dietary preferences? (Optional)",
     "isMultipleSelect" : false,
@@ -161,7 +161,7 @@ var getStartedDummy = [
       "No restrictions",
       "Custom"
     ]
-  },
+  }, //12
   {
     "ques" : "Want us to craft your dream date in seconds?",
     "isMultipleSelect" : false,
@@ -171,5 +171,5 @@ var getStartedDummy = [
       "Yes, show me!",
       "I’m curious to see what you’ve got."
     ]
-  }
+  } //13
 ];

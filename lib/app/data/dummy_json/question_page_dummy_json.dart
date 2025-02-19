@@ -179,7 +179,7 @@ var getQuestionPageDummy = [
     "textFieldType" : "text",
     "options" : []
     //this will be text_field widget - isMultipleSelect --> false and options would be empty
-  },
+  }, //0
   {
     "ques" : "When is your date, and what time do you want to start?",
     "hint" : "Please enter time and date",
@@ -187,7 +187,7 @@ var getQuestionPageDummy = [
     "isRequired" : true,
     "textFieldType" : "dateField",
     "options" : []
-  },
+  }, //1
   {
     "ques" : "When was the last time you planned a date that truly impressed your partner?",
     "isMultipleSelect" : false,
@@ -198,7 +198,7 @@ var getQuestionPageDummy = [
       "I can’t remember",
       "I nail it every time (but could use some help)",
     ]
-  },
+  }, //2
   {
     "ques" : "What’s the hardest part about planning a date?",
     "isMultipleSelect" : false,
@@ -211,7 +211,7 @@ var getQuestionPageDummy = [
       "Juggling time to plan.",
       "Custom"
     ]
-  },
+  }, //3
   {
     "ques" : "Total Time Limit?",
     "isMultipleSelect" : false,
@@ -223,7 +223,7 @@ var getQuestionPageDummy = [
       "5+ hours",
       "Full day"
     ]
-  },
+  }, //4
   {
     "ques" : "What kind of date are you planning?",
     "isMultipleSelect" : false,
@@ -235,7 +235,7 @@ var getQuestionPageDummy = [
       "Activities only.",
       "Custom"
     ]
-  },
+  }, //5
   {
     "ques" : "Do you have a preference for indoor or outdoor activities?",
     "isMultipleSelect" : false,
@@ -246,7 +246,7 @@ var getQuestionPageDummy = [
       "Outdoor (like picnics, stargazing, and more).",
       "No preference."
     ]
-  },
+  }, //6
   {
     "ques" : "What’s the vibe you’re going for?",
     "isMultipleSelect" : false,
@@ -259,7 +259,7 @@ var getQuestionPageDummy = [
       "Energetic and fun.",
       "Custom"
     ]
-  },
+  }, //7
   {
     "ques" : "What does your partner enjoy most?",
     "isMultipleSelect" : true,
@@ -273,7 +273,7 @@ var getQuestionPageDummy = [
       "Relaxing activities 💆‍♀️",
       "Custom"
     ]
-  },
+  }, //8
   {
     "ques" : "What kind of food would you love for this date?",
     "isMultipleSelect" : true,
@@ -290,7 +290,7 @@ var getQuestionPageDummy = [
       "Surprise me!",
       "Custom"
     ]
-  },
+  }, //9
   {
     "ques" : "What activities sound fun to you?",
     "isMultipleSelect" : true,
@@ -307,7 +307,7 @@ var getQuestionPageDummy = [
       "Surprise me!",
       "Custom"
     ]
-  },
+  }, //10
   {
     "ques" : "What’s your total budget for this date?",
     "isMultipleSelect" : false,
@@ -319,7 +319,7 @@ var getQuestionPageDummy = [
       "\$250+",
       "Custom"
     ]
-  },
+  }, //11
   {
     "ques" : "Do you or your partner have any dietary preferences? (Optional)",
     "isMultipleSelect" : false,
@@ -333,7 +333,7 @@ var getQuestionPageDummy = [
       "No restrictions.",
       "Custom"
     ]
-  },
+  }, //12
   {
     "ques" : "Want us to craft your dream date in seconds?",
     "isMultipleSelect" : false,
@@ -343,5 +343,5 @@ var getQuestionPageDummy = [
       "Yes, show me!",
       "I’m curious to see what you’ve got."
     ]
-  }
+  } //13
 ];

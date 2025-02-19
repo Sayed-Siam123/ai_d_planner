@@ -14,6 +14,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../core/services/storage_prefs.dart';
 import '../../../../../core/utils/helper/print_log.dart';
 import '../../../../../data/models/plan_from_ai_model.dart';
 import 'question_page_event.dart';
@@ -40,12 +41,19 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
   }
 
   _fetchQuestionFromDummy(FetchQuestionFromDummy event, Emitter<QuestionPageState> emit) async {
+
+    List<QuestionPageDummyModel> listData = [];
+
     emit(state.copyWith(
       questionPageStateStatus: QuestionPageStateStatus.loading,
       questionPageDummyData: []
     ));
 
-    var listData = questionPageDummyModelFromJson(jsonEncode(getQuestionPageDummy));
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+      listData.addAll(questionPageDummyModelFromJson(await getGetStartedQues()));
+    } else{
+      listData.addAll(questionPageDummyModelFromJson(jsonEncode(getQuestionPageDummy)));
+    }
 
     emit(state.copyWith(
       questionPageStateStatus: QuestionPageStateStatus.success,
@@ -227,15 +235,15 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
     var dataList = questionPageDummyModelFromJson(questionPageDummyModelToJson(event.questionList!));
 
-    var timeData = dataList[1].selectedData?[0].option;
+    var timeData = await _getDate(dataList);
     var time = _getTimeFormat(timeData);
     var date = _getDateFormat(timeData);
-    var location = dataList[0].selectedData?[0].option;
-    var budget = dataList[11].selectedData?[0].option;
-    var duration = dataList[4].selectedData?[0].option;
-    var dateType = dataList[5].selectedData?[0].option;
-    var dateMoodType = dataList[7].selectedData?[0].option;
-    var dateDietRestrictions = dataList[12].selectedData?[0].option;
+    var location = await _getLocation(dataList);
+    var budget = await _getBudget(dataList);
+    var duration = await _getDuration(dataList);
+    var dateType = await _getDateType(dataList);
+    var dateMoodType = await _getDateMoodType(dataList);
+    var dateDietRestrictions = await _getDateDietRestrictions(dataList);
 
     String formatOptions(List<String?> options) {
       if (options.contains("Surprise me!")) {
@@ -245,10 +253,12 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
       return options.join(", ");
     }
 
-    var foodOptions = dataList[9].selectedData?.map((e) => e.option).toList() ?? [];
+    var _foodOptionData = await _getFoodOptions(dataList);
+    var foodOptions = _foodOptionData.map((e) => e.option).toList() ?? [];
     var foodType = formatOptions(foodOptions);
 
-    var activityOptions = dataList[10].selectedData?.map((e) => e.option).toList() ?? [];
+    var _activityOptionData = await _getActivityOption(dataList);
+    var activityOptions = _activityOptionData.map((e) => e.option).toList() ?? [];
     var activityType = formatOptions(activityOptions);
 
     // printLog("$time and $date and $location and $budget");
@@ -275,6 +285,8 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
         questionPageStateApiStatus: QuestionPageStateApiStatus.success,
         plansFromDB: await _getLastThreePlans()
       ));
+
+      await StoragePrefs.deleteByKey(StoragePrefs.getStartedQues);
 
       event.pageController?.jumpToPage(dashboardResponseGeneration);
     } else{
@@ -340,6 +352,84 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
         : data;
 
     return latestThree;
+  }
+
+  getGetStartedQues() async{
+    // return await StoragePrefs.deleteByKey(StoragePrefs.getStartedQues);
+    return await StoragePrefs.get(StoragePrefs.getStartedQues);
+  }
+
+  _getDate(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+      return dataList[3].selectedData?[0].option;
+    } else{
+      return dataList[1].selectedData?[0].option;
+    }
+  }
+
+  _getLocation(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+    return dataList[2].selectedData?[0].option;
+    } else{
+    return dataList[0].selectedData?[0].option;
+    }
+  }
+
+  _getBudget(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+      return dataList[11].selectedData?[0].option;
+    } else{
+      return dataList[11].selectedData?[0].option;
+    }
+  }
+
+  _getDuration(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+      return dataList[4].selectedData?[0].option;
+    } else{
+      return dataList[4].selectedData?[0].option;
+    }
+  }
+
+  _getDateType(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+    return dataList[5].selectedData?[0].option;
+    } else{
+    return dataList[5].selectedData?[0].option;
+    }
+  }
+
+  _getDateMoodType(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+    return dataList[7].selectedData?[0].option;
+    } else{
+    return dataList[7].selectedData?[0].option;
+    }
+  }
+
+  _getDateDietRestrictions(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+      return dataList[12].selectedData?[0].option;
+    } else{
+      return dataList[12].selectedData?[0].option;
+    }
+  }
+
+  Future<List<SelectedOption>> _getFoodOptions(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+      return dataList[9].selectedData!;
+    } else{
+      return dataList[9].selectedData!;
+    }
+    //dataList[9].selectedData
+  }
+
+  Future<List<SelectedOption>> _getActivityOption(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+    return dataList[10].selectedData!;
+    } else{
+    return dataList[10].selectedData!;
+    }
   }
 
 

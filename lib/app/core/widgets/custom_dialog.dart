@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -99,7 +100,7 @@ class CustomDialog{
     );
   }
 
-  static customDialog(context, {title = "Warning",
+  static customMessageDialog(context, {title = "Warning",
         message,
         String? cancelButtonTitle = "",
         String? confirmButtonTitle = "",
@@ -208,5 +209,136 @@ class CustomDialog{
     );
   }
 
+  static customLocationDateTimeDialog(
+      BuildContext context, {
+        String title = "Select Date, Location",
+        String confirmButtonTitle = "Confirm",
+        String cancelButtonTitle = "Cancel",
+        String resetButtonTitle = "Reset",
+        Color titleTextColor = Colors.black,
+        Color confirmButtonTextColor = Colors.blue,
+        Color cancelButtonTextColor = Colors.red,
+        Function(String location, DateTime dateTime)? onConfirm,
+        Function()? onCancel,
+        Function()? onReset,
+        bool barrierDismissal = true,
+      }) async {
+    TextEditingController locationController = TextEditingController();
+    DateTime selectedDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);
+
+    return showDialog(
+      context: context,
+      barrierDismissible: barrierDismissal,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          title: Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: titleTextColor,
+            ),
+          ),
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Location Input Field
+                  TextField(
+                    controller: locationController,
+                    decoration: InputDecoration(
+                      labelText: "Enter Location",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  // const SizedBox(height: 16),
+                  // DateTime Picker Button
+                  // OutlinedButton(
+                  //   onPressed: () async {
+                  //     DateTime? pickedDate = await showDatePicker(
+                  //       context: context,
+                  //       initialDate: selectedDateTime,
+                  //       firstDate: DateTime(2000),
+                  //       lastDate: DateTime(2100),
+                  //     );
+                  //
+                  //     if (pickedDate != null) {
+                  //       setState(() {
+                  //         selectedDateTime = DateTime(
+                  //           pickedDate.year,
+                  //           pickedDate.month,
+                  //           pickedDate.day,
+                  //         );
+                  //       });
+                  //     }
+                  //   },
+                  //   child: Text(
+                  //     "Pick Date",
+                  //     style: TextStyle(color: Colors.blue),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 8),
+                  // Display Selected Date and Time
+                  // Text(
+                  //   "Selected: ${DateFormat("dd-MMM-yyyy").format(selectedDateTime)}",
+                  //   style: TextStyle(fontSize: 14, color: Colors.black87),
+                  //   textAlign: TextAlign.center,
+                  // ),
+                ],
+              );
+            },
+          ),
+          actions: [
+
+            TextButton(
+              onPressed: () {
+                if (onReset != null) onReset();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                resetButtonTitle,
+                style: TextStyle(color: confirmButtonTextColor),
+              ),
+            ),
+            // Cancel Button
+            TextButton(
+              onPressed: () {
+                if (onCancel != null) onCancel();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                cancelButtonTitle,
+                style: TextStyle(color: cancelButtonTextColor),
+              ),
+            ),
+            // Confirm Button
+            TextButton(
+              onPressed: () {
+                if (onConfirm != null) {
+                  onConfirm(
+                    locationController.text,
+                    selectedDateTime,
+                  );
+                }
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                confirmButtonTitle,
+                style: TextStyle(color: confirmButtonTextColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  //Other Services
 
 }

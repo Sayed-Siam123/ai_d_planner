@@ -40,3 +40,14 @@ class SortPlansByDateEvent extends ExploreEvent {
   // TODO: implement props
   List<Object?> get props => [ascending];
 }
+
+class FilterPlansEvent extends ExploreEvent {
+  final DateTime? startDate;
+  final String? location;
+
+  FilterPlansEvent({this.startDate = null, this.location = null});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [startDate,location];
+}

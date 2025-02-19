@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:ai_d_planner/app/binding/central_dependecy_injection.dart';
 import 'package:ai_d_planner/app/core/base/base_view.dart';
 import 'package:ai_d_planner/app/core/constants/size_constants.dart';
+import 'package:ai_d_planner/app/core/services/storage_prefs.dart';
 import 'package:ai_d_planner/app/core/style/app_colors.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
@@ -516,7 +518,19 @@ class QuestionFlowPage extends BaseView {
     }
   }
 
-  void _proceedToSubmit() {
+  _proceedToSubmit() async{
+    await setGetStartedQues(data: jsonEncode(quesFlowBloc.state.getStartedQues!));
+
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+      toReplacementNamed(AppRoutes.seeFullFeature,
+          args: PageRouteArg(
+            to: AppRoutes.seeFullFeature,
+            from: AppRoutes.quesFlow,
+            pageRouteType: PageRouteType.pushReplacement,
+            isFromDashboardNav: false,
+          ));
+    }
+
     toReplacementNamed(AppRoutes.seeFullFeature,
         args: PageRouteArg(
           to: AppRoutes.seeFullFeature,
@@ -524,5 +538,21 @@ class QuestionFlowPage extends BaseView {
           pageRouteType: PageRouteType.pushReplacement,
           isFromDashboardNav: false,
         ));
+
+    // printLog(await getGetStartedQues());
+  }
+
+  setGetStartedQues({required String data}) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+    await StoragePrefs.deleteByKey(StoragePrefs.getStartedQues);
+    await StoragePrefs.set(StoragePrefs.getStartedQues, data.toString());
+    } else{
+    await StoragePrefs.set(StoragePrefs.getStartedQues, data.toString());
+    }
+  }
+
+  getGetStartedQues() async{
+    // return await StoragePrefs.deleteByKey(StoragePrefs.getStartedQues);
+    return await StoragePrefs.get(StoragePrefs.getStartedQues);
   }
 }

@@ -23,9 +23,9 @@ class ExploreState extends Equatable{
 }){
     return ExploreState(
       exploreStateStatus: exploreStateStatus ?? this.exploreStateStatus,
-      favList: favList ?? this.favList,
-      upcomingList: upcomingList ?? this.upcomingList,
-      passedList: passedList ?? this.passedList
+      favList: favList,
+      upcomingList: upcomingList,
+      passedList: passedList,
     );
   }
 

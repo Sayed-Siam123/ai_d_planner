@@ -211,7 +211,8 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
 
   _fetchDummyQues(FetchDummyQues event, Emitter<QuestionFlowState> emit) async {
     emit(state.copyWith(
-      questionFlowStateStatus: QuestionFlowStateStatus.loading
+      questionFlowStateStatus: QuestionFlowStateStatus.loading,
+      getStartedQues: []
     ));
     
     var listData = questionPageDummyModelFromJson(jsonEncode(getStartedDummy));

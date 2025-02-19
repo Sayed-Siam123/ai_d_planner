@@ -156,7 +156,7 @@ class _BaseViewState extends State<BaseView> with TickerProviderStateMixin {
 
     if(routerDelegate.currentConfiguration?.uri.path == AppRoutes.login){
       if(checker.canUpdate){
-        CustomDialog.customDialog(mounted ? AppWidgets().globalContext : null,
+        CustomDialog.customMessageDialog(mounted ? AppWidgets().globalContext : null,
           title: "Update Information",
           titleTextColor: AppColors.warningRed,
           message: "New Update Available!\n\nPlease update the app!",

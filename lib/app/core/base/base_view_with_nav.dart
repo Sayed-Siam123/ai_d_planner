@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/core/constants/string_constants.dart';
+import 'package:ai_d_planner/app/core/widgets/custom_dialog.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/chatbot/chat_bot_page.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_bloc.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_event.dart';
@@ -231,9 +232,49 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ),
 
-
           AppWidgets().gapW16(),
-          Icon(AntDesign.filter,size: 24),
+          Material(
+            color: AppColors.transparentPure,
+            borderRadius: BorderRadius.circular(roundRadius),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(roundRadius),
+              onTap: () {
+
+                CustomDialog.customLocationDateTimeDialog(
+                  context,
+                  confirmButtonTitle: "Submit",
+                  cancelButtonTitle: "Close",
+                  onConfirm: (location, dateTime) {
+                    // printLog("Location: $location");
+                    // printLog("DateTime: $dateTime");
+
+                    // exploreBloc.add(FetchAllPlans());
+
+                    exploreBloc.add(FilterPlansEvent(
+                      // startDate: dateTime,
+                      location: location
+                    ));
+
+                  },
+                  onCancel: () {
+                    printLog("Dialog Cancelled");
+                  },
+                  onReset: () {
+                    exploreBloc.add(FetchAllPlans());
+                  },
+                );
+                // exploreBloc.add(FilterPlansEvent(
+                //     // startDate: DateTime(2025, 02, 27),
+                //   location: "New"
+                // ));
+                // exploreBloc.add(FetchAllPlans());
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(AntDesign.filter,size: 24),
+              ),
+            ),
+          ),
           AppWidgets().gapW16(),
         ]
         // onBackTap: () {
@@ -312,6 +353,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
     var bottomNavStateCubit = getIt<BottomNavStateCubit>();
     pageController = PageController(initialPage: 0);
+    bottomNavStateCubit.onChangeBottomNav(0);
 
     // if(widget.pageRouteArg?.from == AppRoutes.beneficiaryManagementList){
     //   //if it is coming from beneficiaryManagementCreate then the page will initialize pageController to index == 2

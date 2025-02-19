@@ -10,6 +10,7 @@ import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger_observer.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger_settings.dart';
@@ -25,6 +26,7 @@ void main() async{
 
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await initializeHive();
     await initializeSupaBase();
     // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
     // await routeSetup();
@@ -107,6 +109,9 @@ void main() async{
   });
 }
 
+initializeHive() async{
+  await Hive.initFlutter();
+}
 initializeSupaBase() async{
   String supaBaseURL = "https://bijnbvrxavxfnmxwwotv.supabase.co";
   String supaBaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpam5idnJ4YXZ4Zm5teHd3b3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzczMjY0NjksImV4cCI6MjA1MjkwMjQ2OX0.VQul2CavpOF6MrJF5CIeg5klPAKIzY5LgrQ8n8Arm8o";

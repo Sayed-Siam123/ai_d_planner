@@ -265,7 +265,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     children: [
                                       Image.asset(mapPin,height: 20,width: 20,color: AppColors.primaryColor),
                                       AppWidgets().gapW8(),
-                                      Expanded(child: Text(plansList[index].location!,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),))
+                                      Expanded(child: Text(plansList[index].location!,overflow: TextOverflow.ellipsis,style: textRegularStyle(context,fontWeight: FontWeight.normal,fontSize: 17,color: AppColors.textGrayShade7),))
                                     ],
                                   ),
                                   AppWidgets().gapH8(),

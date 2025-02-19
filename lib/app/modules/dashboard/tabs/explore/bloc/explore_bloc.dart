@@ -21,6 +21,7 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
     on<ChangeStatusFav>(_changeStatusFav);
     on<DeletePlan>(_deletePlan);
     on<SortPlansByDateEvent>(_sortPlansByDateEvent);
+    on<FilterPlansEvent>(_filterPlans);
   }
 
   // void _init(InitEvent event, Emitter<ExploreState> emit) async {
@@ -119,6 +120,97 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
       upcomingList: upcoming,
       passedList: passed,
     ));
+  }
+
+  _filterPlans(FilterPlansEvent event, Emitter<ExploreState> emit) async{
+
+    await _getAllPlans(emit);
+
+    List<GetPlanResponseModel> favList = List.from(state.favList ?? []);
+    List<GetPlanResponseModel> upcoming = List.from(state.upcomingList ?? []);
+    List<GetPlanResponseModel> passed = List.from(state.passedList ?? []);
+
+    List<GetPlanResponseModel> filteredFavList = [];
+    List<GetPlanResponseModel> filteredUpcoming = [];
+    List<GetPlanResponseModel> filteredPassed = [];
+
+    filteredFavList.addAll(filterList(event,favList));
+    filteredUpcoming.addAll(filterList(event,upcoming));
+    filteredPassed.addAll(filterList(event,passed));
+
+    // Emit the filtered lists
+    emit(state.copyWith(
+      exploreStateStatus: ExploreStateStatus.success,
+      favList: filteredFavList,
+      upcomingList: filteredUpcoming,
+      passedList: filteredPassed,
+    ));
+  }
+
+  List<GetPlanResponseModel> filterList(FilterPlansEvent event,List<GetPlanResponseModel>? list) {
+    // Early return if the list is null or empty
+    if (list == null || list.isEmpty) {
+      printLog("Filter list is null or empty. Returning empty list.");
+      return [];
+    }
+
+    return list.where((plan) {
+      // Log the plan being processed
+      printLog("Processing plan: ${plan.dateDateTime}, ${plan.location}");
+
+      // If either start date or location is not provided, exclude the plan
+      // if (event.startDate == null || event.location == null || event.location!.isEmpty) {
+      //   printLog("Start date or location is not provided. Excluding plan.");
+      //   return false;
+      // }
+
+      // Check if the plan matches the start date
+      bool matchesDate = _matchesStartDate(plan.dateDateTime, event.startDate);
+
+      // Check if the plan matches the location
+      bool matchesLocation = _matchesLocation(plan.location, event.location);
+
+      // Log the match results
+      printLog("Matches Date: $matchesDate, Matches Location: $matchesLocation");
+
+      // Return true only if both date and location match
+      return (event.startDate != null && event.location != null) ? (matchesDate && matchesLocation) : (matchesDate || matchesLocation);
+    }).toList();
+  }
+
+  // Helper function to check if the plan matches the start date
+  bool _matchesStartDate(String? planDateString, DateTime? startDate) {
+    if (startDate == null) {
+      // If no start date is provided, it is not a match
+      return false;
+    }
+
+    DateTime? planDate = _getDateFromAPI(planDateString);
+    if (planDate == null) {
+      // If the plan date is invalid, consider it a mismatch
+      return false;
+    }
+
+    // Compare only year, month, and day (ignore time)
+    return planDate.year == startDate.year &&
+        planDate.month == startDate.month &&
+        planDate.day == startDate.day;
+  }
+
+// Helper function to check if the plan matches the location
+  bool _matchesLocation(String? planLocation, String? eventLocation) {
+    if (eventLocation == null || eventLocation.isEmpty) {
+      // If no location is provided, it is not a match
+      return false;
+    }
+
+    if (planLocation == null || planLocation.isEmpty) {
+      // If the plan location is invalid, consider it a mismatch
+      return false;
+    }
+
+    // Perform case-insensitive comparison
+    return planLocation.toLowerCase() == eventLocation.toLowerCase() || planLocation.toLowerCase().contains(eventLocation.toLowerCase());
   }
 
   List<GetPlanResponseModel> sortPlans(List<GetPlanResponseModel> plans, {bool ascending = true}) {
