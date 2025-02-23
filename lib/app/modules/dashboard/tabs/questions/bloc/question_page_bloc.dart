@@ -361,77 +361,101 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
   _getDate(List<QuestionPageDummyModel> dataList) async{
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
-      return dataList[3].selectedData?[0].option;
+      return getDataFromOptions(dataList[3]);
     } else{
-      return dataList[1].selectedData?[0].option;
+      return getDataFromOptions(dataList[1]);
     }
   }
 
   _getLocation(List<QuestionPageDummyModel> dataList) async{
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
-    return dataList[2].selectedData?[0].option;
+      return getDataFromOptions(dataList[2]);
     } else{
-    return dataList[0].selectedData?[0].option;
+      return getDataFromOptions(dataList[0]);
     }
   }
 
   _getBudget(List<QuestionPageDummyModel> dataList) async{
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
-      return dataList[11].selectedData?[0].option;
+      return getDataFromOptions(dataList[11]);
     } else{
-      return dataList[11].selectedData?[0].option;
+      return getDataFromOptions(dataList[11]);
     }
   }
 
   _getDuration(List<QuestionPageDummyModel> dataList) async{
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
-      return dataList[4].selectedData?[0].option;
+      return getDataFromOptions(dataList[4]);
     } else{
-      return dataList[4].selectedData?[0].option;
+      return getDataFromOptions(dataList[4]);
     }
   }
 
   _getDateType(List<QuestionPageDummyModel> dataList) async{
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
-    return dataList[5].selectedData?[0].option;
+      return getDataFromOptions(dataList[5]);
     } else{
-    return dataList[5].selectedData?[0].option;
+      return getDataFromOptions(dataList[5]);
     }
   }
 
   _getDateMoodType(List<QuestionPageDummyModel> dataList) async{
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
-    return dataList[7].selectedData?[0].option;
+      return getDataFromOptions(dataList[7]);
     } else{
-    return dataList[7].selectedData?[0].option;
+      return getDataFromOptions(dataList[12]);
     }
   }
 
   _getDateDietRestrictions(List<QuestionPageDummyModel> dataList) async{
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
-      return dataList[12].selectedData?[0].option;
+      return getDataFromOptions(dataList[12]);
     } else{
-      return dataList[12].selectedData?[0].option;
+      return getDataFromOptions(dataList[12]);
     }
   }
 
   Future<List<SelectedOption>> _getFoodOptions(List<QuestionPageDummyModel> dataList) async{
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
-      return dataList[9].selectedData!;
+      return getDataFromAllOptions(dataList[9]);
     } else{
-      return dataList[9].selectedData!;
+      return getDataFromAllOptions(dataList[9]);
     }
     //dataList[9].selectedData
   }
 
   Future<List<SelectedOption>> _getActivityOption(List<QuestionPageDummyModel> dataList) async{
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
-    return dataList[10].selectedData!;
+      return getDataFromAllOptions(dataList[10]);
+      // return dataList[10].isRequired! ? dataList[10].selectedData! : [];
     } else{
-    return dataList[10].selectedData!;
+      return getDataFromAllOptions(dataList[10]);
     }
   }
 
+  getDataFromOptions(QuestionPageDummyModel data){
+    if(data.isRequired!){
+      return data.selectedData?[0].option;
+    } else{
+      if(data.selectedData!.isNotEmpty){
+        return data.selectedData?[0].option;
+      } else{
+        return "";
+      }
+    }
+  }
+
+  getDataFromAllOptions(QuestionPageDummyModel data){
+    if(data.isRequired!){
+      return data.selectedData;
+    } else{
+      if(data.selectedData!.isNotEmpty){
+        return data.selectedData;
+      } else{
+        return [];
+      }
+    }
+  }
 
 
 }
