@@ -1,5 +1,7 @@
 import 'package:ai_d_planner/app/binding/central_dependecy_injection.dart';
+import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:ai_d_planner/app/services/sorting/bloc/sorting_bloc.dart';
+import 'package:ai_d_planner/app/services/sorting/bloc/sorting_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -348,55 +350,76 @@ class CustomDialog{
       builder: (context) {
         return AlertDialog(
           title: Text('Sort By'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text('Budget (Low to High)'),
-                onTap: () {
-                  getIt<SortBloc>().add(SortByBudgetLowToHigh());
-                  Navigator.pop(AppWidgets().globalContext);
-                },
-              ),
-              ListTile(
-                title: Text('Budget (High to Low)'),
-                onTap: () {
-                  getIt<SortBloc>().add(SortByBudgetHighToLow());
-                  Navigator.pop(AppWidgets().globalContext);
+          content: BlocBuilder<SortBloc, SortState>(
+          builder: (context, state) {
+            String selectedSort = 'None';
+            if (state is SortSelected) {
+              selectedSort = state.sortOption;
+            }
 
-                },
-              ),
-              ListTile(
-                title: Text('A-Z'),
-                onTap: () {
-                  getIt<SortBloc>().add(SortByAToZ());
-                  Navigator.pop(AppWidgets().globalContext);
-                },
-              ),
-              ListTile(
-                title: Text('Z-A'),
-                onTap: () {
-                  getIt<SortBloc>().add(SortByZToA());
-                  Navigator.pop(AppWidgets().globalContext);
-                },
-              ),
-              ListTile(
-                title: Text('Newest to Oldest'),
-                onTap: () {
-                  getIt<SortBloc>().add(SortByNewestToOldest());
-                  Navigator.pop(AppWidgets().globalContext);
-                },
-              ),
-              ListTile(
-                title: Text('Oldest to Newest'),
-                onTap: () {
-                  getIt<SortBloc>().add(SortByOldestToNewest());
-                  Navigator.pop(AppWidgets().globalContext);
-                },
-              ),
-            ],
+            printLog(selectedSort);
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: Text('Budget (Low to High)'),
+                  onTap: () {
+                    getIt<SortBloc>().add(SortByBudgetLowToHigh());
+                    Navigator.pop(AppWidgets().globalContext);
+                  },
+                ),
+                ListTile(
+                  title: Text('Budget (High to Low)'),
+                  onTap: () {
+                    getIt<SortBloc>().add(SortByBudgetHighToLow());
+                    Navigator.pop(AppWidgets().globalContext);
+
+                  },
+                ),
+                ListTile(
+                  title: Text('A-Z'),
+                  onTap: () {
+                    getIt<SortBloc>().add(SortByAToZ());
+                    Navigator.pop(AppWidgets().globalContext);
+                  },
+                ),
+                ListTile(
+                  title: Text('Z-A'),
+                  onTap: () {
+                    getIt<SortBloc>().add(SortByZToA());
+                    Navigator.pop(AppWidgets().globalContext);
+                  },
+                ),
+                ListTile(
+                  title: Text('Newest to Oldest'),
+                  onTap: () {
+                    getIt<SortBloc>().add(SortByNewestToOldest());
+                    Navigator.pop(AppWidgets().globalContext);
+                  },
+                ),
+                ListTile(
+                  title: Text('Oldest to Newest'),
+                  onTap: () {
+                    getIt<SortBloc>().add(SortByOldestToNewest());
+                    Navigator.pop(AppWidgets().globalContext);
+                  },
+                ),
+              ],
+            );
+            },
           ),
         );
+      },
+    );
+  }
+
+  _listTileWidget({title,VoidCallback? onTap}){
+    return ListTile(
+      title: Text('Oldest to Newest'),
+      onTap: () {
+        getIt<SortBloc>().add(SortByOldestToNewest());
+        Navigator.pop(AppWidgets().globalContext);
       },
     );
   }

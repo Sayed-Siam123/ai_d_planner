@@ -223,7 +223,8 @@ class _DashboardPageState extends State<DashboardPage> {
             child: InkWell(
               borderRadius: BorderRadius.circular(roundRadius),
               onTap: () {
-                exploreBloc.add(SortPlansByDateEvent(ascending: exploreBloc.ascending));
+                // exploreBloc.add(SortPlansByDateEvent(ascending: exploreBloc.ascending));
+                CustomDialog.sortDialog();
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
