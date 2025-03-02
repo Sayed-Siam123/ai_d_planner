@@ -279,7 +279,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
     var plansData = await compute(deserializePlansFromText, data!.candidates![0].content!.parts![0].text!);
 
     if(plansData != null){
-      await _storePlansInDB(timeData,plansData.plans,location);
+      await _storePlansInDB(timeData,plansData.plans,location,dateMoodType);
 
       emit(state.copyWith(
         questionPageStateApiStatus: QuestionPageStateApiStatus.success,
@@ -333,9 +333,9 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
     return formattedDate;
   }
 
-  _storePlansInDB(String? dateDateTime,List<Plan>? plans,location) async{
+  _storePlansInDB(String? dateDateTime,List<Plan>? plans,location,planVibe) async{
     for(var plan in plans!){
-      await responseSupaBaseRepository?.createPlans(plan: jsonEncode(plan.toJson()),dateTime: dateDateTime,location: location);
+      await responseSupaBaseRepository?.createPlans(plan: jsonEncode(plan.toJson()),dateTime: dateDateTime,location: location,planVibe: planVibe);
     }
   }
 
@@ -403,7 +403,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
       return getDataFromOptions(dataList[7]);
     } else{
-      return getDataFromOptions(dataList[12]);
+      return getDataFromOptions(dataList[7]);
     }
   }
 
@@ -454,6 +454,14 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
       } else{
         return [];
       }
+    }
+  }
+
+  _getVibeType(List<QuestionPageDummyModel> dataList) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+      return getDataFromAllOptions(dataList[9]);
+    } else{
+      return getDataFromAllOptions(dataList[9]);
     }
   }
 

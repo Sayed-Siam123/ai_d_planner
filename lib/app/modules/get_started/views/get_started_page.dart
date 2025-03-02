@@ -55,9 +55,10 @@ class GetStartedPage extends BaseView {
   Widget body(BuildContext context) {
     // TODO: implement body
     return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(0.0),
+      child: ListView(
+        padding: const EdgeInsets.all(20.0),
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _topPart(context),
           _middlePart(context),
@@ -128,56 +129,34 @@ class GetStartedPage extends BaseView {
     return Column(
       children: [
         AppWidgets().gapH(30),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 15,vertical: 2),
-          decoration: BoxDecoration(
-              color: AppColors.transparentPure,
-              borderRadius: BorderRadius.circular(swipeCardRadius),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                  offset: Offset(0, 4), // Shadow position
-                ),
-              ]
-          ),
-          // shadowColor: AppColors.textGrayShade5.withValues(alpha: 0.8),
-          // elevation: 20,
-          // color: AppColors.transparentPure,
-          // margin: EdgeInsets.symmetric(horizontal: 15,vertical: 2),
-          // shape: RoundedRectangleBorder(
-          //   borderRadius: BorderRadius.circular(swipeCardRadius),
-          // ),
-          child: Swiper(
-            controller: swiperController,
-            indicatorLayout: PageIndicatorLayout.SLIDE,
-            itemBuilder: (BuildContext context, int index) {
-              return ClipRRect(
-                  borderRadius: BorderRadius.circular(swipeCardRadius),
-                  child: Image.network(
-                    "https://via.assets.so/album.png?id=${index + 1}&q=95&w=360&h=360&fit=fill",
-                    fit: BoxFit.fill,
-                  ));
-            },
-            itemCount: 3,
-            onIndexChanged: (value) {
-              //pageController!.jumpToPage(value);
-              getStartedBloc.add(ChangeSlideIndicator(currentIndex: value));
-            },
-            autoplay: false,
-            // autoplayDelay: 2000,
-            autoplayDisableOnInteraction: false,
-            // pagination: SwiperPagination(),
-            // control: SwiperControl(),
-            layout: SwiperLayout.STACK,
-            itemWidth: 290.w,
-            itemHeight: 500,
-            axisDirection: AxisDirection.right,
-            // allowImplicitScrolling: true,
-            curve: Curves.easeInOut,
-            scrollDirection: Axis.horizontal,
-          ),
+        Swiper(
+          controller: swiperController,
+          indicatorLayout: PageIndicatorLayout.SLIDE,
+          itemBuilder: (BuildContext context, int index) {
+            return ClipRRect(
+                borderRadius: BorderRadius.circular(swipeCardRadius),
+                child: Image.network(
+                  "https://via.assets.so/album.png?id=${index + 1}&q=95&w=360&h=360&fit=fill",
+                  fit: BoxFit.fitHeight,
+                ));
+          },
+          itemCount: 3,
+          onIndexChanged: (value) {
+            //pageController!.jumpToPage(value);
+            getStartedBloc.add(ChangeSlideIndicator(currentIndex: value));
+          },
+          autoplay: false,
+          // autoplayDelay: 2000,
+          autoplayDisableOnInteraction: false,
+          // pagination: SwiperPagination(),
+          // control: SwiperControl(),
+          layout: SwiperLayout.STACK,
+          itemWidth: 300.w,
+          itemHeight: 350.h,
+          axisDirection: AxisDirection.right,
+          allowImplicitScrolling: true,
+          curve: Curves.easeInOut,
+          scrollDirection: Axis.horizontal,
         ),
         AppWidgets().gapH12(),
         BlocBuilder<GetStartedBloc, GetStartedState>(
@@ -199,37 +178,36 @@ class GetStartedPage extends BaseView {
   }
 
   _bottomPart(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          AppWidgets().gapH(30),
-          Spacer(),
-          Text(StringConstants.bodyMessage,style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),textAlign: TextAlign.center,),
-          Spacer(),
-          CustomAppMaterialButton(
-            title: StringConstants.buttonStart,
-            backgroundColor: AppColors.primaryColor,
-            borderColor: AppColors.primaryColor,
-            usePrefixIcon: false,
-            needSplashEffect: true,
-            borderRadius: 50,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            onPressed: () async {
+    return Column(
+      children: [
+        AppWidgets().gapH(30),
+        // Spacer(),
+        Text(StringConstants.bodyMessage,style: textRegularStyle(context,fontWeight: FontWeight.bold,fontSize: 20),textAlign: TextAlign.center,),
+        // Spacer(),
+        AppWidgets().gapH(30),
+        CustomAppMaterialButton(
+          title: StringConstants.buttonStart,
+          backgroundColor: AppColors.primaryColor,
+          borderColor: AppColors.primaryColor,
+          usePrefixIcon: false,
+          needSplashEffect: true,
+          borderRadius: 50,
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          onPressed: () async {
 
-              // authBloc.add(Logout());
+            // authBloc.add(Logout());
 
-              toReplacementNamed(AppRoutes.quesFlow,args: PageRouteArg(
-                to: AppRoutes.quesFlow,
-                from: AppRoutes.getStarted,
-                pageRouteType: PageRouteType.pushReplacement,
-                isFromDashboardNav: false,
-              ));
-            },
-          ),
-          //AppWidgets().gapH24(),
-        ],
-      ),
+            toReplacementNamed(AppRoutes.quesFlow,args: PageRouteArg(
+              to: AppRoutes.quesFlow,
+              from: AppRoutes.getStarted,
+              pageRouteType: PageRouteType.pushReplacement,
+              isFromDashboardNav: false,
+            ));
+          },
+        ),
+        //AppWidgets().gapH24(),
+      ],
     );
   }
 }

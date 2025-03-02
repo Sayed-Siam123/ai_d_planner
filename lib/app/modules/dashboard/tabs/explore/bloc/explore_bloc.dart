@@ -15,6 +15,8 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
   ResponseSupaBaseRepository? responseSupaBaseRepository;
   bool ascending = true;
 
+  String selectedSort = 'None';
+
   ExploreBloc() : super(ExploreState(exploreStateStatus: ExploreStateStatus.init)) {
     responseSupaBaseRepository = ResponseSupaBaseRepository();
     on<FetchAllPlans>(_fetchAllPlans);

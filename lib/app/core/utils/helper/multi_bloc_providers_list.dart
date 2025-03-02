@@ -6,6 +6,7 @@ import 'package:ai_d_planner/app/modules/get_started/bloc/get_started_bloc.dart'
 import 'package:ai_d_planner/app/modules/question_flow/bloc/question_flow_bloc.dart';
 import 'package:ai_d_planner/app/services/bottom_nav_state/bloc/bottom_nav_cubit.dart';
 import 'package:ai_d_planner/app/services/password_obscure_operation/bloc/password_obscure_ops_cubit.dart';
+import 'package:ai_d_planner/app/services/sorting/bloc/sorting_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -39,5 +40,8 @@ final List<SingleChildWidget> multiBlocProvidersList  = [
     ),
     BlocProvider<ProfileBloc>(
       create: (context) => getIt<ProfileBloc>(),
+    ),
+    BlocProvider<SortBloc>(
+      create: (context) => getIt<SortBloc>(),
     ),
   ];

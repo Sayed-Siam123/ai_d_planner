@@ -94,15 +94,15 @@ class _BaseViewState extends State<BaseView> with TickerProviderStateMixin {
               widget.onPopBack(context);
             }
           },
-          child: Scaffold(
-            key: widget.globalScaffoldKey,
-            // extendBodyBehindAppBar: true,
-            resizeToAvoidBottomInset: false,
-            backgroundColor: AppColors.backgroundColor,
-            appBar: widget.appBar(context) ?? CustomAppBar.noAppBar(),
-            drawerEnableOpenDragGesture: false,
-            body: SafeArea(
-              child: Column(
+          child: SafeArea(
+            child: Scaffold(
+              key: widget.globalScaffoldKey,
+              // extendBodyBehindAppBar: true,
+              resizeToAvoidBottomInset: false,
+              backgroundColor: AppColors.backgroundColor,
+              appBar: widget.appBar(context) ?? CustomAppBar.noAppBar(),
+              drawerEnableOpenDragGesture: false,
+              body: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //jailBreakOrRootCheckerWidget(context), //no need to comment out // // ios device laggy issue,need to fix first
@@ -112,8 +112,8 @@ class _BaseViewState extends State<BaseView> with TickerProviderStateMixin {
                   ),
                 ],
               ),
+              //bottomNavigationBar: _bottomNavBarWidget(),
             ),
-            //bottomNavigationBar: _bottomNavBarWidget(),
           ),
         ),
       ),

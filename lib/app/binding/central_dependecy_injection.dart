@@ -9,6 +9,7 @@ import '../modules/dashboard/tabs/questions/binding/questions_binding.dart';
 import '../modules/get_started/binding/get_started_binding.dart';
 import '../services/bottom_nav_state/binding/bottom_nav_state_binding.dart';
 import '../services/password_obscure_operation/binding/password_obscure_ops_dependency_injection.dart';
+import '../services/sorting/binding/sorting_binding.dart';
 import '../services/timer_bloc/binding/timer_dependency_injection.dart';
 
 GetIt getIt = GetIt.instance;
@@ -24,6 +25,7 @@ dependencySetup() async{
   await questionsDI(getIt);
   await exploreDI(getIt);
   await profileDI(getIt);
+  await sortingDI(getIt);
 }
 
 isRegistered({object}){

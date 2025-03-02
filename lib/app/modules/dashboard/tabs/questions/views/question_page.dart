@@ -94,7 +94,7 @@ class _QuestionPageState extends State<QuestionPage> {
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: Column(
         children: [
-          AppWidgets().gapH(20),
+          AppWidgets().gapH(10),
           Row(
             children: [
               Material(

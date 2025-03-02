@@ -14,7 +14,7 @@ class ResponseSupaBaseRepository {
 
   final SupabaseClient _supabase = Supabase.instance.client;
 
-  Future<void> createPlans({required String plan, bool? isFav = false,String? dateTime,String? location}) async {
+  Future<void> createPlans({required String plan, bool? isFav = false,String? dateTime,String? location,planVibe}) async {
     try {
       // Perform the insert operation
       final response = await _supabase.from(DBConfig.plansTable).insert({
@@ -22,7 +22,8 @@ class ResponseSupaBaseRepository {
         'is_fav' : isFav,
         'plan' : plan,
         'date_date_time' : dateTime,
-        'location_name' : location
+        'location_name' : location,
+        'plan_vibe' : planVibe
       });
 
       // Check if data is returned to confirm success
