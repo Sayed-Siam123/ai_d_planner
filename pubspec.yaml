@@ -36,10 +36,10 @@ dependencies:
   card_swiper: ^3.0.1
   flutter_form_builder: ^9.7.0 # form builder helper
   form_builder_validators: ^11.1.1 # form builder validator use
-  smooth_page_indicator: ^1.2.0+3
+  smooth_page_indicator: ^1.2.1
   pausable_timer: ^3.1.0
-  bottom_picker: ^2.10.1
-  dio: ^5.7.0
+  bottom_picker: ^2.11.1
+  dio: ^5.8.0+1
   add_2_calendar: ^3.0.1
   sign_in_with_apple: ^6.1.4
   crypto: ^3.0.6
@@ -54,9 +54,9 @@ dev_dependencies:
 
   flutter_lints: ^5.0.0
   flutter_automation: ^2.0.0
-  rename_app: ^1.6.1
+  rename_app: ^1.6.2
 #  flutter_launcher_icons: ^0.14.2
-  change_app_package_name: ^1.4.0
+  change_app_package_name: ^1.5.0
 
 dependency_overrides:
   intl: ^0.20.1

@@ -416,11 +416,8 @@ class CustomDialog{
 
   _listTileWidget({title,VoidCallback? onTap}){
     return ListTile(
-      title: Text('Oldest to Newest'),
-      onTap: () {
-        getIt<SortBloc>().add(SortByOldestToNewest());
-        Navigator.pop(AppWidgets().globalContext);
-      },
+      title: Text('$title'),
+      onTap: () => onTap?.call(),
     );
   }
 
