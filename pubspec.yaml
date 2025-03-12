@@ -61,25 +61,31 @@ dev_dependencies:
   change_app_package_name: ^1.5.0
 
 flutter_launcher_icons:
-  #  android: "launcher_icon"
-  #  ios: true
-  #  image_path: "assets/logo/ios/dmcb_1024_1024.png"
-  #  min_sdk_android: 25 # android min sdk min:16, default 21
-  #  remove_alpha_ios: true
-  #  adaptive_icon_padding: false
-  #  adaptive_icon_background : null
-  #  adaptive_icon_foreground : "assets/logo/ios/dmcb_1024_1024.png"
-  image_path_android: "assets/logo/lpai_app_logo.png"
-  image_path_ios: "assets/logo/lpai_app_logo.png"
-  android: "launcher_icon" # can specify file name here e.g. "ic_launcher"
-  ios: "My-Launcher-Icon" # can specify file name here e.g. "My-Launcher-Icon"
-  adaptive_icon_background: "#ffffff" # only available for Android 8.0 devices and above
-  adaptive_icon_foreground: "assets/logo/lpai_app_logo.png" # only available for Android 8.0 devices and above
-  adaptive_icon_foreground_inset: 16 # only available for Android 8.0 devices and above
-  adaptive_icon_monochrome: "assets/logo/lpai_app_logo.png" # only available for Android 13 devices and above
-  min_sdk_android: 21 # android min sdk min:16, default 21
+  android: true
+  ios: true
+  image_path: "assets/logo/lpai_app_logo.png"
   remove_alpha_ios: true
-  background_color_ios: "#ffffff"
+
+#flutter_launcher_icons:
+#  #  android: "launcher_icon"
+#  #  ios: true
+#  #  image_path: "assets/logo/ios/dmcb_1024_1024.png"
+#  #  min_sdk_android: 25 # android min sdk min:16, default 21
+#  #  remove_alpha_ios: true
+#  #  adaptive_icon_padding: false
+#  #  adaptive_icon_background : null
+#  #  adaptive_icon_foreground : "assets/logo/ios/dmcb_1024_1024.png"
+#  image_path_android: "assets/logo/lpai_app_logo.png"
+#  image_path_ios: "assets/logo/lpai_app_logo.png"
+#  android: "launcher_icon" # can specify file name here e.g. "ic_launcher"
+#  ios: "My-Launcher-Icon" # can specify file name here e.g. "My-Launcher-Icon"
+#  adaptive_icon_background: "#ffffff" # only available for Android 8.0 devices and above
+#  adaptive_icon_foreground: "assets/logo/lpai_app_logo.png" # only available for Android 8.0 devices and above
+#  adaptive_icon_foreground_inset: 16 # only available for Android 8.0 devices and above
+#  adaptive_icon_monochrome: "assets/logo/lpai_app_logo.png" # only available for Android 13 devices and above
+#  min_sdk_android: 21 # android min sdk min:16, default 21
+#  remove_alpha_ios: true
+#  background_color_ios: "#ffffff"
 
 dependency_overrides:
   intl: ^0.20.1
