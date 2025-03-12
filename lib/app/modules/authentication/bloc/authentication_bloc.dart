@@ -192,8 +192,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     ));
   }
   void _getForwardMethod() {
-    toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
-      to: AppRoutes.getStarted,
+    toReplacementNamed(AppRoutes.dashboard,args: PageRouteArg(
+      to: AppRoutes.dashboard,
       from: AppRoutes.login,
       pageRouteType: PageRouteType.pushReplacement,
       isFromDashboardNav: false,

@@ -45,8 +45,10 @@ dependencies:
   crypto: ^3.0.6
   hive_ce: ^2.10.1
   hive_ce_flutter: ^2.2.0
+  flutter_datetime_picker_plus: ^2.2.0
 
   supabase_flutter: ^2.8.3
+  purchases_flutter: ^8.6.0
 
 dev_dependencies:
   flutter_test:
@@ -55,8 +57,29 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_automation: ^2.0.0
   rename_app: ^1.6.2
-#  flutter_launcher_icons: ^0.14.2
+  flutter_launcher_icons: ^0.14.2
   change_app_package_name: ^1.5.0
+
+flutter_launcher_icons:
+  #  android: "launcher_icon"
+  #  ios: true
+  #  image_path: "assets/logo/ios/dmcb_1024_1024.png"
+  #  min_sdk_android: 25 # android min sdk min:16, default 21
+  #  remove_alpha_ios: true
+  #  adaptive_icon_padding: false
+  #  adaptive_icon_background : null
+  #  adaptive_icon_foreground : "assets/logo/ios/dmcb_1024_1024.png"
+  image_path_android: "assets/logo/lpai_app_logo.png"
+  image_path_ios: "assets/logo/lpai_app_logo.png"
+  android: "launcher_icon" # can specify file name here e.g. "ic_launcher"
+  ios: "My-Launcher-Icon" # can specify file name here e.g. "My-Launcher-Icon"
+  adaptive_icon_background: "#ffffff" # only available for Android 8.0 devices and above
+  adaptive_icon_foreground: "assets/logo/lpai_app_logo.png" # only available for Android 8.0 devices and above
+  adaptive_icon_foreground_inset: 16 # only available for Android 8.0 devices and above
+  adaptive_icon_monochrome: "assets/logo/lpai_app_logo.png" # only available for Android 13 devices and above
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  remove_alpha_ios: true
+  background_color_ios: "#ffffff"
 
 dependency_overrides:
   intl: ^0.20.1
@@ -72,6 +95,8 @@ flutter:
     - assets/fonts/
     - assets/png/
     - assets/svg/
+    - assets/images/
+    - assets/logo/
 
   fonts:
     - family: Gilroy

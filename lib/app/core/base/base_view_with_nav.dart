@@ -21,8 +21,10 @@ import '../../data/models/page_route_arguments.dart';
 import '../../modules/dashboard/tabs/home/home_page.dart';
 import '../../modules/dashboard/tabs/questions/bloc/question_page_bloc.dart';
 import '../../routes/app_pages.dart';
+import '../../routes/app_routes.dart';
 import '../../services/bottom_nav_state/bloc/bottom_nav_cubit.dart';
 import '../../services/bottom_nav_state/bloc/bottom_nav_state.dart';
+import '../../services/filter/bloc/filter_cubit.dart';
 import '../connection_manager/internet_cubit/internet_cubit.dart';
 import '../constants/enum_constants.dart';
 import '../constants/size_constants.dart';
@@ -39,14 +41,13 @@ class DashboardPage extends StatefulWidget {
   final BuildContext? context;
   final PageRouteArg? pageRouteArg;
 
-  DashboardPage(this.context, {super.key,this.pageRouteArg});
+  DashboardPage(this.context, {super.key, this.pageRouteArg});
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-
   PageController? pageController;
 
   int _currentIndex = 0;
@@ -64,9 +65,8 @@ class _DashboardPageState extends State<DashboardPage> {
   var internetProvider = getIt<InternetCubit>();
   var exploreBloc = getIt<ExploreBloc>();
 
-
   @override
-  void initState(){
+  void initState() {
     // TODO: implement initState
     super.initState();
     pageControllerInitialization();
@@ -100,7 +100,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 animateToPage(context, index: 0);
               } else if (state.currentIndex! == 3) {
                 animateToPage(context, index: 0);
-              } else if(AppHelper().isKeyBoardVisible(routerDelegate.navigatorKey.currentContext)){
+              } else if (AppHelper().isKeyBoardVisible(
+                  routerDelegate.navigatorKey.currentContext)) {
                 AppHelper().hideKeyboardWithSystemChannel();
               }
               // else {
@@ -130,12 +131,30 @@ class _DashboardPageState extends State<DashboardPage> {
                           _currentIndex = index;
                         },
                         children: <Widget>[
-                          HomePage(key: _homePageKey,pageController: pageController,), //0
-                          ExplorePage(key: _explorePageKey,pageController: pageController,), //1
+                          HomePage(
+                            key: _homePageKey,
+                            pageController: pageController,
+                          ),
+                          //0
+                          ExplorePage(
+                            key: _explorePageKey,
+                            pageController: pageController,
+                          ),
+                          //1
                           //ChatBotPage(key: _chatPageKey,pageController: pageController,),
-                          ProfilePage(key: _profilePageKey,), //2
-                          QuestionPage(key: _quesAnsPageKey,pageController: pageController), //3
-                          ResponseGenerationPage(key: _responseGenPageKey,pageController: pageController,) //4
+                          ProfilePage(
+                            key: _profilePageKey,
+                          ),
+                          //2
+                          QuestionPage(
+                              key: _quesAnsPageKey,
+                              pageController: pageController),
+                          //3
+                          ResponseGenerationPage(
+                            key: _responseGenPageKey,
+                            pageController: pageController,
+                          )
+                          //4
                         ],
                       ),
                     ),
@@ -176,7 +195,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
   showAppBar(context, PageController? pageController) {
     var internetCubit = getIt<InternetCubit>();
-    var currentIndex = BlocProvider.of<BottomNavStateCubit>(context).state.currentIndex!;
+    var currentIndex =
+        BlocProvider.of<BottomNavStateCubit>(context).state.currentIndex!;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
@@ -184,7 +204,7 @@ class _DashboardPageState extends State<DashboardPage> {
           color: AppColors.transparentPure,
           navBarColor: AppColors.transparentPure,
           isDarkBrightness: currentIndex != 0
-              ? (Platform.isIOS ? false : true)  // Reverse for non-zero index
+              ? (Platform.isIOS ? false : true) // Reverse for non-zero index
               : (Platform.isIOS ? true : false),
         )); //forcefully change status bar color and nav bar color change
       });
@@ -204,85 +224,96 @@ class _DashboardPageState extends State<DashboardPage> {
       );
     } else if (currentIndex == 1) {
       appBar = CustomAppBar.customAppBar(
-        context,
-        StringConstants.appBarTitleLovePlanAI,
-        isCenterTitle: true,
-        statusBarColor: AppColors.backgroundColor,
-        navBarColor: AppColors.backgroundColor,
-        backgroundColor: AppColors.backgroundColor,
-        isDarkBrightness: true,
-        elevation: 0.0,
-        actionWidget: [
-          /*
+          context, StringConstants.appBarTitleLovePlanAI,
+          isCenterTitle: true,
+          statusBarColor: AppColors.backgroundColor,
+          navBarColor: AppColors.backgroundColor,
+          backgroundColor: AppColors.backgroundColor,
+          isDarkBrightness: true,
+          elevation: 0.0,
+          actionWidget: [
+            /*
           * exploreBloc.add(SortPlansByDateEvent(ascending: ascending));
           * */
 
-          Material(
-            color: AppColors.transparentPure,
-            borderRadius: BorderRadius.circular(roundRadius),
-            child: InkWell(
+            Material(
+              color: AppColors.transparentPure,
               borderRadius: BorderRadius.circular(roundRadius),
-              onTap: () {
-                // exploreBloc.add(SortPlansByDateEvent(ascending: exploreBloc.ascending));
-                CustomDialog.sortDialog();
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.filter_list_outlined,size: 24,),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(roundRadius),
+                onTap: () {
+                  // exploreBloc.add(SortPlansByDateEvent(ascending: exploreBloc.ascending));
+                  CustomDialog.sortDialog();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.filter_list_outlined,
+                    size: 24,
+                  ),
+                ),
               ),
             ),
-          ),
-
-          AppWidgets().gapW16(),
-          Material(
-            color: AppColors.transparentPure,
-            borderRadius: BorderRadius.circular(roundRadius),
-            child: InkWell(
+            AppWidgets().gapW16(),
+            Material(
+              color: AppColors.transparentPure,
               borderRadius: BorderRadius.circular(roundRadius),
-              onTap: () {
+              child: InkWell(
+                borderRadius: BorderRadius.circular(roundRadius),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    useSafeArea: true,
+                    builder: (context) {
+                      return CustomLocationDateTimeDialog(
+                        confirmButtonTitle: "Submit",
+                        cancelButtonTitle: "Close",
+                        onConfirm:
+                            (location, dateRange, budgetRange, mood, dateType) {
+                          // printLog("Location: $location");
+                          printLog("DateTime: $dateRange");
 
-                CustomDialog.customLocationDateTimeDialog(
-                  context,
-                  confirmButtonTitle: "Submit",
-                  cancelButtonTitle: "Close",
-                  onConfirm: (location, dateTime) {
-                    // printLog("Location: $location");
-                    // printLog("DateTime: $dateTime");
+                          // printLog("dateType: $dateType");
+                          // printLog("dateType: $location");
 
-                    // exploreBloc.add(FetchAllPlans());
+                          // exploreBloc.add(FetchAllPlans());
 
-                    exploreBloc.add(FilterPlansEvent(
-                      // startDate: dateTime,
-                      location: location
-                    ));
-
-                  },
-                  onCancel: () {
-                    printLog("Dialog Cancelled");
-                  },
-                  onReset: () {
-                    exploreBloc.add(FetchAllPlans());
-                  },
-                );
-                // exploreBloc.add(FilterPlansEvent(
-                //     // startDate: DateTime(2025, 02, 27),
-                //   location: "New"
-                // ));
-                // exploreBloc.add(FetchAllPlans());
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(AntDesign.filter,size: 24),
+                          exploreBloc.add(FilterPlansEvent(
+                            startEndDate: dateRange,
+                            location: location,
+                            budgetRange: budgetRange,
+                            moodType: mood,
+                            dateType: dateType
+                          ));
+                        },
+                        onCancel: () {
+                          printLog("Dialog Cancelled");
+                        },
+                        onReset: () {
+                          exploreBloc.add(FetchAllPlans());
+                        },
+                      );
+                    },
+                  );
+                  // exploreBloc.add(FilterPlansEvent(
+                  //     // startDate: DateTime(2025, 02, 27),
+                  //   location: "New"
+                  // ));
+                  // exploreBloc.add(FetchAllPlans());
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(AntDesign.filter, size: 24),
+                ),
               ),
             ),
-          ),
-          AppWidgets().gapW16(),
-        ]
-        // onBackTap: () {
-        //   animateToPage(context, index: 0);
-        //   //AppHelper().bottomTabChangeFunc(context, 0);
-        // },
-      );
+            AppWidgets().gapW16(),
+          ]
+          // onBackTap: () {
+          //   animateToPage(context, index: 0);
+          //   //AppHelper().bottomTabChangeFunc(context, 0);
+          // },
+          );
     } else if (currentIndex == 2) {
       appBar = CustomAppBar.customAppBar(
         context,
@@ -316,7 +347,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   animateToPage(context, {index}) {
-    if(internetProvider.state.status == InternetStatusState.connected){
+    if (internetProvider.state.status == InternetStatusState.connected) {
       pageController?.jumpToPage(
         index,
         // duration: const Duration(milliseconds: transitionAnimationDuration), curve: Curves.ease
@@ -327,11 +358,10 @@ class _DashboardPageState extends State<DashboardPage> {
       // );
       var bottomNavStateCubit = BlocProvider.of<BottomNavStateCubit>(context);
       bottomNavStateCubit.onChangeBottomNav(index);
-    } else{
+    } else {
       AppWidgets().getSnackBar(
           status: SnackBarStatus.warning,
-          message: "No internet connection. Please connect to internet first"
-      );
+          message: "No internet connection. Please connect to internet first");
     }
   }
 
@@ -350,11 +380,17 @@ class _DashboardPageState extends State<DashboardPage> {
     // getIt<TransactionBloc>().add(ResetTransactions());
   }
 
-  pageControllerInitialization() async{
-
+  pageControllerInitialization() async {
     var bottomNavStateCubit = getIt<BottomNavStateCubit>();
-    pageController = PageController(initialPage: 0);
-    bottomNavStateCubit.onChangeBottomNav(0);
+
+
+    if(widget.pageRouteArg?.from == AppRoutes.settings){
+      pageController = PageController(initialPage: 2);
+      bottomNavStateCubit.onChangeBottomNav(2);
+    } else{
+      pageController = PageController(initialPage: 0);
+      bottomNavStateCubit.onChangeBottomNav(0);
+    }
 
     // if(widget.pageRouteArg?.from == AppRoutes.beneficiaryManagementList){
     //   //if it is coming from beneficiaryManagementCreate then the page will initialize pageController to index == 2
@@ -386,10 +422,12 @@ class BottomNavigationBarWidget extends StatefulWidget {
 
   final PageController? pageController;
 
-  BottomNavigationBarWidget({super.key, this.currentIndex = 0, this.pageController});
+  BottomNavigationBarWidget(
+      {super.key, this.currentIndex = 0, this.pageController});
 
   @override
-  _BottomNavigationBarWidgetState createState() => _BottomNavigationBarWidgetState();
+  _BottomNavigationBarWidgetState createState() =>
+      _BottomNavigationBarWidgetState();
 }
 
 class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
@@ -411,8 +449,14 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
           child: SizedBox(
             child: BottomNavigationBar(
               currentIndex: state.currentIndex!,
-              selectedLabelStyle: textRegularStyle(context, color: AppColors.primaryColor, fontSize: 12,fontWeight: FontWeight.w500),
-              unselectedLabelStyle: textRegularStyle(context, color: AppColors.liteGray, fontSize: 12,fontWeight: FontWeight.w400),
+              selectedLabelStyle: textRegularStyle(context,
+                  color: AppColors.primaryColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500),
+              unselectedLabelStyle: textRegularStyle(context,
+                  color: AppColors.liteGray,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400),
               enableFeedback: false,
               type: BottomNavigationBarType.fixed,
               elevation: 10,
@@ -429,9 +473,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                   ),
                 ),
                 BottomNavigationBarItem(
-                  icon: iconsFunc(
-                    exploreNavInActive
-                  ),
+                  icon: iconsFunc(exploreNavInActive),
                   label: 'Explore',
                   activeIcon: iconsFunc(
                     exploreNavActive,
@@ -447,13 +489,9 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                 //   ),
                 // ),
                 BottomNavigationBarItem(
-                  icon: iconsFunc(
-                    profileNavInActive
-                  ),
+                  icon: iconsFunc(profileNavInActive),
                   label: "Profile",
-                  activeIcon: iconsFunc(
-                    profileNavActive
-                  ),
+                  activeIcon: iconsFunc(profileNavActive),
                 ),
               ],
               // onTap: (index) => _beamerDelegate.beamToNamed(
@@ -463,7 +501,6 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
               //       : AppRoutes.settingsBottomNav,
               // ),
               onTap: (value) {
-
                 printLog(value);
 
                 /*if(value == 2 || value == 1){
@@ -478,21 +515,25 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                   bottomNavStateCubit.onChangeBottomNav(value);
                 }*/
 
-
-
-                if(internetCubit.state.status == InternetStatusState.connected){
+                if (internetCubit.state.status ==
+                    InternetStatusState.connected) {
                   widget.pageController?.jumpToPage(
                     value,
                     // duration: const Duration(milliseconds: transitionAnimationDuration), curve: Curves.ease
                   );
 
+                  if(value == 1){
+                    getIt<FilterCubit>().resetFilters();
+                    getIt<ExploreBloc>().add(FetchAllPlans());
+                  }
+
                   var bottomNavStateCubit = getIt<BottomNavStateCubit>();
                   bottomNavStateCubit.onChangeBottomNav(value);
-                } else{
+                } else {
                   AppWidgets().getSnackBar(
                       status: SnackBarStatus.warning,
-                      message: "No internet connection. Please connect to internet first"
-                  );
+                      message:
+                          "No internet connection. Please connect to internet first");
                 }
               },
             ),
@@ -502,14 +543,19 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
     );
   }
 
-  iconsFunc(icon, {color = AppColors.liteGray,int? size = 25}) {
+  iconsFunc(icon, {color = AppColors.liteGray, int? size = 25}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0),
       // child: Icon(
       //   icon,
       //   color: color,
       // ),
-      child: Image.asset(icon,height: double.parse(size.toString()),width: double.parse(size.toString()),color: AppColors.primaryColor,),
+      child: Image.asset(
+        icon,
+        height: double.parse(size.toString()),
+        width: double.parse(size.toString()),
+        color: AppColors.primaryColor,
+      ),
     );
   }
 

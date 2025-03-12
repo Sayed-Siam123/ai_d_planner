@@ -64,6 +64,7 @@ class QuestionPageDummyModel {
     "ques": ques,
     "hint": hint,
     "isMultipleSelect": isMultipleSelect,
+    "textFieldType" : textFieldType,
     "isRequired": isRequired,
     "options": options == null
         ? []
@@ -88,8 +89,7 @@ class QuestionPageDummyModel {
       isRequired: isRequired ?? this.isRequired,
       options: options ?? this.options,
       hint: hint ?? this.hint,
-      textEditingController:
-      textEditingController ?? this.textEditingController,
+      textEditingController: textEditingController ?? this.textEditingController,
       focusNode: focusNode ?? this.focusNode,
       selectedData: selected ?? this.selectedData,
       textFieldType: textFieldType ?? this.textFieldType,

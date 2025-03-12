@@ -4,6 +4,7 @@ import 'package:ai_d_planner/app/binding/central_dependecy_injection.dart';
 import 'package:ai_d_planner/app/core/base/base_view.dart';
 import 'package:ai_d_planner/app/core/constants/string_constants.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
+import 'package:ai_d_planner/app/core/utils/helper/app_helper.dart';
 import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/data/models/page_route_arguments.dart';
@@ -90,14 +91,15 @@ class GetStartedPage extends BaseView {
   @override
   void onPopBack(BuildContext context) {
     var _supabase = Supabase.instance.client;
-    _supabase.auth.currentUser == null ?
-    toReplacementNamed(AppRoutes.login,args: PageRouteArg(
-      to: AppRoutes.login,
-      from: AppRoutes.getStarted,
-      pageRouteType: PageRouteType.pushReplacement,
-      isFromDashboardNav: false,
-      isBackAction: true
-    )) : null;
+    // _supabase.auth.currentUser == null ?
+    // toReplacementNamed(AppRoutes.login,args: PageRouteArg(
+    //   to: AppRoutes.login,
+    //   from: AppRoutes.getStarted,
+    //   pageRouteType: PageRouteType.pushReplacement,
+    //   isFromDashboardNav: false,
+    //   isBackAction: true
+    // )) : null;
+    AppHelper.appExitMethod();
   }
 
   @override

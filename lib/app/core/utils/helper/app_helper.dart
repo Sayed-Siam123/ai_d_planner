@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:ai_d_planner/app/core/utils/extensions/app_extensions.dart';
+import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -531,6 +532,7 @@ class AppHelper {
     }
     else if(Platform.isIOS){
       // FlutterAppMinimizer.minimize();
+      printLog("Iphone Issue");
     }
   }
 

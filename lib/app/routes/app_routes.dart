@@ -10,6 +10,8 @@ abstract class AppRoutes {
   static const packagePricePlan = _Paths.packagePricePlan;
   static const exclusiveVipOffer = _Paths.exclusiveVipOffer;
   static const dashboard = _Paths.dashboard;
+  static const settings = _Paths.settings;
+  static const changePassword = _Paths.changePassword;
 }
 
 abstract class _Paths {
@@ -24,5 +26,7 @@ abstract class _Paths {
   static const packagePricePlan = '/packagePricePlan';
   static const exclusiveVipOffer = '/exclusiveVipOffer';
   static const dashboard = '/dashboard';
+  static const settings = '/settings';
+  static const changePassword = '/changePassword';
 
 }

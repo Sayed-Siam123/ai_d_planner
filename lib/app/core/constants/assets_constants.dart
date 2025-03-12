@@ -51,5 +51,11 @@ const homeFrontImage = "${svgPath}home_front_image.svg";
 
 //home_top_background.svg
 //images
+const adventerous = "${imagePath}adventerous.jpeg";
+const custom = "${imagePath}custom.jpeg";
+const energetic = "${imagePath}energetic.jpeg";
+const relaxing = "${imagePath}relaxing.jpeg";
+const romantic = "${imagePath}romantic.jpeg";
+
 
 //lottie

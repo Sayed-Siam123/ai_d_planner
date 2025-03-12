@@ -178,7 +178,15 @@ class _ResponseGenerationPageState extends State<ResponseGenerationPage> {
             spreadRadius: 2,
             offset: Offset(0, 4), // Shadow position
           ),
-        ]
+        ],
+        image: DecorationImage(
+          image: AssetImage((state!.plansFromDB![index!].planVibe!.toLowerCase().contains("romantic")) ? romantic
+              : (state.plansFromDB![index].planVibe!.toLowerCase().contains("adventurous")) ? adventerous
+              : (state.plansFromDB![index].planVibe!.toLowerCase().contains("relaxing")) ? relaxing
+              : (state.plansFromDB![index].planVibe!.toLowerCase().contains("energetic")) ? energetic
+              : custom),
+          fit: BoxFit.cover
+        )
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

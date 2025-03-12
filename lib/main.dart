@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_ce_flutter/adapters.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger_observer.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger_settings.dart';
@@ -28,6 +29,7 @@ void main() async{
     WidgetsFlutterBinding.ensureInitialized();
     await initializeHive();
     await initializeSupaBase();
+    await initializeRevenueCat();
     // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
     // await routeSetup();
     // await firebaseConfig();
@@ -107,6 +109,11 @@ void main() async{
     log(exception.toString(), stackTrace: stackTrace);
     // FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
   });
+}
+
+initializeRevenueCat() async{
+  await Purchases.setLogLevel(LogLevel.error); // For debugging
+  await Purchases.configure(PurchasesConfiguration('appl_qDRhdSXHJefCSPDNMuPlRvpNhWe'));
 }
 
 initializeHive() async{

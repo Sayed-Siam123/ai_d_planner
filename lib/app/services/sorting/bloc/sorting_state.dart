@@ -1,3 +1,4 @@
+import 'package:ai_d_planner/app/services/sorting/bloc/sorting_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SortState extends Equatable {
@@ -8,7 +9,7 @@ abstract class SortState extends Equatable {
 class SortInitial extends SortState {}
 
 class SortSelected extends SortState {
-  final String sortOption;
+  final SortSelectedItem sortOption;
 
   SortSelected(this.sortOption);
 

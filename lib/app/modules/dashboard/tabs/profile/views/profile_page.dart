@@ -6,10 +6,13 @@ import 'package:ai_d_planner/app/core/constants/size_constants.dart';
 import 'package:ai_d_planner/app/core/style/app_colors.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
+import 'package:ai_d_planner/app/data/models/page_route_arguments.dart';
 import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_bloc.dart';
 import 'package:ai_d_planner/app/modules/authentication/bloc/authentication_event.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/bloc/profile_bloc.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/bloc/profile_state.dart';
+import 'package:ai_d_planner/app/routes/app_pages.dart';
+import 'package:ai_d_planner/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,11 +60,25 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
             AppWidgets().gapH(24),
-            _successRateContainer(context),
+            BlocBuilder<ProfileBloc,ProfileState>(
+              builder: (context, state) {
+                return _successRateContainer(context,state);
+              },
+            ),
             AppWidgets().gapH(24),
-            _profileOption(context,icon: Icons.settings,title: "My Account",onTap: () {},),
-            AppWidgets().gapH(12),
-            _profileOption(context,icon: Icons.manage_accounts_rounded,title: "Setting",onTap: () {},),
+            // _profileOption(context,icon: Icons.settings,title: "My Account",onTap: () {},),
+            // AppWidgets().gapH(12),
+            _profileOption(context,icon: Icons.manage_accounts_rounded,title: "Settings",onTap: () {
+              toReplacementNamed(
+                  AppRoutes.settings,
+                args: PageRouteArg(
+                  from: AppRoutes.dashboard,
+                  isFromDashboardNav: true,
+                  pageRouteType: PageRouteType.pushReplacement,
+                  to: AppRoutes.settings,
+                ),
+              );
+            },),
             AppWidgets().gapH(12),
             _profileOption(context,icon: Icons.support_agent,title: "Support",onTap: () {},),
             AppWidgets().gapH(12),
@@ -74,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  _successRateContainer(BuildContext context) {
+  _successRateContainer(BuildContext context,ProfileState? state) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.primaryColor,
@@ -88,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Expanded(
               child: Column(
                 children: [
-                  Text("122",style: textRegularStyle(context,isWhiteColor: true,fontSize: 24,fontWeight: FontWeight.bold),),
+                  Text("${state?.totalGeneratedResponse.toString()}",style: textRegularStyle(context,isWhiteColor: true,fontSize: 24,fontWeight: FontWeight.bold),),
                   Text("Plans Generated",style: textRegularStyle(context,isWhiteColor: true,fontSize: 12,fontWeight: FontWeight.w600),)
                 ],
               ),
@@ -101,8 +118,8 @@ class _ProfilePageState extends State<ProfilePage> {
             Expanded(
               child: Column(
                 children: [
-                  Text("92%",style: textRegularStyle(context,isWhiteColor: true,fontSize: 24,fontWeight: FontWeight.bold),),
-                  Text("Success Ratio",style: textRegularStyle(context,isWhiteColor: true,fontSize: 12,fontWeight: FontWeight.w600),)
+                  Text("${state?.totalFavResponse.toString()}",style: textRegularStyle(context,isWhiteColor: true,fontSize: 24,fontWeight: FontWeight.bold),),
+                  Text("Saved Favourites",style: textRegularStyle(context,isWhiteColor: true,fontSize: 12,fontWeight: FontWeight.w600),)
                 ],
               ),
             )

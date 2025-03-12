@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_d_planner/app/binding/central_dependecy_injection.dart';
@@ -10,25 +11,20 @@ import 'package:ai_d_planner/app/core/style/app_style.dart';
 import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/core/widgets/custom_app_bar.dart';
 import 'package:ai_d_planner/app/data/models/page_route_arguments.dart';
-import 'package:ai_d_planner/app/modules/get_started/bloc/get_started_bloc.dart';
-import 'package:ai_d_planner/app/modules/get_started/bloc/get_started_state.dart';
 import 'package:ai_d_planner/app/modules/question_flow/bloc/question_flow_bloc.dart';
 import 'package:ai_d_planner/app/modules/question_flow/bloc/question_flow_event.dart';
 import 'package:ai_d_planner/app/modules/question_flow/bloc/question_flow_state.dart';
-import 'package:animated_snack_bar/animated_snack_bar.dart';
-import 'package:bottom_picker/bottom_picker.dart';
-import 'package:bottom_picker/resources/arrays.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
 import '../../../core/constants/assets_constants.dart';
 import '../../../core/constants/string_constants.dart';
 import '../../../core/utils/helper/print_log.dart';
-import '../../../core/widgets/custom_buttons_widget.dart';
 import '../../../core/widgets/text_field_widget.dart';
+import '../../../data/models/get_started_ques_model.dart';
 import '../../../data/models/question_page_dummy_model.dart';
 import '../../../routes/app_pages.dart';
 import '../../../routes/app_routes.dart';
@@ -404,7 +400,7 @@ class QuestionFlowPage extends BaseView {
     );
   }
 
-  _showDateTimePicker(BuildContext context,TextEditingController? textEditingController) async {
+  /*_showDateTimePicker(BuildContext context,TextEditingController? textEditingController) async {
     // First: Show Date Picker
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -433,6 +429,44 @@ class QuestionFlowPage extends BaseView {
     );
 
     textEditingController?.text = _getFormattedTime(date.toString());
+  }*/
+
+
+  void _showDateTimePicker(BuildContext context, TextEditingController? textEditingController) {
+    // Show Date Picker First
+    DatePicker.showDatePicker(
+      context,
+      currentTime: DateTime.now(),
+      minTime: DateTime.now(),
+      maxTime: DateTime(DateTime.now().year+5),
+      onCancel: () {
+        debugPrint('Date Picker Cancelled');
+      },
+      onConfirm: (pickedDate) {
+        DatePicker.showTimePicker(
+          context,
+          showSecondsColumn: false, // Hide seconds if not needed
+          onCancel: () {
+            debugPrint('Time Picker Cancelled');
+          },
+          onConfirm: (pickedTime) {
+            // Combine Date and Time
+            DateTime selectedDateTime = DateTime(
+              pickedDate.year,
+              pickedDate.month,
+              pickedDate.day,
+              pickedTime.hour,
+              pickedTime.minute,
+            );
+
+            // Set formatted date-time to TextEditingController
+            textEditingController?.text = _getFormattedTime(selectedDateTime.toString());
+
+            debugPrint('Selected DateTime: $selectedDateTime');
+          },
+        );
+      },
+    );
   }
 
   void _setLocationData(
@@ -519,7 +553,9 @@ class QuestionFlowPage extends BaseView {
   }
 
   _proceedToSubmit() async{
-    await setGetStartedQues(data: jsonEncode(quesFlowBloc.state.getStartedQues!));
+    await setGetStartedQues(data: questionPageDummyModelToJson(quesFlowBloc.state.getStartedQues!));
+    await setQuestionDone(data: true);
+    await setPaymentDone(data: false);
 
     if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
       toReplacementNamed(AppRoutes.seeFullFeature,
@@ -539,7 +575,7 @@ class QuestionFlowPage extends BaseView {
           isFromDashboardNav: false,
         ));
 
-    // printLog(await getGetStartedQues());
+    // log(await getGetStartedQues());
   }
 
   setGetStartedQues({required String data}) async{
@@ -548,6 +584,24 @@ class QuestionFlowPage extends BaseView {
     await StoragePrefs.set(StoragePrefs.getStartedQues, data.toString());
     } else{
     await StoragePrefs.set(StoragePrefs.getStartedQues, data.toString());
+    }
+  }
+
+  setQuestionDone({required bool data}) async{
+    if(await StoragePrefs.hasData(StoragePrefs.questionDone)!){
+      await StoragePrefs.deleteByKey(StoragePrefs.questionDone);
+      await StoragePrefs.set(StoragePrefs.questionDone, data);
+    } else{
+      await StoragePrefs.set(StoragePrefs.questionDone, data);
+    }
+  }
+
+  setPaymentDone({required bool data}) async{
+    if(await StoragePrefs.hasData(StoragePrefs.paymentDone)!){
+      await StoragePrefs.deleteByKey(StoragePrefs.paymentDone);
+      await StoragePrefs.set(StoragePrefs.paymentDone, data);
+    } else{
+      await StoragePrefs.set(StoragePrefs.paymentDone, data);
     }
   }
 

@@ -261,7 +261,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                       widget.keyboardType == KeyboardType.beneficiaryAccountNumber
                   ? TextInputType.number
                   : TextInputType.text,
-              inputFormatters: <TextInputFormatter>[
+              /*inputFormatters: <TextInputFormatter>[
                 widget.keyboardType == KeyboardType.number
                             ? FilteringTextInputFormatter.allow(RegExp("[0-9]"))
                             : widget.keyboardType == KeyboardType.decimal
@@ -276,8 +276,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                 //r'^\d+\.?\d{0,2}' // digits with two decimal points
 
                 // : FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9_\-=@,\.;]+$')),
-              ],
-
+              ],*/
               obscureText: (widget.isPasswordType && !widget.showPassword),
               obscuringCharacter: '\u25CF',
               style: textRegularStyle(

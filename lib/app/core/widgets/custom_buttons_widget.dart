@@ -83,6 +83,7 @@ class CustomAppMaterialButton extends StatelessWidget {
               if(internetCubit.state.status == InternetStatusState.connected){
                 DebounceHelper().killAllDebounce();
                 DebounceHelper().debounce(
+                  time: 1,
                   tag: DebounceHelper.buttonTag,
                   onMethod: onPressed,
                 );
@@ -152,6 +153,7 @@ class CustomAppMaterialButton extends StatelessWidget {
                 if(internetCubit.state.status == InternetStatusState.connected){
                   DebounceHelper().killAllDebounce();
                   DebounceHelper().debounce(
+                    time: 1,
                     tag: DebounceHelper.buttonTag,
                     onMethod: onPressed,
                   );
@@ -232,6 +234,7 @@ class CustomAppTextButton extends StatelessWidget {
           if(internetCubit.state.status == InternetStatusState.connected){
             DebounceHelper().killAllDebounce();
             DebounceHelper().debounce(
+              time: 1,
               tag: DebounceHelper.buttonTag,
               onMethod: onPressed,
             );
@@ -274,6 +277,7 @@ class CustomAppTextButton extends StatelessWidget {
             if(internetCubit.state.status == InternetStatusState.connected){
               DebounceHelper().killAllDebounce();
               DebounceHelper().debounce(
+                time: 1,
                 tag: DebounceHelper.buttonTag,
                 onMethod: onPressed,
               );
@@ -349,6 +353,7 @@ class CustomAppButtonWithCustomChild extends StatelessWidget {
             if(internetCubit.state.status == InternetStatusState.connected){
               DebounceHelper().killAllDebounce();
               DebounceHelper().debounce(
+                time: 1,
                 tag: DebounceHelper.buttonTag,
                 onMethod: onPressed,
               );
@@ -421,6 +426,7 @@ class CustomAppMaterialCapsuleButton extends StatelessWidget {
           if(internetCubit.state.status == InternetStatusState.connected){
             DebounceHelper().killAllDebounce();
             DebounceHelper().debounce(
+              time: 1,
               tag: DebounceHelper.buttonTag,
               onMethod: onPressed,
             );

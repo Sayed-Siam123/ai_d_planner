@@ -4,6 +4,7 @@ import 'package:ai_d_planner/app/core/constants/size_constants.dart';
 import 'package:ai_d_planner/app/data/models/page_route_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../binding/central_dependecy_injection.dart';
 import '../../../core/constants/string_constants.dart';
@@ -89,13 +90,26 @@ class ExclusiveVipOffer extends BaseView {
             fontSize: 16,
             fontWeight: FontWeight.w700,
             onPressed: () async {
-              toReplacementNamed(AppRoutes.dashboard,
-                  args: PageRouteArg(
+
+              var client = await Supabase.instance.client.auth;
+
+              if(client.currentUser != null){
+                toReplacementNamed(AppRoutes.dashboard,
+                    args: PageRouteArg(
                       to: AppRoutes.dashboard,
                       from: AppRoutes.exclusiveVipOffer,
                       pageRouteType: PageRouteType.pushReplacement,
                       isFromDashboardNav: false,
-                  ));
+                    ));
+              } else{
+                toReplacementNamed(AppRoutes.login,
+                    args: PageRouteArg(
+                      to: AppRoutes.login,
+                      from: AppRoutes.exclusiveVipOffer,
+                      pageRouteType: PageRouteType.pushReplacement,
+                      isFromDashboardNav: false,
+                    ));
+              }
             },
           ),
         ),

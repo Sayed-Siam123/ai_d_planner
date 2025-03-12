@@ -137,6 +137,7 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
 
         // Update the question with the modified selected answers
         updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          textFieldType: updatedQuestions[event.questionIndex!].textFieldType,
           selected: selectedAnswers,
         );
       } else {
@@ -172,10 +173,12 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
 
         // Update the question with the modified selected answers
         updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          textFieldType: updatedQuestions[event.questionIndex!].textFieldType,
           selected: selectedAnswersForCustom,
         );
       }
-    } else {
+    }
+    else {
       // Handle single selection (when isMultipleSelect is false)
       printLog("Handle single selection");
 
@@ -199,6 +202,7 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
 
       // Update the question with the modified selected answers
       updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+        textFieldType: updatedQuestions[event.questionIndex!].textFieldType,
         selected: selectedAnswers,
       );
     }
@@ -223,76 +227,6 @@ class QuestionFlowBloc extends Bloc<QuestionFlowEvent, QuestionFlowState> {
     ));
 
   }
-
-  /*Future<bool> validateAndSubmit({required List<QuestionPageDummyModel> questionList}) async {
-    bool isValid = true;
-    String errorMessage = '';
-
-    for (var question in questionList) {
-      if (question.isRequired == true) {
-        if (question.options != null && question.options!.isNotEmpty) {
-          if (question.selectedData != null && question.selectedData!.isNotEmpty) {
-            continue; // At least one option is selected
-          } else {
-            isValid = false;
-            errorMessage = "Please select an option for: ${question.ques}";
-            break;
-          }
-        } else {
-          isValid = false;
-          errorMessage = "No options available to answer: ${question.ques}";
-          break;
-        }
-      }
-    }
-
-    if (!isValid) {
-      // Show snackbar if validation fails
-      await AppWidgets().getSnackBar(
-        status: SnackBarStatus.error,
-        message: errorMessage,
-        position: MobileSnackBarPosition.top,
-      );
-      printLog("Validation failed: $errorMessage");
-    }
-
-    return isValid;
-  }*/
-
-  /*
-  Future<bool> validateCurrentQuestion({required QuestionPageDummyModel question,}) async {
-    bool isValid = true;
-    String errorMessage = '';
-
-    // Check if the question is required
-    if (question.isRequired == true) {
-      if (question.options != null && question.options!.isNotEmpty) {
-        // Check if at least one option is selected
-        if (question.selectedData != null && question.selectedData!.isNotEmpty) {
-          isValid = true;
-        } else {
-          isValid = false;
-          errorMessage = "Please select an option for: ${question.ques}";
-        }
-      } else {
-        isValid = false;
-        errorMessage = "No options available to answer: ${question.ques}";
-      }
-    }
-
-    if (!isValid) {
-      // Show snackbar if validation fails
-      await AppWidgets().getSnackBar(
-        status: SnackBarStatus.error,
-        message: errorMessage,
-        position: MobileSnackBarPosition.top,
-      );
-      printLog("Validation failed: $errorMessage");
-    }
-
-    return isValid;
-  }
-*/
 
   Future<bool> validateCurrentQuestion({required QuestionPageDummyModel question}) async {
     bool isValid = true;

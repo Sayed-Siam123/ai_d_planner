@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:ai_d_planner/app/core/constants/assets_constants.dart';
 import 'package:ai_d_planner/app/core/constants/size_constants.dart';
+import 'package:ai_d_planner/app/core/services/storage_prefs.dart';
 import 'package:ai_d_planner/app/core/style/app_style.dart';
+import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
@@ -57,8 +59,13 @@ class SplashPage extends BaseView {
   }
 
   @override
-  void initState() {
+  initState() async{
     // TODO: implement initState
+
+    if(!await StoragePrefs.hasData(StoragePrefs.questionDone)!){
+      await setQuestionDone(data: false);
+      await setPaymentDone(data: false);
+    }
     _proceedToNext();
   }
 
@@ -73,12 +80,30 @@ class SplashPage extends BaseView {
     return false;
   }
 
+  setQuestionDone({required bool data}) async{
+    if(await StoragePrefs.hasData(StoragePrefs.questionDone)!){
+      await StoragePrefs.deleteByKey(StoragePrefs.questionDone);
+      await StoragePrefs.set(StoragePrefs.questionDone, data);
+    } else{
+      await StoragePrefs.set(StoragePrefs.questionDone, data);
+    }
+  }
+
+  setPaymentDone({required bool data}) async{
+    if(await StoragePrefs.hasData(StoragePrefs.paymentDone)!){
+      await StoragePrefs.deleteByKey(StoragePrefs.paymentDone);
+      await StoragePrefs.set(StoragePrefs.paymentDone, data);
+    } else{
+      await StoragePrefs.set(StoragePrefs.paymentDone, data);
+    }
+  }
+
   void _proceedToNext() async{
     SupabaseClient _supabase = Supabase.instance.client;
 
     await Future.delayed(Duration(seconds: 2));
 
-    if(_supabase.auth.currentUser != null){
+    /*if(_supabase.auth.currentUser != null){
       // toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
       //   to: AppRoutes.getStarted,
       //   from: AppRoutes.splash,
@@ -94,6 +119,48 @@ class SplashPage extends BaseView {
     } else{
       toReplacementNamed(AppRoutes.login,args: PageRouteArg(
         to: AppRoutes.login,
+        from: AppRoutes.splash,
+        pageRouteType: PageRouteType.pushReplacement,
+        isFromDashboardNav: false,
+      ));
+    }*/
+
+    bool questionAnswerStatus = bool.parse(await StoragePrefs.get(StoragePrefs.questionDone) ?? "false");
+    bool paymentStatus = bool.parse((await StoragePrefs.get(StoragePrefs.paymentDone) ?? "false"));
+
+    if(questionAnswerStatus){
+
+      //!paymentStatus use for login route //
+      if(paymentStatus){
+
+        if(_supabase.auth.currentUser != null){
+          toReplacementNamed(AppRoutes.dashboard,args: PageRouteArg(
+            to: AppRoutes.dashboard,
+            from: AppRoutes.splash,
+            pageRouteType: PageRouteType.pushReplacement,
+            isFromDashboardNav: false,
+          ));
+        } else{
+          toReplacementNamed(AppRoutes.login,
+              args: PageRouteArg(
+                to: AppRoutes.login,
+                from: AppRoutes.splash,
+                pageRouteType: PageRouteType.pushReplacement,
+                isFromDashboardNav: false,
+              ));
+        }
+      } else{
+        toReplacementNamed(AppRoutes.seeFullFeature,
+            args: PageRouteArg(
+              to: AppRoutes.seeFullFeature,
+              from: AppRoutes.splash,
+              pageRouteType: PageRouteType.pushReplacement,
+              isFromDashboardNav: false,
+            ));
+      }
+    } else{
+      toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
+        to: AppRoutes.getStarted,
         from: AppRoutes.splash,
         pageRouteType: PageRouteType.pushReplacement,
         isFromDashboardNav: false,

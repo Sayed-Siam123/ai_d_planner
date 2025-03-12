@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:ai_d_planner/app/core/base/base_view_with_nav.dart';
 import 'package:ai_d_planner/app/modules/authentication/views/login_page.dart';
 import 'package:ai_d_planner/app/modules/authentication/views/signup_page.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/tabs/change_password/views/change_password_view.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/tabs/settings/settings_page.dart';
 import 'package:ai_d_planner/app/modules/get_started/views/exclusive_vip_offer.dart';
 import 'package:ai_d_planner/app/modules/get_started/views/get_started_page.dart';
 import 'package:ai_d_planner/app/modules/get_started/views/package_price_plan_page.dart';
@@ -44,6 +46,8 @@ final routerDelegate = BeamerDelegate(
       AppRoutes.packagePricePlan: (context, state, data) => routePageBuilder(child: PackagePricePlanPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.packagePricePlan,isBack: (data as PageRouteArg).isBackAction!),
       AppRoutes.exclusiveVipOffer: (context, state, data) => routePageBuilder(child: ExclusiveVipOffer(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.exclusiveVipOffer,isBack: (data as PageRouteArg).isBackAction!),
       AppRoutes.dashboard: (context, state, data) => routePageBuilder(child: DashboardPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.dashboard,isBack: (data as PageRouteArg).isBackAction!),
+      AppRoutes.settings: (context, state, data) => routePageBuilder(child: SettingsPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.settings,isBack: (data as PageRouteArg).isBackAction!),
+      AppRoutes.changePassword: (context, state, data) => routePageBuilder(child: ChangePasswordPage(context,pageRouteArg: data as PageRouteArg,),path: AppRoutes.changePassword,isBack: (data as PageRouteArg).isBackAction!),
     },
   ).call,
 );

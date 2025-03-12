@@ -5,6 +5,8 @@ abstract class SortEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class SortByNone extends SortEvent {}
+
 class SortByBudgetLowToHigh extends SortEvent {}
 
 class SortByBudgetHighToLow extends SortEvent {}

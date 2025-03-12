@@ -75,7 +75,7 @@ TextStyle textRegularStyle(context,
               : [],
           fontSize: fontSize,
           color: isWhiteColor
-              ? AppColors.white
+              ? AppColors.whitePure
               : isGrayColor
                   ? AppColors.gray
                   : color,

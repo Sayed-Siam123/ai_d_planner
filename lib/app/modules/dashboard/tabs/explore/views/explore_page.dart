@@ -11,6 +11,8 @@ import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_blo
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_event.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/bloc/explore_state.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/explore/views/show_plan_dialog_widget.dart';
+import 'package:ai_d_planner/app/services/sorting/bloc/sorting_bloc.dart';
+import 'package:ai_d_planner/app/services/sorting/bloc/sorting_event.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +35,7 @@ class ExplorePage extends StatefulWidget {
 class _ExplorePageState extends State<ExplorePage> {
 
   var exploreBloc = getIt<ExploreBloc>();
+  var sortBloc = getIt<SortBloc>();
 
   @override
   void initState() {
@@ -40,7 +43,8 @@ class _ExplorePageState extends State<ExplorePage> {
     super.initState();
     if(exploreBloc.state.exploreStateStatus != ExploreStateStatus.success){
       exploreBloc.add(FetchAllPlans());
-      exploreBloc.add(SortPlansByDateEvent(ascending: exploreBloc.ascending));
+      exploreBloc.add(SortPlansList(sortSelectedItem: SortSelectedItem.none, ascending: false));
+      sortBloc.add(SortByNone());
     }
   }
 
@@ -152,6 +156,8 @@ class _ExplorePageState extends State<ExplorePage> {
     return RefreshIndicator(
       onRefresh: () async {
         exploreBloc.add(FetchAllPlans());
+        exploreBloc.add(SortPlansList(sortSelectedItem: SortSelectedItem.none, ascending: false));
+        sortBloc.add(SortByNone());
       },
       child: LayoutBuilder(
         builder: (context, constraints) {

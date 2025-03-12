@@ -7,6 +7,7 @@ import 'package:ai_d_planner/app/data/dummy_json/question_page_dummy_json.dart';
 import 'package:ai_d_planner/app/data/dummy_json/regenerate_question_dummy_json.dart';
 import 'package:ai_d_planner/app/data/models/GetPlanResponseModel.dart';
 import 'package:ai_d_planner/app/data/models/question_page_dummy_model.dart';
+import 'package:ai_d_planner/app/modules/dashboard/tabs/profile/bloc/profile_event.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/repository/gemini_repo.dart';
 import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/repository/response_supabase_repository.dart';
 import 'package:ai_d_planner/app/routes/app_pages.dart';
@@ -14,9 +15,11 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../binding/central_dependecy_injection.dart';
 import '../../../../../core/services/storage_prefs.dart';
 import '../../../../../core/utils/helper/print_log.dart';
 import '../../../../../data/models/plan_from_ai_model.dart';
+import '../../profile/bloc/profile_bloc.dart';
 import 'question_page_event.dart';
 import 'question_page_state.dart';
 
@@ -120,6 +123,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
         // Update the question with the modified selected answers
         updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          textFieldType: updatedQuestions[event.questionIndex!].textFieldType,
           selected: selectedAnswersForMultiple,
         );
       } else {
@@ -155,6 +159,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
         // Update the question with the modified selected answers
         updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+          textFieldType: updatedQuestions[event.questionIndex!].textFieldType,
           selected: selectedAnswersForCustom,
         );
       }
@@ -182,6 +187,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
       // Update the question with the modified selected answers
       updatedQuestions[event.questionIndex!] = updatedQuestions[event.questionIndex!].copyWith(
+        textFieldType: updatedQuestions[event.questionIndex!].textFieldType,
         selected: selectedAnswersForSingle,
       );
     }
@@ -191,7 +197,7 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
       questionPageDummyData: updatedQuestions,
     )) : emit(state.copyWith(
       regenerateQuestionPageDummyData: updatedQuestions,
-    ));;
+    ));
   }
   _resetOption(ResetOption event, Emitter<QuestionPageState> emit) async {
 
@@ -234,6 +240,8 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
     AppHelper().showLoader(dismissOnTap: true,hasMask: true);
 
     var dataList = questionPageDummyModelFromJson(questionPageDummyModelToJson(event.questionList!));
+
+    await setGetStartedQues(data: jsonEncode(event.questionList!));
 
     var timeData = await _getDate(dataList);
     var time = _getTimeFormat(timeData);
@@ -286,7 +294,9 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
         plansFromDB: await _getLastThreePlans()
       ));
 
-      await StoragePrefs.deleteByKey(StoragePrefs.getStartedQues);
+      getIt<ProfileBloc>().add(FetchProfileData());
+
+      // await StoragePrefs.deleteByKey(StoragePrefs.getStartedQues);
 
       event.pageController?.jumpToPage(dashboardResponseGeneration);
     } else{
@@ -297,6 +307,15 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
 
   }
 
+  setGetStartedQues({required String data}) async{
+    if(await StoragePrefs.hasData(StoragePrefs.getStartedQues)!){
+      await StoragePrefs.deleteByKey(StoragePrefs.getStartedQues);
+      await StoragePrefs.set(StoragePrefs.getStartedQues, data.toString());
+    } else{
+      await StoragePrefs.set(StoragePrefs.getStartedQues, data.toString());
+    }
+  }
+
   _changeStatusFav(ChangeStatusFav event, Emitter<QuestionPageState> emit) async{
     AppHelper().showLoader(hasMask: true,dismissOnTap: true);
 
@@ -304,6 +323,8 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageState> {
       id: event.planID,
       status: event.status
     );
+
+    getIt<ProfileBloc>().add(FetchProfileData());
 
     emit(state.copyWith(
         plansFromDB: await _getLastThreePlans()

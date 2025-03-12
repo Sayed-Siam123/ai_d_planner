@@ -17,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/constants/assets_constants.dart';
@@ -364,6 +365,7 @@ class _QuestionPageState extends State<QuestionPage> {
   _getTextField(BuildContext? context, title, hint,
       TextEditingController controller, FocusNode? focusNode,
       {bool? isReadOnly, bool? isActive, String? textFieldType = "text"}) {
+
     return CustomTextFieldWidget(
       context: context!,
       hint: hint,
@@ -404,7 +406,7 @@ class _QuestionPageState extends State<QuestionPage> {
     );
   }
 
-/*  void _showDateTimePicker(BuildContext? context, TextEditingController? textEditingController) {
+  /*  void _showDateTimePicker(BuildContext? context, TextEditingController? textEditingController) {
     BottomPicker.dateTime(
       bottomPickerTheme: BottomPickerTheme.plumPlate,
       pickerTitle: Text(
@@ -434,7 +436,7 @@ class _QuestionPageState extends State<QuestionPage> {
     ).show(context!);
   }*/
 
-  _showDateTimePicker(BuildContext context,TextEditingController? textEditingController) async {
+  /*_showDateTimePicker(BuildContext context,TextEditingController? textEditingController) async {
     // First: Show Date Picker
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -463,6 +465,43 @@ class _QuestionPageState extends State<QuestionPage> {
     );
 
     textEditingController?.text = _getFormattedTime(date.toString());
+  }*/
+
+  void _showDateTimePicker(BuildContext context, TextEditingController? textEditingController) {
+    // Show Date Picker First
+    DatePicker.showDatePicker(
+      context,
+      currentTime: DateTime.now(),
+      minTime: DateTime.now(),
+      maxTime: DateTime(DateTime.now().year+5),
+      onCancel: () {
+        debugPrint('Date Picker Cancelled');
+      },
+      onConfirm: (pickedDate) {
+        DatePicker.showTimePicker(
+          context,
+          showSecondsColumn: false, // Hide seconds if not needed
+          onCancel: () {
+            debugPrint('Time Picker Cancelled');
+          },
+          onConfirm: (pickedTime) {
+            // Combine Date and Time
+            DateTime selectedDateTime = DateTime(
+              pickedDate.year,
+              pickedDate.month,
+              pickedDate.day,
+              pickedTime.hour,
+              pickedTime.minute,
+            );
+
+            // Set formatted date-time to TextEditingController
+            textEditingController?.text = _getFormattedTime(selectedDateTime.toString());
+
+            debugPrint('Selected DateTime: $selectedDateTime');
+          },
+        );
+      },
+    );
   }
 
   void _setLocationData(

@@ -12,7 +12,8 @@ class StoragePrefs{
 
   //storage keys name
   static const String getStartedQues = "get_started_ques";
-  static const String getStartedStatus = "get_started_status";
+  static const String questionDone = "questionDone";
+  static const String paymentDone = "paymentDone";
 
   // static final box = GetStorage(auth);
 
