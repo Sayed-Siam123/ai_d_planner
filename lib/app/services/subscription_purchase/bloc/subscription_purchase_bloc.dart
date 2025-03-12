@@ -9,7 +9,10 @@ import 'package:ai_d_planner/app/services/subscription_purchase/bloc/subscriptio
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
+import '../../../data/models/page_route_arguments.dart';
 import '../../../data/models/subscription_response_model.dart';
+import '../../../routes/app_pages.dart';
+import '../../../routes/app_routes.dart';
 
 class SubscriptionPurchaseBloc extends Bloc<SubscriptionPurchaseEvent, SubscriptionPurchaseState> {
 
@@ -28,6 +31,7 @@ class SubscriptionPurchaseBloc extends Bloc<SubscriptionPurchaseEvent, Subscript
       emit(PurchaseLoading());
       CustomerInfo customerInfo = await Purchases.purchaseStoreProduct(event.product);
       emit(PurchaseSuccess(customerInfo));
+      await _forwardTask();
     } catch (e) {
       emit(PurchaseFailure("Purchase failed: $e"));
     }
@@ -56,5 +60,15 @@ class SubscriptionPurchaseBloc extends Bloc<SubscriptionPurchaseEvent, Subscript
     } catch (e) {
       emit(RestoreFailure("Restore failed: $e"));
     }
+  }
+
+  _forwardTask() {
+    toReplacementNamed(AppRoutes.login,
+        args: PageRouteArg(
+          to: AppRoutes.login,
+          from: AppRoutes.packagePricePlan,
+          pageRouteType: PageRouteType.pushReplacement,
+          isFromDashboardNav: false,
+        ));
   }
 }

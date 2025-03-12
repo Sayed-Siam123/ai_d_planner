@@ -97,7 +97,12 @@ class PackagePricePlanPage extends BaseView {
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 onPressed: () async {
-
+                  // toReplacementNamed(AppRoutes.exclusiveVipOffer,args: PageRouteArg(
+                  //     to: AppRoutes.exclusiveVipOffer,
+                  //     from: AppRoutes.packagePricePlan,
+                  //     pageRouteType: PageRouteType.pushReplacement,
+                  //     isFromDashboardNav: false,
+                  // ));
                 },
               ),
               AppWidgets().gapH16(),
