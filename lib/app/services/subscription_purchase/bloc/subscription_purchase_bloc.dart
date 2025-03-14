@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:ai_d_planner/app/core/utils/helper/app_helper.dart';
 import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
+import 'package:ai_d_planner/app/core/widgets/app_widgets.dart';
 import 'package:ai_d_planner/app/modules/get_started/respository/purchase_repository.dart';
 import 'package:ai_d_planner/app/services/subscription_purchase/bloc/subscription_purchase_event.dart';
 import 'package:ai_d_planner/app/services/subscription_purchase/bloc/subscription_purchase_state.dart';
@@ -29,8 +30,10 @@ class SubscriptionPurchaseBloc extends Bloc<SubscriptionPurchaseEvent, Subscript
   Future<void> _purchaseSubscription(PurchaseSubscription event, Emitter<SubscriptionPurchaseState> emit) async {
     try {
       emit(PurchaseLoading());
+      AppHelper().showLoader(dismissOnTap: false,hasMask: true);
       CustomerInfo customerInfo = await Purchases.purchaseStoreProduct(event.product);
       emit(PurchaseSuccess(customerInfo));
+      AppHelper().hideLoader();
       await _forwardTask();
     } catch (e) {
       emit(PurchaseFailure("Purchase failed: $e"));
@@ -55,7 +58,27 @@ class SubscriptionPurchaseBloc extends Bloc<SubscriptionPurchaseEvent, Subscript
   Future<void> _restorePurchases(RestorePurchases event, Emitter<SubscriptionPurchaseState> emit) async {
     try {
       emit(PurchaseLoading());
+      AppHelper().showLoader(dismissOnTap: false,hasMask: true);
       await Purchases.restorePurchases();
+
+      CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+
+      bool isSubscribed = customerInfo.entitlements.active.isNotEmpty;
+
+      printLog(jsonEncode(customerInfo.entitlements.active.isNotEmpty));
+
+      if(!isSubscribed){
+        AppWidgets().getSnackBar(
+          status: SnackBarStatus.error,
+          message: "Please subscribe a plan first!"
+        );
+      } else{
+        AppHelper().hideLoader();
+        await _forwardTask();
+      }
+
+      AppHelper().hideLoader();
+
       emit(RestoreSuccess());
     } catch (e) {
       emit(RestoreFailure("Restore failed: $e"));

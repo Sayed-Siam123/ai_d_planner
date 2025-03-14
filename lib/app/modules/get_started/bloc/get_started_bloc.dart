@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ai_d_planner/app/core/utils/helper/print_log.dart';
 import 'package:ai_d_planner/app/modules/get_started/respository/purchase_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -31,8 +33,9 @@ class GetStartedBloc extends Bloc<GetStartedEvent, GetStartedState> {
 
       var data = await Purchases.getOfferings();
       var offerings = data.all["Default"];
+      printLog(offerings!.availablePackages[0].storeProduct.price);
 
-      emit(state.copyWith(availablePackageLists: offerings!.availablePackages));
+      emit(state.copyWith(availablePackageLists: offerings.availablePackages));
       AppHelper().hideLoader();
     } catch (e) {
       AppHelper().hideLoader();

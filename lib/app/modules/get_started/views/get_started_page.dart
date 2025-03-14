@@ -147,8 +147,8 @@ class GetStartedPage extends BaseView {
             //pageController!.jumpToPage(value);
             getStartedBloc.add(ChangeSlideIndicator(currentIndex: value));
           },
-          autoplay: false,
-          // autoplayDelay: 2000,
+          autoplay: true,
+          autoplayDelay: 2000,
           autoplayDisableOnInteraction: false,
           // pagination: SwiperPagination(),
           // control: SwiperControl(),

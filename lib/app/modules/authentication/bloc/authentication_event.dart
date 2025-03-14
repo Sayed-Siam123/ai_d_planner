@@ -4,13 +4,13 @@ abstract class AuthenticationEvent extends Equatable{}
 
 class InitiateSignup extends AuthenticationEvent {
 
-  final String? userName,email,password;
+  final String? userName,email,password,rcAppOriginalID;
 
-  InitiateSignup({this.userName, this.email, this.password});
+  InitiateSignup({this.userName, this.email, this.password,this.rcAppOriginalID});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [userName,email,password];
+  List<Object?> get props => [userName,email,password,rcAppOriginalID];
 
 }
 
@@ -28,9 +28,13 @@ class InitiateLogin extends AuthenticationEvent {
 
 class InitiateLoginWithApple extends AuthenticationEvent {
 
+  final String? rcAppOriginalID;
+
+  InitiateLoginWithApple({this.rcAppOriginalID});
+
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [rcAppOriginalID];
 
 }
 

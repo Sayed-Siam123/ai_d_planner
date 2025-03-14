@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -151,6 +152,11 @@ class _MyAppState extends State<MyApp> {
         routerDelegate: routerDelegate,
         scaffoldMessengerKey: AppWidgets.snackBarKey,
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         theme: ThemeData(
           dialogTheme: DialogTheme(
               elevation: 0,

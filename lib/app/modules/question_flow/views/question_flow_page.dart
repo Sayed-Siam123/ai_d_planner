@@ -18,7 +18,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart' as CalenderPicker;
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart' as TimePicker;
 
 import '../../../core/constants/assets_constants.dart';
 import '../../../core/constants/string_constants.dart';
@@ -156,8 +157,8 @@ class QuestionFlowPage extends BaseView {
                               int questionIndex =
                                   state.getStartedQues!.indexOf(questions);
 
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              return ListView(
+                                // crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     questions.ques!,
@@ -434,39 +435,66 @@ class QuestionFlowPage extends BaseView {
 
   void _showDateTimePicker(BuildContext context, TextEditingController? textEditingController) {
     // Show Date Picker First
-    DatePicker.showDatePicker(
+    CalenderPicker.DatePicker.showDatePicker(
       context,
-      currentTime: DateTime.now(),
-      minTime: DateTime.now(),
-      maxTime: DateTime(DateTime.now().year+5),
+      initialDateTime: DateTime.now(),
+      minDateTime: DateTime.now(),
+      maxDateTime: DateTime(DateTime.now().year+5),
+      dateFormat: "dd MMMM yyyy",
       onCancel: () {
         debugPrint('Date Picker Cancelled');
       },
-      onConfirm: (pickedDate) {
-        DatePicker.showTimePicker(
-          context,
-          showSecondsColumn: false, // Hide seconds if not needed
-          onCancel: () {
-            debugPrint('Time Picker Cancelled');
-          },
-          onConfirm: (pickedTime) {
-            // Combine Date and Time
-            DateTime selectedDateTime = DateTime(
-              pickedDate.year,
-              pickedDate.month,
-              pickedDate.day,
-              pickedTime.hour,
-              pickedTime.minute,
-            );
+      onConfirm: (pickedDate, selectedIndex) async{
+        Navigator.pop(context);
+        await Future.delayed(Duration(milliseconds: 50));
+          TimePicker.DatePicker.showTimePicker(
+            AppWidgets().globalContext,
+            showSecondsColumn: false, // Hide seconds if not needed
+            currentTime: DateTime.now(),
+            onCancel: () {
+              debugPrint('Time Picker Cancelled');
+            },
+            onConfirm: (pickedTime) {
+              // Combine Date and Time
+              DateTime selectedDateTime = DateTime(
+                pickedDate.year,
+                pickedDate.month,
+                pickedDate.day,
+                pickedTime.hour,
+                pickedTime.minute,
+              );
 
-            // Set formatted date-time to TextEditingController
-            textEditingController?.text = _getFormattedTime(selectedDateTime.toString());
+              // Set formatted date-time to TextEditingController
+              textEditingController?.text = _getFormattedTime(selectedDateTime.toString());
 
-            debugPrint('Selected DateTime: $selectedDateTime');
-          },
-        );
+              debugPrint('Selected DateTime: $selectedDateTime');
+            },
+          );
       },
     );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return SizedBox(
+    //       width: 350,
+    //       child: CupertinoCalendar(
+    //         minimumDateTime: DateTime(2024, 7, 10),
+    //         maximumDateTime: DateTime(2025, 7, 10),
+    //         initialDateTime: DateTime(2024, 8, 15, 9, 41),
+    //         currentDateTime: DateTime(2024, 8, 15),
+    //         timeLabel: 'Ends',
+    //         mode: CupertinoCalendarMode.dateTime,
+    //       ),
+    //     );
+    //   },
+    // );
+    // DatePicker.showDatePicker(
+    //   context,
+    //   initialDateTime: DateTime.now(),
+    //   minDateTime: DateTime.now(),
+    //   maxDateTime: DateTime(DateTime.now().year+5),
+    //   dateFormat: "dd MMMM yyyy"
+    // );
   }
 
   void _setLocationData(

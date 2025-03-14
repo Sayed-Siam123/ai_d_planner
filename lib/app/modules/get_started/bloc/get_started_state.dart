@@ -32,7 +32,7 @@ class GetStartedState extends Equatable{
 
   @override
   // TODO: implement props
-  List<Object?> get props => [getStartedStateStatus,swiperCurrentIndex,product];
+  List<Object?> get props => [getStartedStateStatus,swiperCurrentIndex,product,availablePackageLists];
 
 
 

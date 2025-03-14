@@ -12,12 +12,13 @@ import 'package:ai_d_planner/app/modules/dashboard/tabs/questions/bloc/question_
 import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:bottom_picker/resources/arrays.dart';
+import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart' as CalenderPicker;
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart' show DatePicker, TimePicker;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/constants/assets_constants.dart';
@@ -469,15 +470,17 @@ class _QuestionPageState extends State<QuestionPage> {
 
   void _showDateTimePicker(BuildContext context, TextEditingController? textEditingController) {
     // Show Date Picker First
-    DatePicker.showDatePicker(
+    CalenderPicker.DatePicker.showDatePicker(
       context,
-      currentTime: DateTime.now(),
-      minTime: DateTime.now(),
-      maxTime: DateTime(DateTime.now().year+5),
+      initialDateTime: DateTime.now(),
+      minDateTime: DateTime.now(),
+      maxDateTime: DateTime(DateTime.now().year+5),
+      dateFormat: "dd MMMM yyyy",
       onCancel: () {
         debugPrint('Date Picker Cancelled');
       },
-      onConfirm: (pickedDate) {
+      /*onConfirm: (pickedDate, selectedIndex) {
+        printLog(pickedDate);
         DatePicker.showTimePicker(
           context,
           showSecondsColumn: false, // Hide seconds if not needed
@@ -500,6 +503,9 @@ class _QuestionPageState extends State<QuestionPage> {
             debugPrint('Selected DateTime: $selectedDateTime');
           },
         );
+      },*/
+      onConfirm: (dateTime, selectedIndex) {
+        printLog(dateTime);
       },
     );
   }

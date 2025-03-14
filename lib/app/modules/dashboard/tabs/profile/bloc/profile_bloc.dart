@@ -33,7 +33,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     emit(state.copyWith(
         profileStateStatus: ProfileStateStatus.success,
-      profileName: data![0].name,
+      profileName: data?[0].name ?? "No Name",
       totalGeneratedResponse:  plans?.length ?? 0,
       totalFavResponse: _getFavLengthFromPlans(plans) ?? 0,
     ));

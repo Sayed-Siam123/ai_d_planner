@@ -36,7 +36,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
     AppHelper().showLoader(dismissOnTap: false,hasMask: true);
 
-    var response = await authenticationRepository?.signUp(event.email, event.password,event.userName);
+    var response = await authenticationRepository?.signUp(event.email, event.password,event.userName,event.rcAppOriginalID);
 
     if(response != null){
       emit(state.copyWith(
@@ -108,7 +108,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
         await Future.delayed(Duration(milliseconds: 300));
 
-        await createOrUpdateProfile(userID: response.user!.id,userName: state.fullName.toString());
+        await createOrUpdateProfile(userID: response.user!.id,userName: state.fullName.toString(),email: "",rcOriginalID: event.rcAppOriginalID);
         _getForwardMethod();
         AppWidgets().getSnackBar(message: "Logged In Successfully!",status: SnackBarStatus.success);
       }
@@ -161,8 +161,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       nonce: rawNonce,
     );
 
+
     emit(state.copyWith(
-        fullName: "${credential.givenName ?? "No"} ${credential.familyName ?? "Name"}"
+        fullName: "${credential.givenName ?? "No"} ${credential.familyName ?? "Name"}",
     ));
 
     return authResponse;
@@ -208,9 +209,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     ));
   }
 
-  createOrUpdateProfile({userID,userName}) async{
-    await authenticationRepository!.getUserProfileByID(userID) ? null
-        : authenticationRepository?.createUserProfile(name: userName, role: "user", authId: userID);
+  createOrUpdateProfile({userID,userName,email,rcOriginalID}) async{
+    (await authenticationRepository!.getUserProfileByID(userID) && await authenticationRepository!.isRevenueCatIDLinkedToSameUUID(userID, rcOriginalID)) ? null
+        : authenticationRepository?.createUserProfile(name: userName, role: "user", authId: userID,email: email,rcOriginalAppID: rcOriginalID);
 
     //authenticationRepository.createUserProfile(name: name, role: role, authId: authId)
   }

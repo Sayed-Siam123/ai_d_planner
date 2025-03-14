@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   flutter_bloc: ^8.1.1
   equatable: ^2.0.7
@@ -46,6 +48,7 @@ dependencies:
   hive_ce: ^2.10.1
   hive_ce_flutter: ^2.2.0
   flutter_datetime_picker_plus: ^2.2.0
+  flutter_cupertino_datetime_picker: ^3.0.0
 
   supabase_flutter: ^2.8.3
   purchases_flutter: ^8.6.0

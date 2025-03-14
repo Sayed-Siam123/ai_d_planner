@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../../../binding/central_dependecy_injection.dart';
 import '../../../core/constants/assets_constants.dart';
@@ -236,10 +237,14 @@ class SignupPage extends BaseView {
                 if(passwordController?.text.toString() != confirmPasswordController?.text.toString()){
                   AppWidgets().getSnackBar(message: "Password not matched!",status: SnackBarStatus.error);
                 } else{
+
+                  CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+
                   authBloc.add(InitiateSignup(
                     email: emailController?.text.toString(),
                     password: passwordController?.text.toString(),
-                    userName: userController?.text.toString()
+                    userName: userController?.text.toString(),
+                    rcAppOriginalID: customerInfo.originalAppUserId
                   ));
                 }
               }

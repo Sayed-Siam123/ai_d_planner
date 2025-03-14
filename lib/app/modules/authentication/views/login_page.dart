@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../../../core/style/app_colors.dart';
 import '../../../core/utils/helper/app_helper.dart';
@@ -248,8 +249,10 @@ class LoginPage extends BaseView {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Platform.isIOS ? _socialMediaLogoWidget(appleLogo,onTap: () {
-                    authBloc.add(InitiateLoginWithApple());
+                  Platform.isIOS ? _socialMediaLogoWidget(appleLogo,onTap: () async{
+                    CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+
+                    authBloc.add(InitiateLoginWithApple(rcAppOriginalID: customerInfo.originalAppUserId));
                   },) : const SizedBox(),
                   Platform.isIOS ? AppWidgets().gapW24() : AppWidgets().gapW(0),
                   // _socialMediaLogoWidget(fbLogo),

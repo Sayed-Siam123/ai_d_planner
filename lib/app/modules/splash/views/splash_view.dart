@@ -9,6 +9,7 @@ import 'package:ai_d_planner/app/routes/app_pages.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/base/base_view.dart';
@@ -128,28 +129,34 @@ class SplashPage extends BaseView {
     bool questionAnswerStatus = bool.parse(await StoragePrefs.get(StoragePrefs.questionDone) ?? "false");
     bool paymentStatus = bool.parse((await StoragePrefs.get(StoragePrefs.paymentDone) ?? "false"));
 
-    if(questionAnswerStatus){
+    CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+    bool isSubscribed = customerInfo.entitlements.active.isNotEmpty;
 
-      //!paymentStatus use for login route //
-      if(paymentStatus){
+    printLog(isSubscribed);
+    printLog(customerInfo.originalAppUserId);
 
-        if(_supabase.auth.currentUser != null){
-          toReplacementNamed(AppRoutes.dashboard,args: PageRouteArg(
-            to: AppRoutes.dashboard,
-            from: AppRoutes.splash,
-            pageRouteType: PageRouteType.pushReplacement,
-            isFromDashboardNav: false,
-          ));
-        } else{
-          toReplacementNamed(AppRoutes.login,
-              args: PageRouteArg(
-                to: AppRoutes.login,
-                from: AppRoutes.splash,
-                pageRouteType: PageRouteType.pushReplacement,
-                isFromDashboardNav: false,
-              ));
-        }
+    if(isSubscribed){
+
+      if(_supabase.auth.currentUser != null){
+        toReplacementNamed(AppRoutes.dashboard,args: PageRouteArg(
+          to: AppRoutes.dashboard,
+          from: AppRoutes.splash,
+          pageRouteType: PageRouteType.pushReplacement,
+          isFromDashboardNav: false,
+        ));
       } else{
+        toReplacementNamed(AppRoutes.login,
+            args: PageRouteArg(
+              to: AppRoutes.login,
+              from: AppRoutes.splash,
+              pageRouteType: PageRouteType.pushReplacement,
+              isFromDashboardNav: false,
+            ));
+      }
+    }
+    else{
+      if(questionAnswerStatus){
+
         toReplacementNamed(AppRoutes.seeFullFeature,
             args: PageRouteArg(
               to: AppRoutes.seeFullFeature,
@@ -157,14 +164,16 @@ class SplashPage extends BaseView {
               pageRouteType: PageRouteType.pushReplacement,
               isFromDashboardNav: false,
             ));
+
       }
-    } else{
-      toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
-        to: AppRoutes.getStarted,
-        from: AppRoutes.splash,
-        pageRouteType: PageRouteType.pushReplacement,
-        isFromDashboardNav: false,
-      ));
+      else{
+        toReplacementNamed(AppRoutes.getStarted,args: PageRouteArg(
+          to: AppRoutes.getStarted,
+          from: AppRoutes.splash,
+          pageRouteType: PageRouteType.pushReplacement,
+          isFromDashboardNav: false,
+        ));
+      }
     }
   }
 

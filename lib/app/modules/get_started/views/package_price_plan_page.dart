@@ -46,6 +46,7 @@ class PackagePricePlanPage extends BaseView {
       navBarColor: AppColors.backgroundColor,
       statusBarColor: AppColors.backgroundColor,
       isDarkBrightness: false,
+      actionWidget: _getActionWidget(),
       onBackTap: () {
         _onBackMethod();
       },
@@ -183,6 +184,9 @@ class PackagePricePlanPage extends BaseView {
   _swipePackage() {
     return BlocBuilder<GetStartedBloc,GetStartedState>(
       builder: (context, state) {
+
+        printLog(state.availablePackageLists);
+
         return state.availablePackageLists != null ? Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -301,6 +305,21 @@ class PackagePricePlanPage extends BaseView {
         ),
       ),
     );
+  }
+
+  _getActionWidget() {
+    return [
+      TextButton(
+        onPressed: () {
+          getIt<SubscriptionPurchaseBloc>().add(RestorePurchases());
+
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Text("Restore"),
+        ),
+      ),
+    ];
   }
 
 }
