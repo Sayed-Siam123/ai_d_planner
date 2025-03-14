@@ -56,7 +56,7 @@ class PackagePricePlanPage extends BaseView {
   @override
   Widget body(BuildContext context) {
     // TODO: implement body
-    return Column(
+    /*return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
@@ -140,8 +140,273 @@ class PackagePricePlanPage extends BaseView {
           ),
         ),
       ],
+    );*/
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 20),
+          Center(
+            child: Text(
+              "Begin Your 3 Days FREE To\nUnlock Full Access! 😊",
+              textAlign: TextAlign.center,
+              style: textRegularStyle(
+                context,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 30),
+          // Timeline Section
+          Column(
+            children: [
+              _buildTimelineItem(
+                icon: Icons.lock,
+                title: "Today",
+                description:
+                "Get instant access to all features like Unlimited Recipe Imports, Pantry Scanning, AI Chef & More!",
+              ),
+              _buildTimelineItem(
+                icon: Icons.notifications,
+                title: "In 2 Days - Reminder",
+                description:
+                "We'll remind you with a notification that your free trial is ending.",
+              ),
+              _buildTimelineItem(
+                icon: Icons.shopping_cart,
+                title: "In 3 Days - Subscription Begins",
+                description:
+                "You'll be charged on March 12, 2025, you can cancel anytime before.",
+              ),
+            ],
+          ),
+          const SizedBox(height: 30),
+          // Pricing Section
+          BlocBuilder<GetStartedBloc, GetStartedState>(
+            builder: (context, state) {
+              return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      /*children: [
+                        _buildPricingOption(
+                          title: "Monthly",
+                          price: "\$8.99/mo",
+                          isSelected: false,
+                        ),
+                        _buildPricingOption(
+                          title: "Yearly",
+                          price: "\$34.99/yr",
+                          isSelected: true,
+                          discount: "70% OFF",
+                        ),
+                      ],*/
+                      children: state.availablePackageLists!.map((package) {
+
+                        final currentProductIndex = state.availablePackageLists!.indexOf(package);
+                        var  currentProduct = state.availablePackageLists![currentProductIndex];
+                        bool isSelected = state.product == currentProduct.storeProduct;
+
+                        return _buildPricingOption(
+                          onTap: () {
+                            getIt<GetStartedBloc>().add(SelectSubscription(isSelected ? null : state.availablePackageLists![currentProductIndex].storeProduct));
+                          },
+                          title: package.storeProduct.title,
+                          price: "\$${package.storeProduct.price}/${_getYearOrMonth(package.storeProduct.title)}",
+                          isSelected: isSelected,
+                          discount: _getDiscountPrice(state.availablePackageLists![currentProductIndex].storeProduct),
+                        );
+                      },).toList(),
+                    );
+            },
+          ),
+          const SizedBox(height: 20),
+          // No Payment Due Now
+          Row(
+            children: const [
+              Icon(Icons.check_circle, color: Colors.black),
+              SizedBox(width: 10),
+              Text(
+                "No Payment Due Now",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const Spacer(),
+          // Start Free Trial Button
+          Center(
+            child: Column(
+              children: [
+                /*ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50,
+                      vertical: 15,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    "Start my FREE 3 days!",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),*/
+                BlocBuilder<GetStartedBloc, GetStartedState>(
+                  builder: (context, state) {
+                    return CustomAppMaterialButton(
+                                  onPressed: () {
+                                    if(getIt<GetStartedBloc>().state.product != null){
+                                      getIt<SubscriptionPurchaseBloc>().add(PurchaseSubscription(getIt<GetStartedBloc>().state.product!));
+                                    } else{
+                                      AppWidgets().getSnackBar(
+                                          message: "Please select a plan first",
+                                          status: SnackBarStatus.error
+                                      );
+                                    }
+                                  },
+                                  title: state.product!.title.toLowerCase().contains("year") ? "Start my FREE 3 days!" : "Start for \$${state.product!.price}/month",
+                                  borderRadius: 50,
+                                  fontSize: 16,
+                                );
+                  },
+                ),
+                const SizedBox(height: 10),
+                BlocBuilder<GetStartedBloc, GetStartedState>(
+                  builder: (context, state) {
+                    return Text(
+                      state.product!.title.toLowerCase().contains("year") ?  "3 days free, then \$${state.product!.price} per year (\$${(state.product!.price/12).toStringAsFixed(1)}/mo)" : "${(state.product!.priceString)} per month",
+                      style: TextStyle(color: Colors.grey),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
     );
   }
+
+  Widget _buildTimelineItem({
+    required IconData icon,
+    required String title,
+    required String description,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.blue.shade100,
+              child: Icon(icon, color: Colors.blue),
+            ),
+            Container(
+              width: 2,
+              height: 50,
+              color: Colors.blue.shade100,
+            ),
+          ],
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: textRegularStyle(
+                  AppWidgets().globalContext,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                description,
+                style: textRegularStyle(AppWidgets().globalContext,color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPricingOption({
+    required String title,
+    required String price,
+    required bool isSelected,
+    String? discount,
+    VoidCallback? onTap,
+  }) {
+    return Material(
+      color: AppColors.transparentPure,
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap: () => onTap?.call(),
+        child: Container(
+          width: 150,
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: isSelected ? Colors.black : Colors.grey.shade300,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              if (discount != null && isSelected)
+                discount.toString().isNotEmpty ? Transform.translate(
+                  offset: Offset(0, -42),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      discount,
+                      style: textRegularStyle(
+                        AppWidgets().globalContext,
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ),
+                ) : SizedBox(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+
+                children: [
+                  const SizedBox(height: 5),
+                  Text(
+                    title,
+                    style: textRegularStyle(AppWidgets().globalContext,fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    price,
+                    style: textRegularStyle(AppWidgets().globalContext,fontSize: 16),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 
   @override
   void didChangeDependencies() {
@@ -320,6 +585,39 @@ class PackagePricePlanPage extends BaseView {
         ),
       ),
     ];
+  }
+
+  _getYearOrMonth(String title) {
+    if(title.toLowerCase().contains("year")){
+      return "year";
+    } else{
+      return "month";
+    }
+  }
+
+  _getDiscountPrice(StoreProduct storeProduct) {
+
+    if(storeProduct.title.toLowerCase().contains("year")){
+      return "${_getCalculatedDiscount(_getMonthPrice(storeProduct),_getYearPrice(storeProduct)).toString()} % OFF";
+    } else{
+      return "";
+    }
+  }
+
+  _getMonthPrice(StoreProduct storeProduct) {
+    return storeProduct.price.toInt();
+  }
+
+  _getYearPrice(StoreProduct storeProduct) {
+    return storeProduct.price.toInt();
+  }
+
+  _getCalculatedDiscount(getMonthPrice, getYearPrice) {
+    var monthPrice1 = getMonthPrice as int;
+    var monthPrice2 = ((getYearPrice as int) / 12);
+
+    var discount  = (((monthPrice1*12)-getYearPrice)/(monthPrice1*12))*100;
+    return discount.toInt();
   }
 
 }

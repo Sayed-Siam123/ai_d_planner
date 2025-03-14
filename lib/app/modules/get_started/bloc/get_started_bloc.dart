@@ -35,7 +35,7 @@ class GetStartedBloc extends Bloc<GetStartedEvent, GetStartedState> {
       var offerings = data.all["Default"];
       printLog(offerings!.availablePackages[0].storeProduct.price);
 
-      emit(state.copyWith(availablePackageLists: offerings.availablePackages));
+      emit(state.copyWith(availablePackageLists: offerings.availablePackages,product: offerings!.availablePackages[0].storeProduct));
       AppHelper().hideLoader();
     } catch (e) {
       AppHelper().hideLoader();
