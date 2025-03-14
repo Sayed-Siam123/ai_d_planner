@@ -53,6 +53,21 @@ class SettingsPage extends BaseView {
             title: Text("Change Password",style: textRegularStyle(context,fontWeight: FontWeight.w600,fontSize: 18),),
             trailing: Icon(Icons.arrow_forward_ios),
           ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            onTap: () {
+              toNamed(
+                AppRoutes.changeUserName,
+                args: PageRouteArg(
+                  to: AppRoutes.changeUserName,
+                  from: AppRoutes.settings,
+                  pageRouteType: PageRouteType.goNamed,
+                ),
+              );
+            },
+            title: Text("Change Name",style: textRegularStyle(context,fontWeight: FontWeight.w600,fontSize: 18),),
+            trailing: Icon(Icons.arrow_forward_ios),
+          ),
         ],
       ),
     );

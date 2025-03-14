@@ -12,6 +12,8 @@ abstract class AppRoutes {
   static const dashboard = _Paths.dashboard;
   static const settings = _Paths.settings;
   static const changePassword = _Paths.changePassword;
+  static const changeUserName = _Paths.changeUserName;
+
 }
 
 abstract class _Paths {
@@ -28,5 +30,7 @@ abstract class _Paths {
   static const dashboard = '/dashboard';
   static const settings = '/settings';
   static const changePassword = '/changePassword';
+  static const changeUserName = '/changeUserName';
+
 
 }

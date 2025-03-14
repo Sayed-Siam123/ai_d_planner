@@ -7,3 +7,12 @@ class FetchProfileData extends ProfileEvent {
   // TODO: implement props
   List<Object?> get props => [];
 }
+
+class UpdateNameData extends ProfileEvent {
+
+  final String? username;
+  UpdateNameData({this.username});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [username];
+}

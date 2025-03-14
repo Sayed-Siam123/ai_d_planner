@@ -28,4 +28,18 @@ class ProfileRepository{
     }
   }
 
+  Future<bool> updateUserName(String newName) async {
+    try {
+      final response = await _supabase
+          .from(DBConfig.profileTable)
+          .update({'name': newName})
+          .eq('user_uid', _supabase.auth.currentUser!.id);
+
+      return response == null;
+    } catch (e) {
+      printLog("Error updating name: $e");
+      return false;
+    }
+  }
+
 }
