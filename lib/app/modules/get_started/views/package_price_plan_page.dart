@@ -143,8 +143,8 @@ class PackagePricePlanPage extends BaseView {
     );*/
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
           Center(
@@ -186,38 +186,24 @@ class PackagePricePlanPage extends BaseView {
           // Pricing Section
           BlocBuilder<GetStartedBloc, GetStartedState>(
             builder: (context, state) {
-              return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      /*children: [
-                        _buildPricingOption(
-                          title: "Monthly",
-                          price: "\$8.99/mo",
-                          isSelected: false,
-                        ),
-                        _buildPricingOption(
-                          title: "Yearly",
-                          price: "\$34.99/yr",
-                          isSelected: true,
-                          discount: "70% OFF",
-                        ),
-                      ],*/
-                      children: state.availablePackageLists!.map((package) {
+              return state.availablePackageLists != null ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: state.availablePackageLists!.map((package) {
+                  final currentProductIndex = state.availablePackageLists!.indexOf(package);
+                  var  currentProduct = state.availablePackageLists![currentProductIndex];
+                  bool isSelected = state.product == currentProduct.storeProduct;
 
-                        final currentProductIndex = state.availablePackageLists!.indexOf(package);
-                        var  currentProduct = state.availablePackageLists![currentProductIndex];
-                        bool isSelected = state.product == currentProduct.storeProduct;
-
-                        return _buildPricingOption(
-                          onTap: () {
-                            getIt<GetStartedBloc>().add(SelectSubscription(isSelected ? null : state.availablePackageLists![currentProductIndex].storeProduct));
-                          },
-                          title: package.storeProduct.title,
-                          price: "\$${package.storeProduct.price}/${_getYearOrMonth(package.storeProduct.title)}",
-                          isSelected: isSelected,
-                          discount: _getDiscountPrice(state.availablePackageLists![currentProductIndex].storeProduct),
-                        );
-                      },).toList(),
-                    );
+                  return _buildPricingOption(
+                    onTap: () {
+                      getIt<GetStartedBloc>().add(SelectSubscription(isSelected ? null : state.availablePackageLists![currentProductIndex].storeProduct));
+                      },
+                    title: package.storeProduct.title,
+                    price: "\$${package.storeProduct.price}/${_getYearOrMonth(package.storeProduct.title)}",
+                    isSelected: isSelected,
+                    discount: _getDiscountPrice(state.availablePackageLists![currentProductIndex].storeProduct),
+                  );
+                  },).toList(),
+              ) : const SizedBox();
             },
           ),
           const SizedBox(height: 20),
@@ -232,7 +218,7 @@ class PackagePricePlanPage extends BaseView {
               ),
             ],
           ),
-          const Spacer(),
+          adaptiveSizedBox(context,80),
           // Start Free Trial Button
           Center(
             child: Column(
@@ -256,30 +242,30 @@ class PackagePricePlanPage extends BaseView {
                 ),*/
                 BlocBuilder<GetStartedBloc, GetStartedState>(
                   builder: (context, state) {
-                    return CustomAppMaterialButton(
-                                  onPressed: () {
-                                    if(getIt<GetStartedBloc>().state.product != null){
-                                      getIt<SubscriptionPurchaseBloc>().add(PurchaseSubscription(getIt<GetStartedBloc>().state.product!));
-                                    } else{
-                                      AppWidgets().getSnackBar(
-                                          message: "Please select a plan first",
-                                          status: SnackBarStatus.error
-                                      );
-                                    }
-                                  },
-                                  title: state.product!.title.toLowerCase().contains("year") ? "Start my FREE 3 days!" : "Start for \$${state.product!.price}/month",
-                                  borderRadius: 50,
-                                  fontSize: 16,
-                                );
+                    return state.product != null ? CustomAppMaterialButton(
+                      onPressed: () {
+                        if(getIt<GetStartedBloc>().state.product != null){
+                          getIt<SubscriptionPurchaseBloc>().add(PurchaseSubscription(getIt<GetStartedBloc>().state.product!));
+                        } else{
+                          AppWidgets().getSnackBar(
+                              message: "Please select a plan first",
+                              status: SnackBarStatus.error
+                          );
+                        }
+                        },
+                      title: state.product!.title.toLowerCase().contains("year") ? "Start my FREE 3 days!" : "Start for \$${state.product!.price}/month",
+                      borderRadius: 50,
+                      fontSize: 16,
+                    ) : const SizedBox();
                   },
                 ),
                 const SizedBox(height: 10),
                 BlocBuilder<GetStartedBloc, GetStartedState>(
                   builder: (context, state) {
-                    return Text(
+                    return state.product != null ? Text(
                       state.product!.title.toLowerCase().contains("year") ?  "3 days free, then \$${state.product!.price} per year (\$${(state.product!.price/12).toStringAsFixed(1)}/mo)" : "${(state.product!.priceString)} per month",
                       style: TextStyle(color: Colors.grey),
-                    );
+                    ) : const SizedBox();
                   },
                 ),
               ],
@@ -618,6 +604,15 @@ class PackagePricePlanPage extends BaseView {
 
     var discount  = (((monthPrice1*12)-getYearPrice)/(monthPrice1*12))*100;
     return discount.toInt();
+  }
+
+  double dynamicHeight(BuildContext context, double baseHeight) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    return (screenHeight / 667) * baseHeight; // 667 is the iPhone 6s height
+  }
+
+  SizedBox adaptiveSizedBox(BuildContext context, double baseHeight) {
+    return SizedBox(height: dynamicHeight(context, baseHeight));
   }
 
 }
